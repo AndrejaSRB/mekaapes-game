@@ -1,10 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import { UseWalletProvider } from "use-wallet";
+import { QueryClient, QueryClientProvider } from "react-query";
+// ******** Components ********
 import App from "./App";
+// ******** Stores ********
+import AppContextProvider from "./store/index";
+// ******** Styles ********
+import "antd/dist/antd.css";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+const queryClient = new QueryClient();
+
+ReactDOM.render(
+  <QueryClientProvider client={queryClient}>
+    <UseWalletProvider
+      chainId={CHAIN_ID}
+      connectors={{
+        portis: { dAppId: "mekaape-game" },
+      }}>
+      <AppContextProvider>
+        <App />
+      </AppContextProvider>
+    </UseWalletProvider>
+  </QueryClientProvider>,
+  document.getElementById("root")
+);

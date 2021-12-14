@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  font-size: 16px;
+  font-family: $font-family !important;
+  position: relative;
+  height: 100%;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+h5 {
+  font-size: 20px;
+}
+
+h4 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 36px;
+}
+
+h1 {
+  font-size: 85px;
+}
