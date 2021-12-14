@@ -14,8 +14,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: #fff;
+  font-family: "Chakra Petch", sans-serif;
   font-size: 16px;
-  font-family: $font-family !important;
   position: relative;
   height: 100%;
 }

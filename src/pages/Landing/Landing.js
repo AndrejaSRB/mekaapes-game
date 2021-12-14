@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+// ******** Styled ********
+import { Title } from './Landing.styles';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ const Landing = () => {
 
   return (
     <div>
-      <h1>Welcome !</h1>
+      <Title>Welcome !</Title>
       <button onClick={handleMinting}>Minting</button>
       <button onClick={handleStartGame}>Start a Game</button>
     </div>

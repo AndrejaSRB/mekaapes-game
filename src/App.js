@@ -11,8 +11,6 @@ import Header from "./components/Header/Header";
 import { UserContext } from "./store/user-context";
 // ******** Services ********
 import metamask from "./services/metamask";
-// ******** Styles ********
-import "./styles/main.scss";
 
 const App = () => {
   const { saveUserMetaMaskToken } = useContext(UserContext);

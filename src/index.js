@@ -8,6 +8,7 @@ import App from "./App";
 import AppContextProvider from "./store/index";
 // ******** Styles ********
 import "antd/dist/antd.css";
+import './index.css'
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
