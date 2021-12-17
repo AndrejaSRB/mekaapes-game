@@ -1,13 +1,14 @@
 import { useEffect, useContext } from "react";
 import { useWallet } from "use-wallet";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+// ******** Components ********
+import ScrollToTop from "./components/ScrollToTop";
 // ******** Pages ********
 import Landing from "./pages/Landing/Landing";
 import Minting from "./pages/Minting/Minting";
-import Game from "./pages/Game/Game";
-// ******** components ********
-import Header from "./components/Header/Header";
-// ******** Stores ********
+import Factory from "./pages/Game/Factory/Factory";
+import Statistics from "./pages/Game/Statistics/Statistics";
+// ******** Pages ********
 import { UserContext } from "./store/user-context";
 // ******** Services ********
 import metamask from "./services/metamask";
@@ -37,11 +38,13 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Header />
+      <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Landing />}/>
         <Route path="/minting" element={<Minting />} />
-        <Route path="/game" element={<Game />} />
+        <Route path="/game/factory" element={<Factory />} />
+        <Route path="/game/statistics" element={<Statistics />} />
+        <Route path="/game" element={<Navigate to="/game/factory" />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

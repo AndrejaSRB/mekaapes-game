@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 // ******** Components ********
 import { message } from "antd";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 // ******** Stores ********
 import { UserContext } from "../../store/user-context";
+// ******** Styled ********
+import { Title, Subtitle, Wrapper, Button, Content } from "./Connect.styles";
 
 const Connect = ({ page }) => {
   const wallet = useWallet();
@@ -31,14 +35,21 @@ const Connect = ({ page }) => {
   };
 
   return (
-    <div>
-      {!userMetaMaskToken && (
-        <div>
-          Connect:
-          <button onClick={handleClickMetamask}>Metmask</button>
-        </div>
+    <Wrapper>
+      <Header page="landing" />
+      {!userMetaMaskToken ? (
+        <Content>
+          <Title>
+            Let's <span>Connect</span>
+          </Title>
+          <Subtitle>You need to connect your wallet.</Subtitle>
+          <Button onClick={handleClickMetamask}>Connect Wallet</Button>
+        </Content>
+      ) : (
+        <Title>You are already conected!</Title>
       )}
-    </div>
+      <Footer page="connect" />
+    </Wrapper>
   );
 };
 
