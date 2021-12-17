@@ -74,10 +74,10 @@ const Landing = () => {
             </p>
           </Box>
           <Box>
-            <h5>$OOGER</h5>
+            <h5>$OOGEAR</h5>
             <img src={CoinImage} alt="Robo Oogas" />
             <p>
-              The ony Appes currency. $OOGER is the ONLY way to mint new guards
+              The ony Appes currency. $OOGEAR is the ONLY way to mint new guards
               for your factory.
             </p>
           </Box>

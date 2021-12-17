@@ -31,6 +31,7 @@ import {
   TitleBox,
   Boxes,
   StakedText,
+  ApeListDesktop,
 } from "./Factory.styles";
 
 const NoItemFound = () => (
@@ -118,8 +119,8 @@ const Factory = () => {
                   Select All:
                 </CustomCheckbox>
               </div>
-              <ApeList lenght={0}>
-                <NftBox>
+              <ApeList>
+                <NftBox lenght={1}>
                   <ApeNft selected>
                     <img src={MekaApe} alt="Robo Ooga" />
                     <div>
@@ -157,7 +158,108 @@ const Factory = () => {
                     </div>
                   </ApeNft>
                 </NftBox>
+                <NftBox>
+                  <ApeNft>
+                    <img src={MekaApe} alt="Robo Ooga" />
+                    <div>
+                      <span>312.08</span>
+                    </div>
+                  </ApeNft>
+                  <ApeNft>
+                    <img src={MekaApe} alt="Robo Ooga" />
+                    <div>
+                      <span>312.08</span>
+                    </div>
+                  </ApeNft>
+                  <ApeNft>
+                    <img src={MekaApe} alt="Robo Ooga" />
+                    <div>
+                      <span>312.08</span>
+                    </div>
+                  </ApeNft>
+                  <ApeNft>
+                    <img src={MekaApe} alt="Robo Ooga" />
+                    <div>
+                      <span>312.08</span>
+                    </div>
+                  </ApeNft>
+                </NftBox>
               </ApeList>
+              <ApeListDesktop>
+                <ApeNft selected>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+                <ApeNft>
+                  <img src={MekaApe} alt="Robo Ooga" />
+                  <div>
+                    <span>312.08</span>
+                  </div>
+                </ApeNft>
+              </ApeListDesktop>
               <Button claim>Claim $OOGEAR</Button>
               <ClaimAndUnstakeButton disabled>
                 Claim $OOGEAR <span>and Unstake</span>
@@ -177,4 +279,4 @@ const Factory = () => {
   );
 };
 
-export default withConnect(Factory, "/game");
+export default withConnect(Factory, "/game/factory");

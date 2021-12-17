@@ -211,7 +211,7 @@ export const Button = styled.button`
     width: 388px;
   }
   @media only screen and (min-width: 1200px) {
-    margin-top: ${({claim}) => claim ? '40px' : '32px'}
+    margin-top: ${({ claim }) => (claim ? "40px" : "32px")};
   }
 `;
 
@@ -323,15 +323,26 @@ export const CustomCheckbox = styled(Checkbox)`
 
 export const ApeList = styled.div`
   display: flex;
-  justify-content: ${({ lenght }) => (lenght > 1 ? "flex-start" : "center")};
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   overflow-x: scroll;
   max-width: 332px;
   margin: 0 auto;
   @media only screen and (min-width: 900px) {
+    display: none;
+  }
+`;
+
+export const ApeListDesktop = styled.div`
+  display: none;
+  @media only screen and (min-width: 900px) {
+    display: flex;
+    flex-wrap: wrap;
     max-width: 564px;
-    overflow-x: hidden;
+    height: 220px;
     overflow-y: scroll;
+    overflow-x: hidden;
+    justify-content: center;
   }
   @media only screen and (min-width: 1200px) {
     max-width: 388px;
@@ -341,8 +352,13 @@ export const ApeList = styled.div`
 
 export const NftBox = styled.div`
   display: flex;
+  justify-content: ${({lenght}) => lenght > 1 ? "center" : "flex-start"};
   flex-wrap: wrap;
-  justify-content: center;
+  min-width: 240px;
+  width: 100%;
+  @media only screen and (min-width: 900px) {
+    min-width: 330px;
+  }
   @media only screen and (min-width: 1200px) {
     width: 388px;
   }
@@ -355,6 +371,7 @@ export const ApeNft = styled.div`
   margin: 5px;
   cursor: pointer;
   position: relative;
+  height: 70px;
   img {
     width: 70px;
     border-radius: 15px;
@@ -374,6 +391,7 @@ export const ApeNft = styled.div`
   }
   @media only screen and (min-width: 900px) {
     margin: 8px 6px;
+    height: 98px;
     img {
       width: 98px;
       border: 5px solid
@@ -385,6 +403,7 @@ export const ApeNft = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     margin: 8px 6px;
+    height: 103px;
     img {
       width: 103px;
       border: 5px solid

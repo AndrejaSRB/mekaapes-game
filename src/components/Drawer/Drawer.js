@@ -40,7 +40,7 @@ const MobileMenu = ({
     <NavList>
       <div>
         <NavLink
-          to="/game"
+          to="/game/factory"
           className={({ isActive }) => (isActive ? "active" : "")}>
           Factory
         </NavLink>

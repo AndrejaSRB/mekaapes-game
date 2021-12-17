@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react';
+import { useState, createContext } from "react";
 
 export const UserContext = createContext({
   userMetaMaskToken: null,
@@ -9,13 +9,15 @@ export const UserContext = createContext({
 const UserContextProvider = ({ children }) => {
   const [userMetaMaskToken, setUserMetaMaskToken] = useState(null);
 
-  const saveUserMetaMaskToken = token => {
-    setUserMetaMaskToken(token);
+  const saveUserMetaMaskToken = (token) => {
+    if (token) {
+      setUserMetaMaskToken(token);
+    }
   };
 
   const deleteUserMetaMaskToken = () => {
     setUserMetaMaskToken(null);
-    localStorage.removeItem('mekaape_useraddress');
+    localStorage.removeItem("mekaape_useraddress");
   };
   const contextValue = {
     userMetaMaskToken: userMetaMaskToken,

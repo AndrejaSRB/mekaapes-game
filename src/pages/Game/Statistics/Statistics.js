@@ -114,4 +114,4 @@ const Statistics = () => {
   );
 };
 
-export default withConnect(Statistics, "/game");
+export default withConnect(Statistics, "/game/statistics");
