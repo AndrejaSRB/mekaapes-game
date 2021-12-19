@@ -87,6 +87,10 @@ const MobileMenu = ({
     switch (page) {
       case "landing":
         return landingNavigationList;
+      case "terms":
+        return landingNavigationList;
+      case "whitepaper":
+        return landingNavigationList;
       case "minting":
         return landingNavigationList;
       case "game":

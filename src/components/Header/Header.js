@@ -151,7 +151,6 @@ const Header = ({ page }) => {
           <Logo>
             <Link to="/">MekaApes</Link>
           </Logo>
-          {/* MenuOutlined */}
           {renderNavigation(page)}
           <Menu>
             <MenuOutlined onClick={handleOpenMobileMenu} />
