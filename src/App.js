@@ -7,7 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Landing from "./pages/Landing/Landing";
 import Minting from "./pages/Minting/Minting";
 import TermsOfUse from "./pages/Terms/Terms";
-import Whitepaper from './pages/Whitepaper/Whitepaper';
+import Whitepaper from "./pages/Whitepaper/Whitepaper";
 import Factory from "./pages/Game/Factory/Factory";
 import Statistics from "./pages/Game/Statistics/Statistics";
 import Crafting from "./pages/Game/Crafting/Crafting";

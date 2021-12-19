@@ -8,7 +8,7 @@ import App from "./App";
 import AppContextProvider from "./store/index";
 // ******** Styles ********
 import "antd/dist/antd.css";
-import './index.css'
+import "./index.css";
 
 const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
 
@@ -19,6 +19,9 @@ ReactDOM.render(
     <UseWalletProvider
       chainId={CHAIN_ID}
       connectors={{
+        injected: {
+          chainId: [CHAIN_ID],
+        },
         portis: { dAppId: "mekaape-game" },
       }}>
       <AppContextProvider>
