@@ -55,7 +55,7 @@ const Statistics = () => {
               </Stats>
             </div>
             <TotalText>
-              Total Stolen: <span>56%</span>
+              Daily Users: <span>1.500.000</span>
             </TotalText>
           </Box>
           <LeaderboardsBox>

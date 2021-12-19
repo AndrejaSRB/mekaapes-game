@@ -30,7 +30,7 @@ const Landing = () => {
           A GAME OF <span>MAKAAPES</span>
         </Title>
         <MainBox>
-          <h4>Welcome!</h4>
+          <h4 className="desktop">Welcome!</h4>
           <IntroText>
             <div>
               <p>The danger of attack is imminent.</p>
@@ -57,6 +57,7 @@ const Landing = () => {
               <Link to="/game/factory">Start a Game</Link>
             </ButtonWrapper>
           </BottomContent>
+          <h4 className="mobile">Welcome!</h4>
         </MainBox>
         <BoxesWrapper>
           <Box>

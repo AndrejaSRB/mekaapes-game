@@ -57,7 +57,12 @@ export const MainBox = styled.div`
   border: 10px solid ${theme.color.borderColor};
   border-radius: 50px;
   padding: 54px 14px;
-  & > h4 {
+  display: flex;
+  flex-direction: column-reverse;
+  & > .desktop {
+    display: none;
+  }
+  & > .mobile {
     color: ${theme.color.white};
     margin: 0 0 16px 0;
     font-size: 24px;
@@ -66,10 +71,16 @@ export const MainBox = styled.div`
   }
   @media only screen and (min-width: 1024px) {
     padding: 64px 20px;
-    & > h4 {
+    flex-direction: column;
+    & > .mobile {
+      display: none;
+    }
+    & > .desktop {
+      display: block;
       color: ${theme.color.white};
       margin-bottom: 24px;
       font-size: 38px;
+      text-align: center;
     }
   }
   @media only screen and (min-width: 1300px) {

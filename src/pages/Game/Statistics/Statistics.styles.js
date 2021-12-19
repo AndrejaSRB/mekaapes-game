@@ -208,6 +208,7 @@ export const LeaderboardsBox = styled.div`
 export const BoardWrapper = styled.div`
   max-height: 280px;
   overflow-y: scroll;
+  padding-right: 9px;
   @media only screen and (min-width: 1200px) {
     max-height: 400px;
   }

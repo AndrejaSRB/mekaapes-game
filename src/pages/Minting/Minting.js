@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useWallet } from "use-wallet";
 // ******** Components ********
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -16,18 +17,54 @@ import {
   ButtonWrapper,
   Counter,
   Price,
-  ContentNotAllowed,
-  GoBack,
 } from "./Minting.styles";
 
-const Minting = () => {
-  const [counter, setCounter] = useState(0);
-  const [allowed] = useState(true);
-
   // set allowed to true if its whitelisted or false if the user is not
+  // TODO some users can mint maximum 2 and some 4, other which are not listed only 2.
+
+const Minting = () => {
+  const [currentETHBalance, setCurrentETHBalance] = useState(0);
+  const [counter, setCounter] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [price] = useState(0.0088);
+  const [allowed] = useState(true);
+  const wallet = useWallet();
+
+  useEffect(() => {
+    if (wallet) {
+      const balance = wallet.balance;
+      if (+balance > 0) {
+        setCurrentETHBalance(
+          Number((Number(-1) / 1000000000000000000).toFixed(5))
+        );
+      }
+    }
+  }, [wallet]);
+
+  useEffect(() => {
+    if (counter) {
+      if (currentETHBalance >= counter * price) {
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
+    }
+  }, [currentETHBalance, counter, price]);
+
+  useEffect(() => {
+    if (allowed) {
+      if (counter > 0) {
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
+    } else {
+      setIsDisabled(true);
+    }
+  }, [allowed, counter]);
 
   const handleCounter = (type) => () => {
-    if (type === "plus" && counter < 20) {
+    if (type === "plus" && counter < 4) {
       setCounter(counter + 1);
     } else if (type === "minus" && counter > 0) {
       setCounter(counter - 1);
@@ -35,13 +72,13 @@ const Minting = () => {
   };
 
   return (
-    <Wrapper height={allowed}>
+    <Wrapper>
       <Header page="minting" />
-      {allowed ? (
-        <Content>
-          <Title>You are the first!</Title>
-          <MainBox>
-            <h4>Welcome!</h4>
+      <Content>
+        <Title>{allowed ? "You are the worthy!" : "You shall not pass"}</Title>
+        <MainBox>
+          <h4>Welcome!</h4>
+          {allowed ? (
             <IntroText>
               You have secured your place as the first defender of the Factory!{" "}
               <span>
@@ -49,39 +86,35 @@ const Minting = () => {
                 a Robo Oogas or MekaApes.
               </span>
             </IntroText>
-            <Counter>
-              <div className="icon" onClick={handleCounter("minus")}>
-                <MinusOutlined />
-              </div>
-              <div className="number noselect">{counter}</div>
-              <div className="icon" onClick={handleCounter("plus")}>
-                <PlusOutlined />
-              </div>
-            </Counter>
-            <ButtonWrapper>
-              <button disabled={counter === 0} className="noselect">
-                Mint Now
-              </button>
-              <button disabled={counter === 0} className="noselect">
-                Mint and Stake
-              </button>
-            </ButtonWrapper>
-            <Price className="noselect">
-              <span>Price 0.0088 ETH</span>
-              0/10,000
-            </Price>
-          </MainBox>
-        </Content>
-      ) : (
-        <ContentNotAllowed>
-          <Title>
-            Something went <span>wrong!</span>
-          </Title>
-          <p>Sorry, but in this moment you are not on the list.</p>
-          <GoBack to="/">Go Back</GoBack>
-        </ContentNotAllowed>
-      )}
-      <Footer page={allowed ? "minting" : "connect"} />
+          ) : (
+            <IntroText></IntroText>
+          )}
+          <Counter>
+            <div
+              className={counter === 0 ? "icon disabled" : "icon"}
+              onClick={handleCounter("minus")}>
+              <MinusOutlined />
+            </div>
+            <div className="number noselect">{counter}</div>
+            <div className="icon" onClick={handleCounter("plus")}>
+              <PlusOutlined />
+            </div>
+          </Counter>
+          <ButtonWrapper>
+            <button disabled={isDisabled} className="noselect">
+              Mint Now
+            </button>
+            <button disabled={isDisabled} className="noselect">
+              Mint and Stake
+            </button>
+          </ButtonWrapper>
+          <Price className="noselect">
+            <span>Price {price} ETH</span>
+            0/10,000
+          </Price>
+        </MainBox>
+      </Content>
+      <Footer page="minting" />
     </Wrapper>
   );
 };

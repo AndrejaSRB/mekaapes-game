@@ -26,6 +26,9 @@ import {
 
 const EXAMPLE_CURRENT_VALUE = 18323;
 
+// TODO
+// Disable buttons if the total value is 50k
+
 const Crafting = () => {
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
@@ -62,13 +65,17 @@ const Crafting = () => {
           <CounterBox>
             <OogearBox>
               <Counter>
-                <div className="minus" onClick={handleOogearCounter("minus")}>
+                <div
+                  className={oogearCounter === 0 ? "minus disabled" : "minus"}
+                  onClick={handleOogearCounter("minus")}>
                   <MinusOutlined />
                 </div>
-                <div className="number" counter={oogearCounter}>
+                <div className="number noselect" counter={oogearCounter}>
                   {oogearCounter}
                 </div>
-                <div className="plus" onClick={handleOogearCounter("plus")}>
+                <div
+                  className={oogearCounter === 20 ? "plus disabled" : "plus"}
+                  onClick={handleOogearCounter("plus")}>
                   <PlusOutlined />
                 </div>
               </Counter>
@@ -80,13 +87,17 @@ const Crafting = () => {
             </OogearBox>
             <DmtBox>
               <Counter>
-                <div className="minus" onClick={handleDmtCounter("minus")}>
+                <div
+                  className={dmtCounter === 0 ? "minus disabled" : "minus"}
+                  onClick={handleDmtCounter("minus")}>
                   <MinusOutlined />
                 </div>
-                <div className="number" counter={dmtCounter}>
+                <div className="number noselect" counter={dmtCounter}>
                   {dmtCounter}
                 </div>
-                <div className="plus" onClick={handleDmtCounter("plus")}>
+                <div
+                  className={dmtCounter === 20 ? "plus disabled" : "plus"}
+                  onClick={handleDmtCounter("plus")}>
                   <PlusOutlined />
                 </div>
               </Counter>

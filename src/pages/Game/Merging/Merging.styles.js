@@ -99,76 +99,71 @@ export const TitleBox = styled.div`
   }
 `;
 
-export const OogearBox = styled.div``;
-
-export const Counter = styled.div`
+export const MergingBox = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  color: ${theme.color.white};
-  margin-bottom: 40px;
-  .number {
-    margin: 0 40px;
-    font-size: 48px;
+  max-width: 250px;
+  margin: 0 auto 64px auto;
+  img {
+    width: 30px;
+  }
+  @media only screen and (min-width: 789px) {
+    max-width: 542px;
+    margin-bottom: 100px;
+    img {
+        width: 58px;
+    }
+  }
+`;
+
+export const Box = styled.div`
+  width: 80px;
+  height: 80px;
+  position: relative;
+  cursor: pointer;
+  img {
+    width: 80px;
+    height: 80px;
+    box-shadow: 0px 0px 40px #11051b;
+    border-radius: 15px;
+  }
+  span {
+    position: absolute;
     color: ${theme.color.white};
+    font-size: 24px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
-  .minus {
-    border-radius: 100%;
-    border: 5px solid ${theme.color.green};
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: ${theme.transition};
-    cursor: pointer;
-    &:hover {
-      background: ${theme.color.green};
+  p {
+    position: absolute;
+    color: ${theme.color.white};
+    font-size: 16px;
+    left: 50%;
+    bottom: -34px;
+    transform: translate(-50%);
+    margin: 0;
+  }
+  @media only screen and (min-width: 789px) {
+    width: 200px;
+    height: 200px;
+    img {
+      width: 200px;
+      height: 200px;
     }
-  }
-  .minus.disabled {
-    cursor: not-allowed;
-    &:hover {
-      background: transparent;
+    span {
+      font-size: 38px;
     }
-  }
-  .plus {
-    border-radius: 100%;
-    border: 5px solid ${theme.color.green};
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: ${theme.transition};
-    cursor: pointer;
-    &:hover {
-      background: ${theme.color.green};
-    }
-  }
-  .plus.disabled {
-    cursor: not-allowed;
-    &:hover {
-      background: transparent;
-    }
-  }
-  @media only screen and (min-width: 1200px) {
-    .plus,
-    .minus {
-      width: 64px;
-      height: 64px;
-      span > svg {
-        font-size: 30px;
-      }
+    p {
+      font-size: 28px;
+      bottom: -64px;
     }
   }
 `;
 
 export const ButtonBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   button {
     background: ${theme.color.red};
     transition: ${theme.transition};
@@ -178,7 +173,7 @@ export const ButtonBox = styled.div`
     border-radius: 400px;
     height: 80px;
     width: 240px;
-    font-size: 21px;
+    font-size: 18px;
     &:hover {
       background: ${theme.color.redHover};
     }
@@ -188,95 +183,30 @@ export const ButtonBox = styled.div`
       background: ${theme.color.secondButton};
       cursor: not-allowed;
     }
-  }
-  button:last-child {
-    margin-top: 32px;
-  }
-  @media only screen and (min-width: 600px) {
-    button {
+    @media only screen and (min-width: 600px) {
       width: 380px;
+      font-size: 21px;
     }
-  }
-  @media only screen and (min-width: 1200px) {
-    flex-direction: row;
-    button {
-      width: 214px;
-    }
-    button:last-child {
-      margin-top: 0;
-      margin-left: 32px;
+    @media only screen and (min-width: 1200px) {
+      width: 388px;
     }
   }
 `;
 
 export const HelperText = styled.p`
-  margin-top: 16px;
-  margin-bottom: 0;
-  color: ${theme.color.white};
-  font-size: 18px;
-  line-height: 23px;
-  text-align: center;
-  span {
-    display: block;
-    color: ${theme.color.whiteGrey};
-    margin-top: 7px;
-  }
-  @media only screen and (min-width: 1200px) {
-    font-size: 21px;
-    span {
-      display: inline;
-      padding-left: 24px;
-    }
-  }
-`;
-
-export const DmtBox = styled.div`
-  margin-top: 76px;
-  text-align: center;
-  @media only screen and (min-width: 1024px) {
-    margin-top: 0px;
-  }
-`;
-
-export const Button = styled.button`
-  background: ${theme.color.red};
-  transition: ${theme.transition};
-  cursor: pointer;
-  border: none;
-  color: ${theme.color.white};
-  border-radius: 400px;
-  height: 80px;
-  width: 240px;
-  font-size: 21px;
-  &:hover {
-    background: ${theme.color.redHover};
-  }
-  &:disabled {
-    color: ${theme.color.white};
-    border: 1px solid #ffffff;
-    background: ${theme.color.secondButton};
-    cursor: not-allowed;
-  }
-  @media only screen and (min-width: 600px) {
-    width: 380px;
-  }
-  @media only screen and (min-width: 1200px) {
-    width: 388px;
-  }
-`;
-
-export const Text = styled.p`
   color: ${theme.color.whiteGrey};
   font-size: 16px;
   line-height: 21px;
   text-align: center;
-  margin-top: 32px;
+  margin-top: 16px;
   margin-bottom: 0;
-`;
-
-export const CounterBox = styled.div`
-  @media only screen and (min-width: 1024px) {
-    display: flex;
-    justify-content: space-between;
+  span {
+    display: block;
+  }
+  @media only screen and (min-width: 789px) {
+    margin-top: 24px;
+  }
+  @media only screen and (min-width: 1200px) {
+    font-size: 18px;
   }
 `;

@@ -70,10 +70,13 @@ export const Button = styled.button`
     border-radius: 400px;
     font-size: 21px;
     margin-top: 64px;
-    margin-bottom: 256px;
+    margin-bottom: 150px;
     transition: ${theme.transition};
     &:hover {
       background-color: ${theme.color.redHover};
     }
+  }
+  @media screen and (min-height: 1200px) and (min-width: 1300px) {
+    margin-bottom: 256px;
   }
 `;

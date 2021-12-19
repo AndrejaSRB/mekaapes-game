@@ -80,7 +80,7 @@ const Header = ({ page }) => {
       <NavLink
         to="/terms"
         className={({ isActive }) => (isActive ? "active" : "")}>
-        Terms of Services
+        Terms of Use
       </NavLink>
     </NavList>
   );
@@ -123,6 +123,10 @@ const Header = ({ page }) => {
   const renderNavigation = (page) => {
     switch (page) {
       case "landing":
+        return landingNavigationList;
+      case "terms":
+        return landingNavigationList;
+      case "whitepaper":
         return landingNavigationList;
       case "minting":
         return landingNavigationList;

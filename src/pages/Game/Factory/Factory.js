@@ -32,6 +32,8 @@ import {
   Boxes,
   StakedText,
   ApeListDesktop,
+  CustomUnstakeCheckbox,
+  Subtitle,
 } from "./Factory.styles";
 
 const NoItemFound = () => (
@@ -42,13 +44,24 @@ const NoItemFound = () => (
 );
 
 // TODO
-// Logic for rendering Staked
+// Add placeholders if the STAKED box is not full
+// Add select all for Robo and Meka APe
 
 const Factory = () => {
-  const [checked, setChecked] = useState(false);
+  const [checkedStaked, setCheckedStaked] = useState(false);
+  const [checkedUnstakedMeka, setCheckedUnstakedMeka] = useState(false);
+  const [checkedUnstakedRobo, setCheckedUnstakedRobo] = useState(false);
 
-  const hadnleChangeCheckbox = (e) => {
-    setChecked(e.target.checked);
+  const hadnleChangeStakedCheckbox = (e) => {
+    setCheckedStaked(e.target.checked);
+  };
+
+  const hadnleChangeUnstakedMekaCheckbox = (e) => {
+    setCheckedUnstakedMeka(e.target.checked);
+  };
+
+  const hadnleChangeUnstakedRoboCheckbox = (e) => {
+    setCheckedUnstakedRobo(e.target.checked);
   };
 
   return (
@@ -66,16 +79,23 @@ const Factory = () => {
               <img src={HeroImage} alt="Factory Robo" />
             </div>
             <p>
-              <span>Balance:</span> 1,000,000,000 $OOGEAR
+              <span>$OOGEAR Balance:</span> 1,000,000,000
             </p>
             <p>
-              <span>Balance:</span> 1,000,000 $DMT
+              <span>$DMT Balance:</span> 1,000,000
             </p>
           </MobileBoxHeader>
           <Boxes>
             <Unstaked>
               <h5>Unstaked</h5>
-              <h6>Robo Oogas:</h6>
+              <Subtitle>
+                <h6 className="robo">Robo Oogas:</h6>
+                <CustomUnstakeCheckbox
+                  onChange={hadnleChangeUnstakedRoboCheckbox}
+                  checked={checkedUnstakedRobo}>
+                  Select All:
+                </CustomUnstakeCheckbox>
+              </Subtitle>
               <NftList lenght={5}>
                 <Nft selected>
                   <img src={HeroImage} alt="Robo Ooga" />
@@ -93,7 +113,14 @@ const Factory = () => {
                   <img src={HeroImage} alt="Robo Ooga" />
                 </Nft>
               </NftList>
-              <h6 className="meka">MekaApe:</h6>
+              <Subtitle>
+                <h6 className="meka">MekaApe:</h6>
+                <CustomUnstakeCheckbox
+                  onChange={hadnleChangeUnstakedMekaCheckbox}
+                  checked={checkedUnstakedMeka}>
+                  Select All:
+                </CustomUnstakeCheckbox>
+              </Subtitle>
               <NftList lenght={0}>
                 <NoItemFound />
               </NftList>
@@ -103,10 +130,10 @@ const Factory = () => {
             <MiddleBox>
               <img src={HeroImage} alt="hero ape" />
               <p>
-                <span>Balance:</span> 1,000,000,000 $OOGEAR
+                <span>$OOGEAR Balance:</span> 1,000,000,000
               </p>
               <p>
-                <span>Balance:</span> 1,000,000 $DMT
+                <span>$DMT Balance:</span> 1,000,000
               </p>
             </MiddleBox>
             <Staked>
@@ -114,8 +141,8 @@ const Factory = () => {
               <div className="subtitle">
                 <h6>Guard the factory:</h6>
                 <CustomCheckbox
-                  onChange={hadnleChangeCheckbox}
-                  checked={checked}>
+                  onChange={hadnleChangeStakedCheckbox}
+                  checked={checkedStaked}>
                   Select All:
                 </CustomCheckbox>
               </div>
@@ -229,35 +256,19 @@ const Factory = () => {
                   </div>
                 </ApeNft>
                 <ApeNft>
-                  <img src={MekaApe} alt="Robo Ooga" />
-                  <div>
-                    <span>312.08</span>
-                  </div>
+                  <img src={PlaceholderApe} alt="Robo Ooga" />
                 </ApeNft>
                 <ApeNft>
-                  <img src={MekaApe} alt="Robo Ooga" />
-                  <div>
-                    <span>312.08</span>
-                  </div>
-                </ApeNft>
-
-                <ApeNft>
-                  <img src={MekaApe} alt="Robo Ooga" />
-                  <div>
-                    <span>312.08</span>
-                  </div>
+                  <img src={PlaceholderApe} alt="Robo Ooga" />
                 </ApeNft>
                 <ApeNft>
-                  <img src={MekaApe} alt="Robo Ooga" />
-                  <div>
-                    <span>312.08</span>
-                  </div>
+                  <img src={PlaceholderApe} alt="Robo Ooga" />
                 </ApeNft>
                 <ApeNft>
-                  <img src={MekaApe} alt="Robo Ooga" />
-                  <div>
-                    <span>312.08</span>
-                  </div>
+                  <img src={PlaceholderApe} alt="Robo Ooga" />
+                </ApeNft>
+                <ApeNft>
+                  <img src={PlaceholderApe} alt="Robo Ooga" />
                 </ApeNft>
               </ApeListDesktop>
               <Button claim>Claim $OOGEAR</Button>

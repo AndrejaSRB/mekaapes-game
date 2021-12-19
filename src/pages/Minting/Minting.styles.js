@@ -3,15 +3,12 @@ import styled from "styled-components";
 import * as theme from "../../theme";
 // ******** Image ********
 import BackgroundImage from "../../assets/background.jpg";
-// ******** Components ********
-import { Link } from "react-router-dom";
 
 export const Wrapper = styled.div`
   background-image: url(${BackgroundImage});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
-  height: ${({ height }) => (height ? "auto" : "100%")};
 `;
 
 export const Title = styled.h1`
@@ -113,10 +110,10 @@ export const ButtonWrapper = styled.div`
       background-color: ${theme.color.redHover};
     }
     &:disabled {
-        color: ${theme.color.white};
-        border: 1px solid #FFFFFF;
-        background: ${theme.color.secondButton};
-        cursor: not-allowed;
+      color: ${theme.color.white};
+      border: 1px solid #ffffff;
+      background: ${theme.color.secondButton};
+      cursor: not-allowed;
     }
   }
   @media only screen and (min-width: 789px) {
@@ -150,6 +147,12 @@ export const Counter = styled.div`
     }
     &:hover {
       background: ${theme.color.green};
+    }
+  }
+  .icon.disabled {
+    cursor: not-allowed;
+    &:hover {
+      background: transparent;
     }
   }
   .number {
@@ -190,43 +193,5 @@ export const Price = styled.div`
       display: inline-block;
       margin-right: 15px;
     }
-  }
-`;
-
-export const ContentNotAllowed = styled.div`
-  text-align: center;
-  margin-bottom: 64px;
-  p {
-    font-size: 24px;
-    color: ${theme.color.white};
-  }
-  @media only screen and (min-width: 789px) {
-    margin-bottom: 256px;
-    p {
-      font-size: 38px;
-    }
-  }
-`;
-
-export const GoBack = styled(Link)`
-  background-color: ${theme.color.red};
-  color: ${theme.color.white};
-  border: none;
-  cursor: pointer;
-  width: 240px;
-  height: 80px;
-  margin: 0 auto 32px auto;
-  font-size: 21px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 400px;
-  transition: ${theme.transition};
-  &:hover {
-    background-color: ${theme.color.redHover};
-    color: ${theme.color.white};
-  }
-  @media only screen and (min-width: 789px) {
-    width: 660px;
   }
 `;

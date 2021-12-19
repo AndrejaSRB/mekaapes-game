@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 // ******** Image ********
 import LoadingImage from "../../../assets/landing-image.png";
 // ******** Styles ********
-import { ModalWrapper, LoadingPicture, Text } from "./Loading.styles";
+import { ModalWrapper, LoadingPicture, Text, Dot } from "./Loading.styles";
 
 const Loading = ({ open }) => {
   return (
@@ -11,7 +11,11 @@ const Loading = ({ open }) => {
         <LoadingPicture>
           <img src={LoadingImage} alt="Loading" />
         </LoadingPicture>
-        <Text>Loading data...</Text>
+        <Text>Loading data
+            <Dot>.</Dot>
+            <Dot>.</Dot>
+            <Dot>.</Dot>
+        </Text>
       </div>
     </ModalWrapper>
   );
@@ -21,5 +25,4 @@ export default Loading;
 
 Loading.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleCloseModal: PropTypes.func.isRequired,
 };

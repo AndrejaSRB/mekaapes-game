@@ -49,7 +49,7 @@ export const FooterWrapper = styled.footer`
       opacity: 1;
     }
   }
-  @media only screen and (min-width: 1024px) {
+  @media screen and (min-height: 1200px) and (min-width: 1300px) {
     position: ${({ page }) => (page === "connect" ? "fixed" : "static")};
     bottom: 0;
     width: 100%;

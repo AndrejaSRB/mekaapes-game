@@ -137,9 +137,6 @@ export const Unstaked = styled.div`
   h6 {
     color: ${theme.color.white};
   }
-  h6.meka {
-    margin-top: 38px;
-  }
   @media only screen and (min-width: 1200px) {
     h6 {
       font-size: 21px;
@@ -154,8 +151,11 @@ export const NftList = styled.div`
   overflow-x: scroll;
   max-width: 332px;
   margin: 0 auto;
+  margin-bottom: 38px;
+  padding-bottom: 9px;
   @media only screen and (min-width: 900px) {
     max-width: 564px;
+    margin-bottom: 49px;
   }
   @media only screen and (min-width: 1200px) {
     max-width: 332px;
@@ -328,6 +328,7 @@ export const ApeList = styled.div`
   overflow-x: scroll;
   max-width: 332px;
   margin: 0 auto;
+  padding-bottom: 9px;
   @media only screen and (min-width: 900px) {
     display: none;
   }
@@ -346,13 +347,13 @@ export const ApeListDesktop = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     max-width: 388px;
-    height: 226px;
+    height: 230px;
   }
 `;
 
 export const NftBox = styled.div`
   display: flex;
-  justify-content: ${({lenght}) => lenght > 1 ? "center" : "flex-start"};
+  justify-content: ${({ lenght }) => (lenght > 1 ? "center" : "flex-start")};
   flex-wrap: wrap;
   min-width: 240px;
   width: 100%;
@@ -515,5 +516,77 @@ export const StakedText = styled.div`
     p:last-child {
       margin-top: 10px;
     }
+  }
+`;
+
+export const Subtitle = styled.div`
+  color: ${theme.color.white};
+  max-width: 332px;
+  margin: 0 auto;
+  h6.robo {
+    color: ${theme.color.white};
+  }
+  h6.meka {
+    margin-top: 38px;
+    color: ${theme.color.white};
+  }
+  @media only screen and (min-width: 900px) {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    h6.robo {
+        margin-bottom: 5px;
+    }
+    h6.robo,
+    h6.meka {
+      width: 50%;
+      text-align: left;
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    max-width: 564px;
+    margin-bottom: 9px;
+    h6.meka {
+      margin-bottom: 0px;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    max-width: 332px;
+    h6 {
+      font-size: 21px;
+    }
+  }
+  @media only screen and (min-width: 1520px) {
+    h6.meka {
+      margin-bottom: 5px;
+    }
+  }
+`;
+
+export const CustomUnstakeCheckbox = styled(Checkbox)`
+  color: ${theme.color.white};
+  flex-direction: row-reverse;
+  font-size: 16px;
+  font-weight: 600;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  span:first-child {
+    border-radius: 5px;
+    background: transparent;
+  }
+  span:first-child.ant-checkbox-checked {
+    span.ant-checkbox-inner {
+      background-color: ${theme.color.green};
+      border-color: ${theme.color.green};
+    }
+  }
+  margin: 0 auto 10px auto;
+  @media only screen and (min-width: 900px) {
+    margin-bottom: 0px;
+    justify-content: flex-start;
+    width: 50%;
+  }
+  @media only screen and (min-width: 1200px) {
   }
 `;
