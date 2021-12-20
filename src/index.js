@@ -19,9 +19,6 @@ ReactDOM.render(
     <UseWalletProvider
       chainId={CHAIN_ID}
       connectors={{
-        injected: {
-          chainId: [CHAIN_ID],
-        },
         portis: { dAppId: "mekaape-game" },
       }}>
       <AppContextProvider>

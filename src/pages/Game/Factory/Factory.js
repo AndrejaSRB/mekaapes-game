@@ -121,10 +121,10 @@ const Factory = () => {
                   Select All:
                 </CustomUnstakeCheckbox>
               </Subtitle>
-              <NftList lenght={0}>
+              <NftList meka lenght={0}>
                 <NoItemFound />
               </NftList>
-              <Button>Stake and Guard!</Button>
+              <Button type="stake">Stake and Guard!</Button>
               <HelperText>Select your NFTs to Claim</HelperText>
             </Unstaked>
             <MiddleBox>
@@ -271,7 +271,7 @@ const Factory = () => {
                   <img src={PlaceholderApe} alt="Robo Ooga" />
                 </ApeNft>
               </ApeListDesktop>
-              <Button claim>Claim $OOGEAR</Button>
+              <Button type="claim">Claim $OOGEAR</Button>
               <ClaimAndUnstakeButton disabled>
                 Claim $OOGEAR <span>and Unstake</span>
               </ClaimAndUnstakeButton>

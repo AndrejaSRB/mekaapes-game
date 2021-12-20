@@ -11,6 +11,7 @@ const MobileMenu = ({
   page,
   reduceAddress,
   address,
+  handleOpenDisconnectModal,
 }) => {
   const landingNavigationList = (
     <NavList>
@@ -110,9 +111,9 @@ const MobileMenu = ({
       <Title>
         <div>
           {connected && (
-            <>
+            <div onClick={handleOpenDisconnectModal}>
               <span>Account:</span> {reduceAddress(address)}
-            </>
+            </div>
           )}
         </div>
         <span>

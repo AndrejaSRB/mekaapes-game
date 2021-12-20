@@ -159,6 +159,7 @@ export const NftList = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     max-width: 332px;
+    margin-bottom: ${({meka}) => meka ? "0px" : "35px"};
   }
 `;
 
@@ -211,7 +212,15 @@ export const Button = styled.button`
     width: 388px;
   }
   @media only screen and (min-width: 1200px) {
-    margin-top: ${({ claim }) => (claim ? "40px" : "32px")};
+    margin-top: ${({ type }) => {
+      if (type === "claim") {
+        return "41px";
+      } else if (type === "stake") {
+        return "18px";
+      } else {
+        return "32px";
+      }
+    }};
   }
 `;
 
@@ -535,7 +544,7 @@ export const Subtitle = styled.div`
     align-items: flex-end;
     justify-content: space-between;
     h6.robo {
-        margin-bottom: 5px;
+      margin-bottom: 5px;
     }
     h6.robo,
     h6.meka {
@@ -554,6 +563,9 @@ export const Subtitle = styled.div`
     max-width: 332px;
     h6 {
       font-size: 21px;
+    }
+    h6.meka {
+        margin-top: 0;
     }
   }
   @media only screen and (min-width: 1520px) {

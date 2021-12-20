@@ -178,6 +178,7 @@ const Header = ({ page }) => {
         page={page}
         reduceAddress={reduceAddress}
         address={wallet.account ? wallet.account : userMetaMaskToken}
+        handleOpenDisconnectModal={handleOpenDisconnectModal}
       />
     </>
   );
