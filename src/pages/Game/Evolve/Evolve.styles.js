@@ -2,7 +2,7 @@ import styled from "styled-components";
 // ******** Theme ********
 import * as theme from "../../../theme";
 // ******** Image ********
-import BackgroundImage from "../../../assets/background.jpg";
+import BackgroundImage from "../../../assets/background.png";
 // ******** Components ********
 import { Checkbox } from "antd";
 
