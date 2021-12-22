@@ -14,16 +14,23 @@ import Crafting from "./pages/Game/Crafting/Crafting";
 import Merging from "./pages/Game/Merging/Merging";
 import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
-// ******** Pages ********
+// ******** Stores ********
 import { UserContext } from "./store/user-context";
+import { BalanceContext } from "./store/balance-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
+// TODO
+// Get DMT and OOGEAR balance and set
+// use useeffect and check if the user is connected first
+
 const App = () => {
   const { saveUserMetaMaskToken } = useContext(UserContext);
+  const { getDmtBalance } = useContext(BalanceContext);
   const wallet = useWallet();
 
   useEffect(() => {
+    getDmtBalance();
     const checkOnLoadMetamaskConnection = async () => {
       await metamask.isMetaMaskConnected().then((connected) => {
         if (connected) {
