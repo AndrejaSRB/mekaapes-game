@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { useWallet } from "use-wallet";
 import PropTypes from "prop-types";
 // ******** Components ********
 import Disconnect from "../Modals/Disconnect/Disconnect";
@@ -25,10 +24,9 @@ const Header = ({ page }) => {
   const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { userMetaMaskToken } = useContext(UserContext);
-  const wallet = useWallet();
 
   const reduceAddress = (address) => {
-    if (address) {
+    if (address && typeof address === 'string') {
       let string = address;
       let userAddress = address;
       let firstSix = userAddress.slice(0, 6);
@@ -143,9 +141,7 @@ const Header = ({ page }) => {
         <Content>
           {page !== "landing" && (
             <AccountMobile>
-              {renderAccountData(
-                wallet.account ? wallet.account : userMetaMaskToken
-              )}
+              {renderAccountData(userMetaMaskToken)}
             </AccountMobile>
           )}
           <Logo>
@@ -157,11 +153,7 @@ const Header = ({ page }) => {
           </Menu>
         </Content>
         {page !== "landing" && (
-          <Account>
-            {renderAccountData(
-              wallet.account ? wallet.account : userMetaMaskToken
-            )}
-          </Account>
+          <Account>{renderAccountData(userMetaMaskToken)}</Account>
         )}
       </Wrapper>
       {userMetaMaskToken && isDisconnectModalOpen && (
@@ -177,7 +169,7 @@ const Header = ({ page }) => {
         connected={userMetaMaskToken}
         page={page}
         reduceAddress={reduceAddress}
-        address={wallet.account ? wallet.account : userMetaMaskToken}
+        address={userMetaMaskToken}
         handleOpenDisconnectModal={handleOpenDisconnectModal}
       />
     </>

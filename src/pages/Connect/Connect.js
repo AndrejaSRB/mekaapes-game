@@ -1,5 +1,4 @@
-import { useEffect, useContext } from "react";
-import { useWallet } from "use-wallet";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 // ******** Components ********
@@ -10,22 +9,20 @@ import Footer from "../../components/Footer/Footer";
 import { UserContext } from "../../store/user-context";
 // ******** Styled ********
 import { Title, Subtitle, Wrapper, Button, Content } from "./Connect.styles";
+import metamask from "../../services/metamask";
 
 const Connect = ({ page }) => {
-  const wallet = useWallet();
   const navigate = useNavigate();
-  const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
-
-  useEffect(() => {
-    if (wallet && wallet.account) {
-      saveUserMetaMaskToken(wallet.account);
-      localStorage.setItem("mekaape_useraddress", wallet.account);
-    }
-  }, [wallet, saveUserMetaMaskToken]);
+  const { saveUserMetaMaskToken } = useContext(UserContext);
+  const token = localStorage.getItem("mekaape_useraddress");
 
   const handleClickMetamask = async () => {
     if (window?.ethereum) {
-      wallet.connect();
+      let address = await metamask.getUserAddress();
+      if (address) {
+        localStorage.setItem("mekaape_useraddress", address);
+        saveUserMetaMaskToken(address);
+      }
       if (page) {
         navigate(page);
       }
@@ -37,7 +34,7 @@ const Connect = ({ page }) => {
   return (
     <Wrapper>
       <Header page="landing" />
-      {!userMetaMaskToken ? (
+      {!token ? (
         <Content>
           <Title>
             Let's <span>Connect</span>
@@ -46,7 +43,12 @@ const Connect = ({ page }) => {
           <Button onClick={handleClickMetamask}>Connect Wallet</Button>
         </Content>
       ) : (
-        <Title>You are already conected!</Title>
+        <Content>
+          <Title>
+            Welcome, you are <span>conected!</span>
+          </Title>
+          <Subtitle>You can switch the page.</Subtitle>
+        </Content>
       )}
       <Footer page="connect" />
     </Wrapper>

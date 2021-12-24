@@ -19,6 +19,7 @@ const UserContextProvider = ({ children }) => {
     setUserMetaMaskToken(null);
     localStorage.removeItem("mekaape_useraddress");
   };
+
   const contextValue = {
     userMetaMaskToken: userMetaMaskToken,
     saveUserMetaMaskToken: saveUserMetaMaskToken,

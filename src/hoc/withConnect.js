@@ -7,9 +7,15 @@ import { UserContext } from "../store/user-context";
 
 const withConnect = (Component, page) => (props) => {
   const { userMetaMaskToken } = useContext(UserContext);
+  const token = localStorage.getItem("mekaape_useraddress");
+
   return (
     <>
-      {userMetaMaskToken ? <Component {...props} /> : <Connect page={page} />}
+      {userMetaMaskToken && token ? (
+        <Component {...props} />
+      ) : (
+        <Connect page={page} />
+      )}
     </>
   );
 };

@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { useWallet } from "use-wallet";
+import { useEffect, useState, useContext } from "react";
 // ******** Components ********
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 // ******** HOC ********
 import withConnect from "../../hoc/withConnect";
+// ******** stores ********
+import { UserContext } from "../../store/user-context";
 // ******** Icons ********
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+// ******** Services ********
+import metamask from "../../services/metamask";
 // ******** Styles ********
 import {
   Wrapper,
@@ -19,27 +22,29 @@ import {
   Price,
 } from "./Minting.styles";
 
-  // set allowed to true if its whitelisted or false if the user is not
-  // TODO some users can mint maximum 2 and some 4, other which are not listed only 2.
+// set allowed to true if its whitelisted or false if the user is not
+// TODO some users can mint maximum 2 and some 4, other which are not listed only 2.
+// Check the ETH balance, and update on every minting transaction
 
 const Minting = () => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [price] = useState(0.0088);
   const [allowed] = useState(true);
-  const wallet = useWallet();
 
   useEffect(() => {
-    if (wallet) {
-      const balance = wallet.balance;
-      if (+balance > 0) {
-        setCurrentETHBalance(
-          Number((Number(-1) / 1000000000000000000).toFixed(5))
-        );
-      }
+    if (userMetaMaskToken) {
+      const getETHBalance = async () => {
+        let balance = await metamask.getBalance(userMetaMaskToken);
+        setCurrentETHBalance(+balance);
+      };
+      getETHBalance();
+    }else {
+        setCurrentETHBalance(0);
     }
-  }, [wallet]);
+  }, [userMetaMaskToken]);
 
   useEffect(() => {
     if (counter) {

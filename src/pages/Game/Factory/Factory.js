@@ -45,7 +45,8 @@ const NoItemFound = () => (
 
 // TODO
 // Add placeholders if the STAKED box is not full
-// Add select all for Robo and Meka APe
+// Create functionality to select oogas
+// Disable buttons if the amount is bigger than the balance in that coin
 
 const Factory = () => {
   const [checkedStaked, setCheckedStaked] = useState(false);

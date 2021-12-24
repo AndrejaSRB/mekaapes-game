@@ -161,7 +161,7 @@ export const Ape = styled.div`
   margin: 8px;
   width: 80px;
   height: 80px;
-  cursor: pointer;
+  cursor: ${({placeholder}) => placeholder ? "default" : "pointer"};
   @media only screen and (min-width: 900px) {
     width: 110px;
     height: 110px;

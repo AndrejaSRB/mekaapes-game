@@ -28,6 +28,7 @@ const EXAMPLE_CURRENT_VALUE = 18323;
 
 // TODO
 // Disable buttons if the total value is 50k
+// Disable buttons if the amount is bigger than the balance in that coin
 
 const Crafting = () => {
   const [oogearCounter, setOogeaerCounter] = useState(0);

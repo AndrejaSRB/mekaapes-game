@@ -63,6 +63,9 @@ const tooltipText = (
   </TooltipList>
 );
 
+// TODO
+// Disable buttons if the user has less than 100 $DMT
+
 const Upgrade = () => {
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
 

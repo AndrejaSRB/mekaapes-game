@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 export class Metamask {
   provider = null;
@@ -13,26 +13,49 @@ export class Metamask {
   }
 
   async getUserAddress() {
-    await this.provider.send('eth_requestAccounts', []);
-    const address = await this.signer.getAddress();
+    const accounts = await this.ethereum
+      .request({
+        method: "wallet_requestPermissions",
+        params: [
+          {
+            eth_accounts: {},
+          },
+        ],
+      })
+      .then(() =>
+        this.ethereum.request({
+          method: "eth_requestAccounts",
+          params: [
+            {
+              eth_accounts: {},
+            },
+          ],
+        })
+      );
+    const address = accounts[0];
 
-    localStorage.setItem('mekaape_useraddress', address);
+    localStorage.setItem("mekaape_useraddress", address);
 
     return address;
   }
 
+  async getBalance(address) {
+    const balance = await this.provider.getBalance(address);
+    return ethers.utils.formatEther(balance);
+  }
+
   checkMetamaskConnection() {
     if (this.ethereum) {
-      this.ethereum.on('chainChanged', (res) => {
-        localStorage.removeItem('mekaape_useraddress');
+      this.ethereum.on("chainChanged", (res) => {
+        localStorage.removeItem("mekaape_useraddress");
         window.location.reload();
       });
-      this.ethereum.on('accountsChanged', accounts => {
+      this.ethereum.on("accountsChanged", (accounts) => {
         if (accounts && accounts.length === 0) {
-          localStorage.removeItem('mekaape_useraddress');
+          localStorage.removeItem("mekaape_useraddress");
           window.location.reload();
         } else if (accounts && accounts.length > 0) {
-          localStorage.setItem('mekaape_useraddress', accounts[0]);
+          localStorage.setItem("mekaape_useraddress", accounts[0]);
           window.location.reload();
         }
       });

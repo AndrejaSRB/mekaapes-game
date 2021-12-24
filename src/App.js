@@ -1,5 +1,4 @@
 import { useEffect, useContext } from "react";
-import { useWallet } from "use-wallet";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 // ******** Components ********
 import ScrollToTop from "./components/ScrollToTop";
@@ -16,7 +15,6 @@ import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
-import { BalanceContext } from "./store/balance-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
@@ -25,28 +23,17 @@ import metamask from "./services/metamask";
 // use useeffect and check if the user is connected first
 
 const App = () => {
-  const { saveUserMetaMaskToken } = useContext(UserContext);
-  const { getDmtBalance } = useContext(BalanceContext);
-  const wallet = useWallet();
+  const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
 
   useEffect(() => {
-    getDmtBalance();
-    const checkOnLoadMetamaskConnection = async () => {
-      await metamask.isMetaMaskConnected().then((connected) => {
-        if (connected) {
-          const address = localStorage.getItem("mekaape_useraddress");
-          if (address) {
-            wallet.connect();
-            saveUserMetaMaskToken(address);
-          }
-        } else {
-          localStorage.removeItem("mekaape_useraddress");
-        }
-      });
-    };
-    checkOnLoadMetamaskConnection();
     metamask.checkMetamaskConnection();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userMetaMaskToken]);
+
+  useEffect(() => {
+    let userAddress = localStorage.getItem("mekaape_useraddress");
+    if (userAddress) {
+      saveUserMetaMaskToken(userAddress);
+    }
   }, [saveUserMetaMaskToken]);
 
   return (
