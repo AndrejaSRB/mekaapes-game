@@ -167,6 +167,9 @@ export const ButtonWrapper = styled.div`
     margin: 0 auto 32px auto;
     font-size: 21px;
     display: flex;
+    flex: 1;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
     justify-content: center;
     align-items: center;
     border-radius: 400px;

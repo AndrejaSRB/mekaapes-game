@@ -70,7 +70,9 @@ export const Button = styled.a`
   font-size: 21px;
   width: 174px;
   height: 60px;
+  min-height: 60px;
   display: flex;
+  flex: 1;
   justify-content: center;
   align-items: center;
   border-radius: 400px;
@@ -115,6 +117,7 @@ export const SocialWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
   @media only screen and (min-width: 1024px) {
     flex-direction: row;
     justify-content: space-between;
