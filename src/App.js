@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react";
+import { useWallet } from "use-wallet";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 // ******** Components ********
 import ScrollToTop from "./components/ScrollToTop";
@@ -23,6 +24,7 @@ import metamask from "./services/metamask";
 // use useeffect and check if the user is connected first
 
 const App = () => {
+  const wallet = useWallet();
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
 
   useEffect(() => {
@@ -30,10 +32,26 @@ const App = () => {
   }, [userMetaMaskToken]);
 
   useEffect(() => {
-    let userAddress = localStorage.getItem("mekaape_useraddress");
-    if (userAddress) {
-      saveUserMetaMaskToken(userAddress);
-    }
+    // let userAddress = localStorage.getItem("mekaape_useraddress");
+    // if (userAddress) {
+    //   wallet.connect();
+    //   saveUserMetaMaskToken(userAddress);
+    // }
+    const checkOnLoadMetamaskConnection = async () => {
+      await metamask.isMetaMaskConnected().then((connected) => {
+        if (connected) {
+          let userAddress = localStorage.getItem("mekaape_useraddress");
+          if (userAddress) {
+            wallet.connect();
+            saveUserMetaMaskToken(userAddress);
+          }
+        } else {
+          localStorage.removeItem("mekaape_useraddress");
+        }
+      });
+    };
+    checkOnLoadMetamaskConnection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveUserMetaMaskToken]);
 
   return (

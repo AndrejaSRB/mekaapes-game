@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useWallet } from "use-wallet";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 // ******** Stores ********
@@ -13,11 +14,13 @@ import {
 } from "./Disconnect.styles";
 
 const Disconnect = ({ open, handleCloseModal, reduceAddress }) => {
+  const wallet = useWallet();
   const { userMetaMaskToken, deleteUserMetaMaskToken } =
     useContext(UserContext);
   const navigate = useNavigate();
 
   const handleClick = () => {
+    wallet.reset();
     deleteUserMetaMaskToken();
     navigate("/");
     handleCloseModal();

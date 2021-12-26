@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useWallet } from "use-wallet";
 import PropTypes from "prop-types";
 // ******** Components ********
 import { message } from "antd";
@@ -9,20 +10,23 @@ import Footer from "../../components/Footer/Footer";
 import { UserContext } from "../../store/user-context";
 // ******** Styled ********
 import { Title, Subtitle, Wrapper, Button, Content } from "./Connect.styles";
-import metamask from "../../services/metamask";
 
 const Connect = ({ page }) => {
+  const wallet = useWallet();
   const navigate = useNavigate();
   const { saveUserMetaMaskToken } = useContext(UserContext);
   const token = localStorage.getItem("mekaape_useraddress");
 
+  useEffect(() => {
+    if (wallet && wallet.account) {
+      localStorage.setItem("mekaape_useraddress", wallet.account);
+      saveUserMetaMaskToken(wallet.account);
+    }
+  }, [wallet, saveUserMetaMaskToken]);
+
   const handleClickMetamask = async () => {
     if (window?.ethereum) {
-      let address = await metamask.getUserAddress();
-      if (address) {
-        localStorage.setItem("mekaape_useraddress", address);
-        saveUserMetaMaskToken(address);
-      }
+        wallet.connect();
       if (page) {
         navigate(page);
       }

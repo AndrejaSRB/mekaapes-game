@@ -19,6 +19,9 @@ ReactDOM.render(
     <UseWalletProvider
       chainId={CHAIN_ID}
       connectors={{
+        metamask: {
+          chainId: [CHAIN_ID],
+        },
         portis: { dAppId: "mekaape-game" },
       }}>
       <AppContextProvider>
