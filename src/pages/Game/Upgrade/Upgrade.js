@@ -10,6 +10,10 @@ import withConnect from "../../../hoc/withConnect";
 import { InfoOutlined } from "@ant-design/icons";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
+import MekaApeExample from "../../../assets/meka-ape-landing.png";
+import RoboOogaExample from "../../../assets/landing-image.png";
+// ******** Functions ********
+import { getLevelText } from "./helpers";
 // ******** Styles ********
 import {
   Wrapper,
@@ -29,17 +33,97 @@ import {
   Name,
   InfoIcon,
   TooltipList,
+  LevelBoxContainer,
 } from "./Upgrade.styles";
 
+const EXAMPLE_DATA = [
+  {
+    img: RoboOogaExample,
+    name: "Ape #2323",
+    level: 0,
+    id: 1,
+  },
+  {
+    img: MekaApeExample,
+    name: "Ape #1121",
+    level: 1,
+    id: 2,
+  },
+  {
+    img: RoboOogaExample,
+    name: "Ape #12",
+    level: 1,
+    id: 3,
+  },
+  {
+    img: RoboOogaExample,
+    name: "Ape #31231",
+    level: 2,
+    id: 4,
+  },
+  {
+    img: MekaApeExample,
+    name: "Ape #9393",
+    level: 3,
+    id: 5,
+  },
+  {
+    img: RoboOogaExample,
+    name: "Ape #1123",
+    level: 0,
+    id: 6,
+  },
+  {
+    img: MekaApeExample,
+    name: "Ape #8828",
+    level: 0,
+    id: 7,
+  },
+  {
+    img: MekaApeExample,
+    name: "Ape #838",
+    level: 1,
+    id: 8,
+  },
+  {
+    img: RoboOogaExample,
+    name: "Ape #1231",
+    level: 2,
+    id: 9,
+  },
+  {
+    img: MekaApeExample,
+    name: "Ape #111",
+    level: 2,
+    id: 2,
+  },
+  {
+    img: RoboOogaExample,
+    name: "Ape #989",
+    level: 0,
+    id: 3,
+  },
+  {
+    img: MekaApeExample,
+    name: "Ape #642",
+    level: 3,
+    id: 1,
+  },
+  {
+    img: RoboOogaExample,
+    name: "Ape #100",
+    level: 1,
+    id: 0,
+  },
+];
+
 const LevelBox = ({ level }) => (
-  <>
-    {level > 0 && (
-      <LevelBoxWrapper currentLvl={level}>
-        <span>lvl</span>
-        <p>{level}</p>
-      </LevelBoxWrapper>
-    )}
-  </>
+  <LevelBoxContainer>
+    <LevelBoxWrapper currentLvl={`${level}`}>
+      <span>lvl</span>
+      <p>{level}</p>
+    </LevelBoxWrapper>
+  </LevelBoxContainer>
 );
 
 const tooltipText = (
@@ -65,9 +149,15 @@ const tooltipText = (
 
 // TODO
 // Disable buttons if the user has less than 100 $DMT
+// Connect with the contract
 
 const Upgrade = () => {
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
+  const [selectedApe, setSelectedApe] = useState(null);
+
+  const handleSaveApe = (ape) => {
+    setSelectedApe(ape);
+  };
 
   const handleOpenApeModal = () => {
     setIsApeModalOpen(true);
@@ -75,6 +165,47 @@ const Upgrade = () => {
 
   const handleCloseApeModal = () => {
     setIsApeModalOpen(false);
+  };
+
+  const getLevel = (type) => {
+    if (selectedApe) {
+      let lvl = 0;
+      if (type === "up") {
+        if (selectedApe && selectedApe.level !== undefined) {
+          lvl = +selectedApe.level + 1;
+        }
+      } else if (type === "down") {
+        if (selectedApe && selectedApe.level !== undefined) {
+          return +selectedApe.level;
+        }
+      }
+      return lvl;
+    }
+  };
+
+  const renderRoboOoga = () => {
+    if (selectedApe) {
+      return (
+        <ApeBox>
+          <Ape currentLvl={selectedApe.level} onClick={handleOpenApeModal}>
+            <img src={selectedApe.img} alt={selectedApe.name} />
+          </Ape>
+          <Name>{selectedApe.name}</Name>
+        </ApeBox>
+      );
+    } else {
+      return (
+        <ApeBox>
+          <Ape currentLvl={""} onClick={handleOpenApeModal}>
+            <img src={PlaceholderApe} alt="ape" />
+            <p>
+              Select <span>Robo Ooga</span>
+            </p>
+          </Ape>
+          <Name>Robo Ooga</Name>
+        </ApeBox>
+      );
+    }
   };
 
   return (
@@ -95,37 +226,31 @@ const Upgrade = () => {
             <h6>Levelin Up your Robo Oogas get stronger.</h6>
           </TitleBox>
           <LeftSide>
-            <LevelBox level="2" />
-            <h6>Current Level:</h6>
-            <LevelList>
-              <li>Earn 50% more $OOGEAR</li>
-              <li>Decrease the unstaking time by 25%</li>
-            </LevelList>
+            {selectedApe && (
+              <>
+                <LevelBox level={getLevel("down")} />
+                <h6>Current Level:</h6>
+                <LevelList>{getLevelText(getLevel("down"))}</LevelList>
+              </>
+            )}
           </LeftSide>
           <Middle>
-            <ApeBox>
-              <Ape currentLvl={""} onClick={handleOpenApeModal}>
-                <img src={PlaceholderApe} alt="ape" />
-                <p>
-                  Select <span>Robo Ooga</span>
-                </p>
-              </Ape>
-              <Name>Robo Ooga #3123</Name>
-            </ApeBox>
+            {renderRoboOoga()}
             <ButtonBox>
-              <button disabled>Level Up Robo Oogas</button>
+              <button disabled={!Boolean(selectedApe)}>
+                Level Up Robo Oogas
+              </button>
             </ButtonBox>
             <HelperText>Spend 100 $DMT to level up your Robo Oogas</HelperText>
           </Middle>
           <RightSide>
-            <LevelBox level="3" />
-            <h6>Next Level:</h6>
-            <LevelList>
-              <li>Earn 100% more $OOGEAR</li>
-              <li>Earn 100% more $OOGEAR</li>
-              <li>Earn 100% more $OOGEAR</li>
-              <li>Earn 100% more $OOGEAR</li>
-            </LevelList>
+            {selectedApe && (
+              <>
+                <LevelBox level={getLevel("up")} />
+                <h6>Next Level:</h6>
+                <LevelList>{getLevelText(getLevel("up"))}</LevelList>
+              </>
+            )}
           </RightSide>
         </MainBox>
       </Content>
@@ -134,6 +259,9 @@ const Upgrade = () => {
         <LevelRoboOogas
           open={isApeModalOpen}
           handleCloseModal={handleCloseApeModal}
+          list={EXAMPLE_DATA}
+          handleSaveApe={handleSaveApe}
+          selectedApe={selectedApe}
         />
       )}
     </Wrapper>

@@ -1,7 +1,5 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-// ******** Images ********
-import MekaApeExample from "../../../assets/meka-ape-landing.png";
-import RoboOogaExample from "../../../assets/landing-image.png";
 // ******** Styles ********
 import {
   ModalWrapper,
@@ -19,7 +17,71 @@ import {
 // TODO
 // Filter out all level 3 RoboOgas from the list and present other
 
-const LevelRoboOogas = ({ open, handleCloseModal }) => {
+const LevelRoboOogas = ({
+  open,
+  handleCloseModal,
+  list,
+  handleSaveApe,
+  selectedApe,
+}) => {
+  const [clickedApe, setClickedApe] = useState(null);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (selectedApe) {
+      setClickedApe(selectedApe);
+    }
+  }, [selectedApe]);
+
+  useEffect(() => {
+    if (list && list.length > 0) {
+      let apes = list.filter((ape) => ape.level < 3);
+      setData(apes);
+    }
+  }, [list]);
+
+  const handleClickButton = () => {
+    if (clickedApe) {
+      handleSaveApe(clickedApe);
+      handleCloseModal();
+      setClickedApe(null);
+      setData(null);
+    }
+  };
+
+  const handleClickApe = (ape) => () => {
+    setClickedApe(ape);
+  };
+
+  const getIfActive = (id) => {
+    if (clickedApe) {
+      if (clickedApe.id === id) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
+
+  const handleRenderElements = () => {
+    if (data && data.length > 0) {
+      return data.map((ape) => (
+        <Ape
+          key={ape.id}
+          onClick={handleClickApe(ape)}>
+          <ApeImage
+            active={getIfActive(ape.id)}
+            currentLvl={ape.level}
+            src={ape.img}
+            alt={ape.name}
+          />
+        </Ape>
+      ));
+    }
+  };
+
   return (
     <ModalWrapper
       visible={open}
@@ -32,52 +94,9 @@ const LevelRoboOogas = ({ open, handleCloseModal }) => {
         <Subtitle>
           Choose your Robo Ooga to upgrade it to another Level.
         </Subtitle>
-        <MekaApesBox>
-          <Ape>
-            <ApeImage active currentLvl="2" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="1" src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="1" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="0" src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="2" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="2" src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="1" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="2" src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="2" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="1" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="0" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="0" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="2" src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active currentLvl="2" src={MekaApeExample} alt="Ape" />
-          </Ape>
-        </MekaApesBox>
+        <MekaApesBox>{handleRenderElements()}</MekaApesBox>
         <ButtonWrapper>
-          <Button>Choose</Button>
+          <Button disabled={!Boolean(clickedApe)} onClick={handleClickButton}>Choose</Button>
           <CancelBtn onClick={handleCloseModal}>Cancel</CancelBtn>
         </ButtonWrapper>
         <Text>
@@ -93,5 +112,7 @@ export default LevelRoboOogas;
 LevelRoboOogas.propTypes = {
   open: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
-  clickedApe: PropTypes.object,
+  handleSaveApe: PropTypes.func.isRequired,
+  selectedApe: PropTypes.object,
+  list: PropTypes.array,
 };

@@ -66,6 +66,12 @@ export const Button = styled.button`
   &:hover {
     background: ${theme.color.redHover};
   }
+  &:disabled {
+    color: ${theme.color.white};
+    border: 1px solid #ffffff;
+    background: ${theme.color.secondButton};
+    cursor: not-allowed;
+  }
   @media only screen and (min-width: 450px) {
     width: 388px;
   }

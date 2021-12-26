@@ -1,7 +1,5 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-// ******** Images ********
-import MekaApeExample from "../../../assets/meka-ape-landing.png";
-import RoboOogaExample from "../../../assets/landing-image.png";
 // ******** Styles ********
 import {
   ModalWrapper,
@@ -16,7 +14,71 @@ import {
   ApeImage,
 } from "./MergeMekaApes.styles";
 
-const MergeMekaApes = ({ open, handleCloseModal }) => {
+const MergeMekaApes = ({
+  open,
+  handleCloseModal,
+  handleSavePickedApe,
+  selectedApe,
+  list,
+}) => {
+  const [clickedApe, setClickedApe] = useState(null);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (selectedApe) {
+      setClickedApe(selectedApe);
+    }
+  }, [selectedApe]);
+
+  useEffect(() => {
+    if (list && list.length > 0) {
+      let apes = list.filter(
+        (ape) => ape.level === 0 && ape.status === "staked"
+      );
+      setData(apes);
+    }
+  }, [list]);
+
+  const handleClickButton = () => {
+    if (clickedApe) {
+      handleSavePickedApe(clickedApe);
+      handleCloseModal();
+      setClickedApe(null);
+      setData(null);
+    }
+  };
+
+  const handleClickApe = (ape) => () => {
+    setClickedApe(ape);
+  };
+
+  const getIfActive = (id) => {
+    if (clickedApe) {
+      if (clickedApe.id === id) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
+
+  const handleRenderElements = () => {
+    if (data && data.length > 0) {
+      return data.map((ape) => (
+        <Ape key={ape.id} onClick={handleClickApe(ape)}>
+          <ApeImage
+            active={getIfActive(ape.id)}
+            currentLvl={ape.level}
+            src={ape.img}
+            alt={ape.name}
+          />
+        </Ape>
+      ));
+    }
+  };
+
   return (
     <ModalWrapper
       visible={open}
@@ -27,52 +89,11 @@ const MergeMekaApes = ({ open, handleCloseModal }) => {
       <div className="content">
         <Title>MekaApes</Title>
         <Subtitle>Choose your MekaApes to merge it with another one.</Subtitle>
-        <MekaApesBox>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active selected src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={RoboOogaExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-          <Ape>
-            <ApeImage active src={MekaApeExample} alt="Ape" />
-          </Ape>
-        </MekaApesBox>
+        <MekaApesBox>{handleRenderElements()}</MekaApesBox>
         <ButtonWrapper>
-          <Button>Choose</Button>
+          <Button disabled={!Boolean(clickedApe)} onClick={handleClickButton}>
+            Choose
+          </Button>
           <CancelBtn onClick={handleCloseModal}>Cancel</CancelBtn>
         </ButtonWrapper>
         <Text>

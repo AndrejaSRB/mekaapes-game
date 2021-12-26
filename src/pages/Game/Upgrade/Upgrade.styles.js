@@ -152,6 +152,10 @@ export const HelperText = styled.p`
   }
 `;
 
+export const LevelBoxContainer = styled.div`
+    min-height: 80px;
+`;
+
 export const LevelBoxWrapper = styled.div`
   width: 80px;
   height: 80px;

@@ -24,7 +24,7 @@ import {
   CounterBox,
 } from "./Crafting.styles";
 
-const EXAMPLE_CURRENT_VALUE = 18323;
+const EXAMPLE_CURRENT_VALUE = 22323;
 
 // TODO
 // Disable buttons if the total value is 50k

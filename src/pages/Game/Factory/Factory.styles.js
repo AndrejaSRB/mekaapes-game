@@ -159,7 +159,7 @@ export const NftList = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     max-width: 332px;
-    margin-bottom: ${({meka}) => meka ? "0px" : "35px"};
+    margin-bottom: ${({ meka }) => (meka ? "0px" : "35px")};
   }
 `;
 
@@ -214,7 +214,7 @@ export const Button = styled.button`
   @media only screen and (min-width: 1200px) {
     margin-top: ${({ type }) => {
       if (type === "claim") {
-        return "41px";
+        return "26px";
       } else if (type === "stake") {
         return "18px";
       } else {
@@ -349,14 +349,14 @@ export const ApeListDesktop = styled.div`
     display: flex;
     flex-wrap: wrap;
     max-width: 564px;
-    height: 220px;
+    height: 228px;
     overflow-y: scroll;
     overflow-x: hidden;
-    justify-content: center;
+    justify-content: flex-start;
   }
   @media only screen and (min-width: 1200px) {
     max-width: 388px;
-    height: 230px;
+    height: 238px;
   }
 `;
 
@@ -382,18 +382,20 @@ export const ApeNft = styled.div`
   cursor: pointer;
   position: relative;
   height: 70px;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 3px solid
+      ${({ selected }) => (selected ? theme.color.green : "transparent")};
   img {
     width: 70px;
     border-radius: 15px;
-    border: 3px solid
-      ${({ selected }) => (selected ? theme.color.green : "transparent")};
   }
   div {
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
+    left:0;
     width: 100%;
     background: rgba(41, 44, 69, 0.8);
-    border-radius: 0px 0px 15px 15px;
     color: ${theme.color.white};
     text-align: center;
     font-size: 14px;
@@ -402,10 +404,10 @@ export const ApeNft = styled.div`
   @media only screen and (min-width: 900px) {
     margin: 8px 6px;
     height: 98px;
+    border: 5px solid
+      ${({ selected }) => (selected ? theme.color.green : "transparent")};
     img {
       width: 98px;
-      border: 5px solid
-        ${({ selected }) => (selected ? theme.color.green : "transparent")};
     }
     div {
       font-size: 15px;
@@ -416,8 +418,6 @@ export const ApeNft = styled.div`
     height: 103px;
     img {
       width: 103px;
-      border: 5px solid
-        ${({ selected }) => (selected ? theme.color.green : "transparent")};
     }
     div {
       font-size: 16px;
@@ -565,7 +565,7 @@ export const Subtitle = styled.div`
       font-size: 21px;
     }
     h6.meka {
-        margin-top: 0;
+      margin-top: 0;
     }
   }
   @media only screen and (min-width: 1520px) {
@@ -600,5 +600,43 @@ export const CustomUnstakeCheckbox = styled(Checkbox)`
     width: 50%;
   }
   @media only screen and (min-width: 1200px) {
+  }
+`;
+
+export const ApeInProgress = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 2px;
+  cursor: not-allowed;
+  position: relative;
+  img {
+    width: 80px;
+    border-radius: 15px;
+    border: 3px solid transparent;
+  }
+  .icon-one {
+    position: absolute;
+    color: ${theme.color.green};
+    bottom: 25px;
+    left: 20px;
+    span > svg {
+      font-size: 32px;
+    }
+  }
+  .icon-two {
+    position: absolute;
+    color: ${theme.color.green};
+    top: 30px;
+    right: 20px;
+    span > svg {
+      font-size: 26px;
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    margin: 0 5px;
+    img {
+      width: 103px;
+    }
   }
 `;
