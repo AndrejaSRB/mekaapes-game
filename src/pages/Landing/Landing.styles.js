@@ -157,6 +157,8 @@ export const Text = styled.p`
 
 export const ButtonWrapper = styled.div`
   text-align: center;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
   & > a {
     background-color: ${theme.color.red};
     color: ${theme.color.white};

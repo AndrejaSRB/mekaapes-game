@@ -66,6 +66,8 @@ export const Logo = styled.div`
 `;
 
 export const Button = styled.a`
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
   color: ${theme.color.white};
   font-size: 21px;
   width: 174px;
@@ -78,7 +80,6 @@ export const Button = styled.a`
   margin-top: 12px;
   margin-bottom: 12px;
   cursor: pointer;
-  transition: ${theme.transition};
   background-color: ${theme.color.secondButton};
   font-weight: 600;
   & > svg {
@@ -92,22 +93,30 @@ export const Button = styled.a`
     width: 24px;
     height: 24px;
   }
-  &:hover {
-    background-color: ${theme.color.white};
-    color: ${theme.color.secondButton};
-    & > svg {
-      color: ${theme.color.secondButton};
-    }
-    & > span {
-      background-image: url(${OpenSeaImageBlack});
-    }
+  &:active {
+    color: ${theme.color.white};
   }
+  &:hover {
+    color: ${theme.color.white};
+  }
+
   @media only screen and (min-width: 1024px) {
+    transition: ${theme.transition};
     margin-right: 16px;
     margin-top: 0;
     margin-bottom: 0;
     &:last-child {
       margin-right: 0;
+    }
+    &:hover {
+      background-color: ${theme.color.white};
+      color: ${theme.color.secondButton};
+      & > svg {
+        color: ${theme.color.secondButton};
+      }
+      & > span {
+        background-image: url(${OpenSeaImageBlack});
+      }
     }
   }
 `;

@@ -26,6 +26,13 @@ const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
 
   useEffect(() => {
+    document.addEventListener("touchstart", function () {}, false);
+    return () => {
+      document.removeEventListener("touchstart", function () {}, false);
+    };
+  }, []);
+
+  useEffect(() => {
     metamask.checkMetamaskConnection();
   }, [userMetaMaskToken]);
 
