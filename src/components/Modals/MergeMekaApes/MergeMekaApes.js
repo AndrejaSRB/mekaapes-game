@@ -20,6 +20,7 @@ const MergeMekaApes = ({
   handleSavePickedApe,
   selectedApe,
   list,
+  oppositeApe,
 }) => {
   const [clickedApe, setClickedApe] = useState(null);
   const [data, setData] = useState(null);
@@ -32,12 +33,22 @@ const MergeMekaApes = ({
 
   useEffect(() => {
     if (list && list.length > 0) {
-      let apes = list.filter(
-        (ape) => ape.level === 0 && ape.status === "staked"
-      );
-      setData(apes);
+      if (oppositeApe) {
+        let apes = list.filter(
+          (ape) =>
+            ape.level === 0 &&
+            ape.status === "staked" &&
+            ape.id !== oppositeApe.id
+        );
+        setData(apes);
+      } else {
+        let apes = list.filter(
+          (ape) => ape.level === 0 && ape.status === "staked"
+        );
+        setData(apes);
+      }
     }
-  }, [list]);
+  }, [list, oppositeApe]);
 
   const handleClickButton = () => {
     if (clickedApe) {
@@ -110,4 +121,5 @@ MergeMekaApes.propTypes = {
   open: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
   clickedApe: PropTypes.object,
+  oppositeApe: PropTypes.object,
 };

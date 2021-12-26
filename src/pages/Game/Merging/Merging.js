@@ -123,14 +123,17 @@ const Merging = () => {
   const [burnMeka, setBurnMeka] = useState(null);
   const [selectedApe, setSelectedApe] = useState(null);
   const [type, setType] = useState(null);
+  const [oppositeApe, setOppositeApe] = useState(null);
 
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
       setType("keep");
       setSelectedApe(keepMeka);
+      setOppositeApe(burnMeka);
     } else {
       setType("burn");
       setSelectedApe(burnMeka);
+      setOppositeApe(keepMeka);
     }
     setIsApeModalOpen(true);
   };
@@ -138,6 +141,7 @@ const Merging = () => {
   const handleCloseApeModal = () => {
     setIsApeModalOpen(false);
     setSelectedApe(null);
+    setOppositeApe(null);
   };
 
   const handleSavePickedApe = (ape) => {
@@ -222,6 +226,7 @@ const Merging = () => {
           selectedApe={selectedApe}
           handleSavePickedApe={handleSavePickedApe}
           list={EXAMPLE_DATA}
+          oppositeApe={oppositeApe}
         />
       )}
     </Wrapper>
