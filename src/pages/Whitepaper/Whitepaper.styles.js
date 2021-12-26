@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
   background-image: url(${BackgroundImage});
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: top;
+  background-position: right;
 `;
 
 export const Title = styled.h1`
