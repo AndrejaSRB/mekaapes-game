@@ -161,15 +161,14 @@ export const ButtonWrapper = styled.div`
     background-color: ${theme.color.red};
     color: ${theme.color.white};
     border: none;
+    position: relative;
+    z-index: 1;
     cursor: pointer;
     width: 240px;
     height: 80px;
     margin: 0 auto 32px auto;
     font-size: 21px;
     display: flex;
-    flex: 1;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
     justify-content: center;
     align-items: center;
     border-radius: 400px;

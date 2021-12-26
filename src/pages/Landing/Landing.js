@@ -22,6 +22,7 @@ import {
 } from "./Landing.styles";
 
 const Landing = () => {
+
   return (
     <Wrapper>
       <Header page="landing" />

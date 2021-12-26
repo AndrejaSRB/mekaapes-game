@@ -13,26 +13,8 @@ export class Metamask {
   }
 
   async getUserAddress() {
-    const accounts = await this.ethereum
-      .request({
-        method: "wallet_requestPermissions",
-        params: [
-          {
-            eth_accounts: {},
-          },
-        ],
-      })
-      .then(() =>
-        this.ethereum.request({
-          method: "eth_requestAccounts",
-          params: [
-            {
-              eth_accounts: {},
-            },
-          ],
-        })
-      );
-    const address = accounts[0];
+    await this.provider.send('eth_requestAccounts', []);
+    const address = await this.signer.getAddress();
 
     localStorage.setItem("mekaape_useraddress", address);
 
