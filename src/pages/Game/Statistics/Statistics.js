@@ -46,7 +46,7 @@ const Statistics = () => {
                 <span className="number">3.212</span>
               </Stats>
               <Stats>
-                <span>MekaApes Staked:</span>
+                <span>MekaApes Stolen:</span>
                 <span className="number">3.212</span>
               </Stats>
               <Stats position="last">

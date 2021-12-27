@@ -39,7 +39,7 @@ export const ModalWrapper = styled(Modal)`
       display: none;
     }
     @media only screen and (min-width: 789px) {
-        padding-bottom: 15px;
+      padding-bottom: 15px;
     }
   }
 `;
@@ -112,20 +112,20 @@ export const Subtitle = styled.h3`
   }
 `;
 
-export const MekaApesBox = styled.div`
+export const RoboApesBox = styled.div`
   margin-top: 24px;
   margin-bottom: 32px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  height: 348px;
+  height: ${({ length }) => (length < 1 ? "135px" : "348px")};
   max-width: 414px;
   overflow-y: scroll;
   @media only screen and (min-width: 789px) {
     margin-top: 32px;
     max-width: 616px;
-    height: 235px;
-  justify-content: flex-start;
+    height: ${({ length }) => (length < 1 ? "160px" : "235px")};
+    justify-content: flex-start;
   }
 `;
 
@@ -158,5 +158,28 @@ export const Text = styled.span`
   text-align: center;
   @media only screen and (min-width: 789px) {
     font-size: 18px;
+  }
+`;
+
+export const NotFoundItem = styled.div`
+  text-align: center;
+  img {
+    width: 80px;
+    border-radius: 15px;
+  }
+  p {
+    font-size: 16px;
+    color: ${theme.color.white};
+    margin-top: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+  }
+  @media only screen and (min-width: 900px) {
+    img {
+      width: 103px;
+    }
+    p {
+      font-size: 18px;
+    }
   }
 `;

@@ -1,21 +1,31 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+// ******** Images ********
+import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Styles ********
 import {
   ModalWrapper,
   Title,
   Subtitle,
-  MekaApesBox,
+  RoboApesBox,
   Text,
   Button,
   CancelBtn,
   ButtonWrapper,
   Ape,
   ApeImage,
+  NotFoundItem,
 } from "./LevelRoboOogas.styles";
 
 // TODO
 // Filter out all level 3 RoboOgas from the list and present other
+
+const NoItemFound = () => (
+  <NotFoundItem>
+    <img src={PlaceholderApe} alt="placeholder" />
+    <p>No items found!</p>
+  </NotFoundItem>
+);
 
 const LevelRoboOogas = ({
   open,
@@ -26,6 +36,7 @@ const LevelRoboOogas = ({
 }) => {
   const [clickedApe, setClickedApe] = useState(null);
   const [data, setData] = useState(null);
+  const [listLength, setListLength] = useState(0);
 
   useEffect(() => {
     if (selectedApe) {
@@ -37,6 +48,7 @@ const LevelRoboOogas = ({
     if (list && list.length > 0) {
       let apes = list.filter((ape) => ape.level < 3);
       setData(apes);
+      setListLength(apes.length);
     }
   }, [list]);
 
@@ -68,9 +80,7 @@ const LevelRoboOogas = ({
   const handleRenderElements = () => {
     if (data && data.length > 0) {
       return data.map((ape) => (
-        <Ape
-          key={ape.id}
-          onClick={handleClickApe(ape)}>
+        <Ape key={ape.id} onClick={handleClickApe(ape)}>
           <ApeImage
             active={getIfActive(ape.id)}
             currentLvl={ape.level}
@@ -79,6 +89,18 @@ const LevelRoboOogas = ({
           />
         </Ape>
       ));
+    } else {
+      return <NoItemFound />;
+    }
+  };
+
+  const getIfBtnIsDisabled = () => {
+    if (listLength < 1) {
+      return true;
+    } else if (!Boolean(clickedApe)) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -94,9 +116,11 @@ const LevelRoboOogas = ({
         <Subtitle>
           Choose your Robo Ooga to upgrade it to another Level.
         </Subtitle>
-        <MekaApesBox>{handleRenderElements()}</MekaApesBox>
+        <RoboApesBox length={listLength}>{handleRenderElements()}</RoboApesBox>
         <ButtonWrapper>
-          <Button disabled={!Boolean(clickedApe)} onClick={handleClickButton}>Choose</Button>
+          <Button disabled={getIfBtnIsDisabled()} onClick={handleClickButton}>
+            Choose
+          </Button>
           <CancelBtn onClick={handleCloseModal}>Cancel</CancelBtn>
         </ButtonWrapper>
         <Text>
