@@ -9,6 +9,12 @@ export const Wrapper = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
+  @media only screen and (min-width: 1300px) {
+    padding: 0 16px;
+  }
+  @media only screen and (min-width: 1320px) {
+    padding: 0;
+  }
 `;
 
 export const Title = styled.h1`
@@ -21,6 +27,7 @@ export const Title = styled.h1`
   & > span {
     display: block;
     width: 100%;
+    color: ${theme.color.red}
   }
   @media only screen and (min-width: 650px) {
     & > span {
@@ -84,6 +91,9 @@ export const MainBox = styled.div`
     }
   }
   @media only screen and (min-width: 1300px) {
+    padding: 54px 54px 0 54px;
+  }
+  @media only screen and (min-width: 1350px) {
     width: 1300px;
     margin: 0 auto;
     padding: 54px 54px 0 54px;
@@ -193,7 +203,7 @@ export const BoxesWrapper = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  @media only screen and (min-width: 1300px) {
+  @media only screen and (min-width: 1320px) {
     width: 1300px;
     margin: 32px auto 0 auto;
   }

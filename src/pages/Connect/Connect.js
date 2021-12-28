@@ -37,7 +37,7 @@ const Connect = ({ page }) => {
       {!token ? (
         <Content>
           <Title>
-            Let's <span>Connect</span>
+            {/* Let's <span>Connect</span> */}
           </Title>
           <Subtitle>You need to connect your wallet.</Subtitle>
           <Button onClick={handleClickMetamask}>Connect Wallet</Button>

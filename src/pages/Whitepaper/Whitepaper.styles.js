@@ -62,6 +62,10 @@ export const MainBox = styled.div`
     padding: 64px 20px;
   }
   @media only screen and (min-width: 1300px) {
+    padding: 54px;
+    margin: 0 16px;
+  }
+  @media only screen and (min-width: 1320px) {
     width: 1300px;
     margin: 0 auto;
     padding: 54px;
@@ -203,12 +207,12 @@ export const BoxRight = styled.div`
     flex-direction: row;
     justify-content: space-between;
     .text {
-        width: 75%;
+      width: 75%;
     }
     .image {
-        text-align: right;
-        width: 25%;
-        padding-left: 10px;
+      text-align: right;
+      width: 25%;
+      padding-left: 10px;
     }
   }
   @media only screen and (min-width: 1024px) {

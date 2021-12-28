@@ -62,6 +62,10 @@ export const MainBox = styled.div`
     padding: 64px 20px;
   }
   @media only screen and (min-width: 1300px) {
+    padding: 54px;
+    margin: 0 16px;
+  }
+  @media only screen and (min-width: 1320px) {
     width: 1300px;
     margin: 0 auto;
     padding: 54px;
@@ -79,7 +83,7 @@ export const TitleBox = styled.div`
   }
   @media only screen and (min-width: 1024px) {
     h4 {
-    text-align: left;
+      text-align: left;
       font-size: 38px;
       line-height: 49px;
       margin-bottom: 24px;
@@ -88,20 +92,20 @@ export const TitleBox = styled.div`
 `;
 
 export const TermsContent = styled.div`
+  h3 {
+    color: ${theme.color.whiteGrey};
+    font-size: 20px;
+  }
+  p {
+    color: ${theme.color.whiteGrey};
+    font-size: 14px;
+  }
+  @media only screen and (min-width: 1024px) {
     h3 {
-        color: ${theme.color.whiteGrey};
-        font-size: 20px;
+      font-size: 24px;
     }
     p {
-        color: ${theme.color.whiteGrey};
-        font-size: 14px;
+      font-size: 16px;
     }
-    @media only screen and (min-width: 1024px) {
-        h3 {
-            font-size: 24px;
-        }
-        p {
-            font-size: 16px;
-        }
-    }
+  }
 `;

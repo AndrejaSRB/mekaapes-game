@@ -62,6 +62,9 @@ export const Holder = styled.div`
     margin-top: 0px;
   }
   @media only screen and (min-width: 1300px) {
+    margin: 0 16px;
+  }
+  @media only screen and (min-width: 1320px) {
     width: 1300px;
     margin: 0 auto;
   }

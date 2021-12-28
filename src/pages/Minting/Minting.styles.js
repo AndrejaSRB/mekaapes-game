@@ -58,6 +58,11 @@ export const MainBox = styled.div`
     font-size: 24px;
     text-align: center;
     line-height: 1;
+    span {
+        display: block;
+        margin-top: 16px;
+        line-height: 28px;
+    }
   }
   @media only screen and (min-width: 1024px) {
     padding: 64px 20px;
@@ -68,9 +73,12 @@ export const MainBox = styled.div`
     }
   }
   @media only screen and (min-width: 1300px) {
+    padding: 54px 54px 0 54px;
+    margin: 0 16px;
+  }
+  @media only screen and (min-width: 1320px) {
     width: 1300px;
     margin: 0 auto;
-    padding: 54px 54px 0 54px;
   }
 `;
 

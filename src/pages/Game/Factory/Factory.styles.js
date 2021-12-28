@@ -44,6 +44,10 @@ export const Content = styled.div`
     margin-bottom: 128px;
   }
   @media only screen and (min-width: 1300px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  @media only screen and (min-width: 1320px) {
     padding-left: 0px;
     padding-right: 0px;
   }
@@ -92,7 +96,7 @@ export const MainBox = styled.div`
     width: 100%;
     margin: 0 auto;
   }
-  @media only screen and (min-width: 1300px) {
+  @media only screen and (min-width: 1320px) {
     width: 1300px;
     margin: 0 auto;
     padding: 54px;
@@ -385,7 +389,7 @@ export const ApeNft = styled.div`
   border-radius: 15px;
   overflow: hidden;
   border: 3px solid
-      ${({ selected }) => (selected ? theme.color.green : "transparent")};
+    ${({ selected }) => (selected ? theme.color.green : "transparent")};
   img {
     width: 70px;
     border-radius: 15px;
@@ -393,7 +397,7 @@ export const ApeNft = styled.div`
   div {
     position: absolute;
     bottom: -1px;
-    left:0;
+    left: 0;
     width: 100%;
     background: rgba(41, 44, 69, 0.8);
     color: ${theme.color.white};

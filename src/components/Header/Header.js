@@ -9,6 +9,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import { UserContext } from "../../store/user-context";
 // ******** Images ********
 import WalletIcon from "../../assets/wallet_icon.svg";
+import LogoImg from '../../assets/logo.svg';
 // ******** Styles ********
 import {
   Wrapper,
@@ -26,7 +27,7 @@ const Header = ({ page }) => {
   const { userMetaMaskToken } = useContext(UserContext);
 
   const reduceAddress = (address) => {
-    if (address && typeof address === 'string') {
+    if (address && typeof address === "string") {
       let string = address;
       let userAddress = address;
       let firstSix = userAddress.slice(0, 6);
@@ -113,7 +114,7 @@ const Header = ({ page }) => {
       <NavLink
         to="/game/statistics"
         className={({ isActive }) => (isActive ? "active" : "")}>
-        Game Statistics
+        Statistics
       </NavLink>
     </NavList>
   );
@@ -145,7 +146,9 @@ const Header = ({ page }) => {
             </AccountMobile>
           )}
           <Logo>
-            <Link to="/">MekaApes</Link>
+            <Link to="/">
+                <img src={LogoImg} alt="Logo" />
+            </Link>
           </Logo>
           {renderNavigation(page)}
           <Menu>

@@ -1,4 +1,5 @@
 // ******** Components ********
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ScrollToTop from "react-scroll-to-top";
 // ******** Icons ********
@@ -7,6 +8,8 @@ import {
   faMedium,
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
+// ******** Images ********
+import LogoImage from "../../assets/logo.svg";
 // ******** Styled ********
 import { FooterWrapper, Logo, Button, SocialWrapper } from "./Footer.styles";
 
@@ -14,7 +17,11 @@ const Footer = ({ page }) => {
   return (
     <FooterWrapper page={page}>
       <div className="content">
-        <Logo>MegaApes</Logo>
+        <Logo>
+          <Link to='/'>
+            <img src={LogoImage} alt="logo" />
+          </Link>
+        </Logo>
         <SocialWrapper>
           <Button
             href="http://discord.gg/oogaverse"

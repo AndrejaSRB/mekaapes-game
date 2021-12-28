@@ -41,8 +41,8 @@ const Minting = () => {
         setCurrentETHBalance(+balance);
       };
       getETHBalance();
-    }else {
-        setCurrentETHBalance(0);
+    } else {
+      setCurrentETHBalance(0);
     }
   }, [userMetaMaskToken]);
 
@@ -82,7 +82,17 @@ const Minting = () => {
       <Content>
         <Title>{allowed ? "You are the worthy!" : "You shall not pass"}</Title>
         <MainBox>
-          <h4>Welcome!</h4>
+          {allowed ? (
+            <h4>Welcome!</h4>
+          ) : (
+            <h4>
+              Sorry...{" "}
+              <span>
+                Your wallet is not whitelisted. You need to wait for the public
+                mint.
+              </span>
+            </h4>
+          )}
           {allowed ? (
             <IntroText>
               You have secured your place as the first defender of the Factory!{" "}

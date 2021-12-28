@@ -19,10 +19,14 @@ export const FooterWrapper = styled.footer`
       justify-content: space-between;
     }
     @media only screen and (min-width: 1300px) {
-      width: 1300px;
-      margin: 0 auto;
       height: 297px;
       padding-top: 92px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    @media only screen and (min-width: 1320px) {
+      width: 1300px;
+      margin: 0 auto;
       padding-left: 0;
       padding-right: 0;
     }
@@ -60,8 +64,21 @@ export const Logo = styled.div`
   color: ${theme.color.white};
   font-size: 36px;
   margin-bottom: 20px;
+  a {
+    cursor: pointer;
+    img {
+      height: 40px;
+    }
+  }
   @media only screen and (min-width: 1024px) {
     margin-bottom: 0;
+  }
+  @media only screen and (min-width: 1080px) {
+    a {
+      img {
+        height: 60px;
+      }
+    }
   }
 `;
 
