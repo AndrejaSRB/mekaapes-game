@@ -155,7 +155,7 @@ const Header = ({ page }) => {
             <MenuOutlined onClick={handleOpenMobileMenu} />
           </Menu>
         </Content>
-        {page !== "landing" && (
+        {page !== "landing" && page !== "whitepaper" && page !== "terms" && (
           <Account>{renderAccountData(userMetaMaskToken)}</Account>
         )}
       </Wrapper>
