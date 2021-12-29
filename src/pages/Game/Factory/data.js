@@ -94,29 +94,29 @@ export const exampleStaked = [
     name: "Ape",
     id: uuidv4(),
   },
-  {
-    img: MekaApeExample,
-    name: "Ape",
-    id: uuidv4(),
-  },
-//   {
-//     img: RoboOogaExample,
-//     name: "Ape",
-//     id: uuidv4(),
-//   },
-//   {
-//     img: MekaApeExample,
-//     name: "Ape",
-//     id: uuidv4(),
-//   },
-//   {
-//     img: MekaApeExample,
-//     name: "Ape",
-//     id: 8,
-//   },
-//   {
-//     img: RoboOogaExample,
-//     name: "Ape",
-//     id: uuidv4(),
-//   },
+  //   {
+  //     img: MekaApeExample,
+  //     name: "Ape",
+  //     id: uuidv4(),
+  //   },
+  //   {
+  //     img: RoboOogaExample,
+  //     name: "Ape",
+  //     id: uuidv4(),
+  //   },
+  //   {
+  //     img: MekaApeExample,
+  //     name: "Ape",
+  //     id: uuidv4(),
+  //   },
+  //   {
+  //     img: MekaApeExample,
+  //     name: "Ape",
+  //     id: 8,
+  //   },
+  //   {
+  //     img: RoboOogaExample,
+  //     name: "Ape",
+  //     id: uuidv4(),
+  //   },
 ];

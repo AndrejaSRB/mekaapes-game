@@ -44,7 +44,7 @@ const Landing = () => {
                 Recruit unique Robo Apes and <span>Apes to the fight.</span>
               </p>
               <p>
-                Earn $OOGER or $DMT as your <span>champions battle!</span>
+                Earn $OG or $DMT as your <span>champions battle!</span>
               </p>
             </div>
           </IntroText>
@@ -52,7 +52,7 @@ const Landing = () => {
             <HeroImage>
               <img src={HeroGameImage} alt="mekaape hero" />
             </HeroImage>
-            <Text>Use $OOGER or $DMT exclusively to add to your force.</Text>
+            <Text>Use $OG or $DMT exclusively to add to your force.</Text>
             <ButtonWrapper>
               <Link to="/minting">Minting</Link>
               <Link to="/game/factory">Play</Link>
@@ -79,7 +79,7 @@ const Landing = () => {
             <h5>$OG</h5>
             <img src={CoinImage} alt="Robo Oogas" />
             <p>
-              The ony Appes currency. $OOGEAR is the ONLY way to mint new guards
+              The ony Appes currency. $OG is the ONLY way to mint new guards
               for your factory.
             </p>
           </Box>
@@ -87,7 +87,7 @@ const Landing = () => {
             <h5>$DMT</h5>
             <img src={CoinImage} alt="Robo Oogas" />
             <p>
-              The ony Appes currency. $OOGER is the ONLY way to mint new guards
+              The ony Appes currency. $OG is the ONLY way to mint new guards
               for your factory.
             </p>
           </Box>

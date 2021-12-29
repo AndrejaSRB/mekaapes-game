@@ -95,25 +95,25 @@ const EXAMPLE_DATA = [
     img: MekaApeExample,
     name: "Ape #111",
     level: 2,
-    id: 2,
+    id: 32,
   },
   {
     img: RoboOogaExample,
     name: "Ape #989",
     level: 0,
-    id: 3,
+    id: 73,
   },
   {
     img: MekaApeExample,
     name: "Ape #642",
     level: 3,
-    id: 1,
+    id: 19,
   },
   {
     img: RoboOogaExample,
     name: "Ape #100",
     level: 1,
-    id: 0,
+    id: 770,
   },
 ];
 
@@ -135,14 +135,14 @@ const tooltipText = (
     </li>
     <li>
       {" "}
-      DMT level 1 -{">"} Earn 25% more $OOGEAR + Decrease the risk of OOGEAR
+      DMT level 1 -{">"} Earn 25% more $OG + Decrease the risk of OOGEAR
       getting stolen to 25% when unstaking
     </li>
     <li>
-      DMT level 2 -{">"} Earn 50% more $OOGEAR + Decrease the unstaking time by
+      DMT level 2 -{">"} Earn 50% more $OG + Decrease the unstaking time by
       25%
     </li>
-    <li>DMT level 3 -{">"} Earn 100% more $OOGEAR</li>
+    <li>DMT level 3 -{">"} Earn 100% more $OG</li>
     <li>Price for each level is 100 $DMT</li>
   </TooltipList>
 );

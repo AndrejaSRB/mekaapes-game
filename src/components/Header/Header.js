@@ -114,7 +114,7 @@ const Header = ({ page }) => {
       <NavLink
         to="/game/statistics"
         className={({ isActive }) => (isActive ? "active" : "")}>
-        Statistics
+        Game Statistics
       </NavLink>
     </NavList>
   );

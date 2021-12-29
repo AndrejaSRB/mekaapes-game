@@ -84,7 +84,7 @@ const Crafting = () => {
                 <button disabled={oogearCounter < 1}>Mint Now</button>
                 <button disabled={oogearCounter < 1}>Mint & Stake</button>
               </ButtonBox>
-              <HelperText>Price xxxxxx $OOGEAR</HelperText>
+              <HelperText>Price xxxxxx $OG</HelperText>
             </OogearBox>
             <DmtBox>
               <Counter>

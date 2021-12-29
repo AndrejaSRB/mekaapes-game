@@ -282,7 +282,7 @@ const Factory = () => {
               <img src={HeroImage} alt="Factory Robo" />
             </div>
             <p>
-              <span>$OOGEAR Balance:</span> 1,000,000,000
+              <span>$OG Balance:</span> 1,000,000,000
             </p>
             <p>
               <span>$DMT Balance:</span> 1,000,000
@@ -319,7 +319,7 @@ const Factory = () => {
             <MiddleBox>
               <img src={HeroImage} alt="hero ape" />
               <p>
-                <span>$OOGEAR Balance:</span> 1,000,000,000
+                <span>$OG Balance:</span> 1,000,000,000
               </p>
               <p>
                 <span>$DMT Balance:</span> 1,000,000
@@ -337,13 +337,13 @@ const Factory = () => {
               </div>
               <ApeList>{renderMobileStakedApes()}</ApeList>
               <ApeListDesktop>{renderDesktopStakedApes()}</ApeListDesktop>
-              <Button type="claim">Claim $OOGEAR</Button>
+              <Button type="claim">Claim $OG</Button>
               <ClaimAndUnstakeButton disabled>
-                Claim $OOGEAR <span>and Unstake</span>
+                Claim $OG <span>and Unstake</span>
               </ClaimAndUnstakeButton>
               <StakedText>
                 <p>
-                  Unclaimed: <span>1000 $OOGEAR</span>
+                  Unclaimed: <span>1000 $OG</span>
                 </p>
                 <p>Select your DMT to claim rewards!</p>
               </StakedText>

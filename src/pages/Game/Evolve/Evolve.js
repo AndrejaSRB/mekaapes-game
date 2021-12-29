@@ -132,7 +132,7 @@ const Evolve = () => {
   }, [width]);
 
   const hadnleChangeCheckbox = (e) => {
-    if (data && data.length > 0) {
+    if (EXAMPLE_DATA && EXAMPLE_DATA.length > 0) {
       if (!e.target.checked) {
         setSelected([]);
       } else {

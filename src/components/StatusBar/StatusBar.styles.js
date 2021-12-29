@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
   align-items: center;
   position: relative;
   overflow: hidden;
-  border-radius: 50px;
+  border-radius: 56px;
   margin-bottom: 36px;
   @media only screen and (min-width: 1024px) {
     margin-bottom: 46px;

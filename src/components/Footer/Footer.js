@@ -38,7 +38,7 @@ const Footer = ({ page }) => {
             Medium
           </Button>
           <Button
-            href="https://opensea.io/collection/oogaverse"
+            href="https://opensea.io/collection/mekaapes"
             target="_blank"
             rel="noreferrer">
             <span />

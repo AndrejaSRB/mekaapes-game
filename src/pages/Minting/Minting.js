@@ -117,10 +117,10 @@ const Minting = () => {
           </Counter>
           <ButtonWrapper>
             <button disabled={isDisabled} className="noselect">
-              Mint Now
+              Mint and Stake
             </button>
             <button disabled={isDisabled} className="noselect">
-              Mint and Stake
+              Mint Now
             </button>
           </ButtonWrapper>
           <Price className="noselect">

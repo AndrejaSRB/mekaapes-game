@@ -128,7 +128,9 @@ export const NavList = styled.div`
       cursor: pointer;
       transition: ${theme.transition};
       border-bottom: 3px solid transparent;
-      animation: 2s ${blink} infinite;
+      text-shadow: 0 0 30px #ff1010, 0 0 50px #ff1010, 0 0 100px #ff1010,
+        0 0 130px #ff1010;
+      animation: 2s ${blink} ease-in-out infinite alternate;
       &:hover {
         color: ${theme.color.green};
         border-bottom: 3px solid ${theme.color.green};
