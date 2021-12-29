@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -24,15 +24,38 @@ import {
   CounterBox,
 } from "./Crafting.styles";
 
-const EXAMPLE_CURRENT_VALUE = 22323;
+const EXAMPLE_CURRENT_VALUE = 29223;
 
 // TODO
 // Disable buttons if the total value is 50k
 // Disable buttons if the amount is bigger than the balance in that coin
+// Disable minting with $DTM after 10k of total minted
 
 const Crafting = () => {
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
+  const [OGPrice, setOGPrice] = useState(4000);
+
+  // Prices
+  // 10,001 - 25,000: 4,000 $OG
+  // 25,001 - 40,000: 8,000 $OG
+  // 40,001 - 55,000: 12,000 $OG
+
+  useEffect(() => {
+    if (EXAMPLE_CURRENT_VALUE >= 10001 && EXAMPLE_CURRENT_VALUE < 25001) {
+      setOGPrice(4000);
+    } else if (
+      EXAMPLE_CURRENT_VALUE >= 25001 &&
+      EXAMPLE_CURRENT_VALUE < 40000
+    ) {
+      setOGPrice(6000);
+    } else if (
+      EXAMPLE_CURRENT_VALUE >= 40001 &&
+      EXAMPLE_CURRENT_VALUE < 55000
+    ) {
+      setOGPrice(12000);
+    }
+  }, []);
 
   const handleDmtCounter = (type) => () => {
     if (type === "plus" && dmtCounter < 20) {
@@ -84,7 +107,7 @@ const Crafting = () => {
                 <button disabled={oogearCounter < 1}>Mint Now</button>
                 <button disabled={oogearCounter < 1}>Mint & Stake</button>
               </ButtonBox>
-              <HelperText>Price xxxxxx $OG</HelperText>
+              <HelperText>Price {OGPrice} $OG</HelperText>
             </OogearBox>
             <DmtBox>
               <Counter>
@@ -104,7 +127,7 @@ const Crafting = () => {
               </Counter>
               <Button disabled={dmtCounter < 1}>Mint $DMT</Button>
               <HelperText>
-                Price xxxxxx $DMT <span>1231/10,000</span>
+                Price 120 $DMT <span>1231/10,000</span>
               </HelperText>
             </DmtBox>
           </CounterBox>

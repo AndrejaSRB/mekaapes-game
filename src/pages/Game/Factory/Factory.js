@@ -77,6 +77,8 @@ const InProgressApe = () => (
 
 // TODO
 // Disable buttons if the amount is bigger than the balance in that coin
+// Sum total $OG staked tokens to the unclaimed total bellow the unstake button
+// Add clicked total sum to the Claim button
 
 const Factory = () => {
   const { width } = useWindowDimenstions();

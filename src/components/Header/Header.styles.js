@@ -90,18 +90,6 @@ export const Content = styled.div`
   }
 `;
 
-const blink = keyframes`
-  0% {
-        color: ${theme.color.white};
-    }
-    50% {
-        color: #db045a;
-    }
-    100% {
-        color: ${theme.color.white};
-    }
-`;
-
 export const NavList = styled.div`
   display: none;
   @media only screen and (min-width: 1300px) {
@@ -115,22 +103,6 @@ export const NavList = styled.div`
       cursor: pointer;
       transition: ${theme.transition};
       border-bottom: 3px solid transparent;
-      &:hover {
-        color: ${theme.color.green};
-        border-bottom: 3px solid ${theme.color.green};
-      }
-    }
-    & > a.flash {
-      font-size: 21px;
-      color: ${theme.color.red};
-      margin: 0 24px;
-      padding-bottom: 8px;
-      cursor: pointer;
-      transition: ${theme.transition};
-      border-bottom: 3px solid transparent;
-      text-shadow: 0 0 30px #ff1010, 0 0 50px #ff1010, 0 0 100px #ff1010,
-        0 0 130px #ff1010;
-      animation: 2s ${blink} ease-in-out infinite alternate;
       &:hover {
         color: ${theme.color.green};
         border-bottom: 3px solid ${theme.color.green};

@@ -31,7 +31,7 @@ const Minting = () => {
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [price] = useState(0.0088);
+  const [price] = useState(0.088);
   const [allowed] = useState(true);
 
   useEffect(() => {

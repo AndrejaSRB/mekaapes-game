@@ -5,7 +5,7 @@ import { Wrapper, Box, Color } from "./StatusBar.styles";
 const StatusBar = ({totalNumber}) => {
 
   const percentage = () => {
-    return (100 * totalNumber) / 50000;
+    return (100 * totalNumber) / 55000;
   };
 
   return (
@@ -25,7 +25,7 @@ const StatusBar = ({totalNumber}) => {
         <span className="desktop">,000</span>
       </Box>
       <Box place="last">
-        50<span className="mobile">k</span>{" "}
+        55<span className="mobile">k</span>{" "}
         <span className="desktop">,000</span>
       </Box>
     </Wrapper>
