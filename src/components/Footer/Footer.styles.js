@@ -7,7 +7,7 @@ import OpenSeaImageBlack from "../../assets/opensea_icon_black.svg";
 import BackToTopArrow from "../../assets/back-to-top-arrow.png";
 
 export const FooterWrapper = styled.footer`
-  background-color: #150520;
+  background: rgba(0, 0, 0, 0.75);
   & > .content {
     color: ${theme.color.white};
     padding: 64px 20px;

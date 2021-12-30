@@ -127,9 +127,8 @@ export const ButtonWrapper = styled.div`
   & > button.orange {
     background-color: #f5811b;
     transition: ${theme.transition};
-
     &:hover {
-      background-color: #ff851c;
+      background-color: #cc6d1a;
     }
     &:disabled {
       color: ${theme.color.white};
