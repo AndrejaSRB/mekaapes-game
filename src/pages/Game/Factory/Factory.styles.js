@@ -228,6 +228,39 @@ export const Button = styled.button`
   }
 `;
 
+export const ButtonClaim = styled.button`
+  background-color: ${theme.color.red};
+  color: ${theme.color.white};
+  border: none;
+  cursor: pointer;
+  width: 240px;
+  height: 50px;
+  margin: 16px auto 0 auto;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 400px;
+  transition: ${theme.transition};
+  &:hover {
+    background-color: ${theme.color.redHover};
+  }
+  &:disabled {
+    color: ${theme.color.white};
+    border: 1px solid #ffffff;
+    background: ${theme.color.secondButton};
+    cursor: not-allowed;
+  }
+  @media only screen and (min-width: 900px) {
+    width: 388px;
+    height: 80px;
+    font-size: 21px;
+  }
+  @media only screen and (min-width: 1200px) {
+    margin-top: 26px;
+  }
+`;
+
 export const NotFoundItem = styled.div`
   text-align: center;
   img {
@@ -320,8 +353,8 @@ export const CustomCheckbox = styled(Checkbox)`
     }
   }
   margin: 0 auto 32px auto;
-  @media only screen and (min-width: 340px) {
-    width: 332px;
+  @media only screen and (min-width: 420px) {
+    width: 320px;
   }
   @media only screen and (min-width: 900px) {
     margin-bottom: 0px;
@@ -435,9 +468,9 @@ export const ClaimAndUnstakeButton = styled.button`
   border: none;
   cursor: pointer;
   width: 240px;
-  height: 80px;
-  margin: 32px auto 0 auto;
-  font-size: 21px;
+  height: 50px;
+  margin: 16px auto 0 auto;
+  font-size: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -455,6 +488,8 @@ export const ClaimAndUnstakeButton = styled.button`
   }
   @media only screen and (min-width: 900px) {
     width: 388px;
+    height: 80px;
+    font-size: 21px;
     flex-direction: row;
     span {
       margin-left: 5px;

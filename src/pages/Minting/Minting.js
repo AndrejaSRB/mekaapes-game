@@ -26,12 +26,13 @@ import {
 // TODO some users can mint maximum 2 and some 4, other which are not listed only 2.
 // Check the ETH balance, and update on every minting transaction
 
+// Check the ETH amount before transaction
+
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const [currentETHBalance, setCurrentETHBalance] = useState(0);
+  const [, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [price] = useState(0.088);
   const [allowed] = useState(true);
 
   useEffect(() => {
@@ -45,16 +46,6 @@ const Minting = () => {
       setCurrentETHBalance(0);
     }
   }, [userMetaMaskToken]);
-
-  useEffect(() => {
-    if (counter) {
-      if (currentETHBalance >= counter * price) {
-        setIsDisabled(false);
-      } else {
-        setIsDisabled(true);
-      }
-    }
-  }, [currentETHBalance, counter, price]);
 
   useEffect(() => {
     if (allowed) {
@@ -119,12 +110,15 @@ const Minting = () => {
             <button disabled={isDisabled} className="noselect">
               Mint and Stake
             </button>
-            <button disabled={isDisabled} className="noselect">
+            <Price className="noselect">
+              <span>Price 0.04 ETH</span>
+            </Price>
+            <button disabled={isDisabled} className="noselect orange">
               Mint Now
             </button>
           </ButtonWrapper>
-          <Price className="noselect">
-            <span>Price {price} ETH</span>
+          <Price className="noselect" margin>
+            <span>Price 0.055 ETH</span>
             0/10,000
           </Price>
         </MainBox>

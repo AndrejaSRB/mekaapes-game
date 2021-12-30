@@ -229,9 +229,7 @@ export const Box = styled.div`
   }
   & > p {
     color: ${theme.color.whiteGrey};
-    & > span {
-      display: block;
-    }
+    margin-bottom: 0;
   }
   @media only screen and (min-width: 680px) {
     width: 303px;
@@ -242,6 +240,10 @@ export const Box = styled.div`
     }
     & > p {
       font-size: 18px;
+    }
+    & > p.width {
+        width: 235px;
+        margin: 0 auto;
     }
   }
 `;

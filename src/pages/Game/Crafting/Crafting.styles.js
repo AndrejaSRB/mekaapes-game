@@ -283,3 +283,20 @@ export const CounterBox = styled.div`
     justify-content: space-between;
   }
 `;
+
+export const AnimationBox = styled.div`
+  text-align: center;
+  margin-bottom: 32px;
+  img {
+    border-radius: 30px;
+    filter: drop-shadow(0px 0px 40px #11051b);
+    width: 160px;
+    height: 160px;
+  }
+  @media only screen and (min-width: 1024px) {
+    img {
+      width: 220px;
+      height: 220px;
+    }
+  }
+`;

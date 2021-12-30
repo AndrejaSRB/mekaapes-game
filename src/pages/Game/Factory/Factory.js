@@ -47,6 +47,7 @@ import {
   CustomUnstakeCheckbox,
   Subtitle,
   ApeInProgress,
+  ButtonClaim,
 } from "./Factory.styles";
 // ******** Fake Data ********
 import {
@@ -339,9 +340,9 @@ const Factory = () => {
               </div>
               <ApeList>{renderMobileStakedApes()}</ApeList>
               <ApeListDesktop>{renderDesktopStakedApes()}</ApeListDesktop>
-              <Button type="claim">Claim $OG</Button>
+              <ButtonClaim>Claim xxxx $OG</ButtonClaim>
               <ClaimAndUnstakeButton disabled>
-                Claim $OG <span>and Unstake</span>
+                Claim $OG and Unstake
               </ClaimAndUnstakeButton>
               <StakedText>
                 <p>

@@ -59,9 +59,9 @@ export const MainBox = styled.div`
     text-align: center;
     line-height: 1;
     span {
-        display: block;
-        margin-top: 16px;
-        line-height: 28px;
+      display: block;
+      margin-top: 16px;
+      line-height: 28px;
     }
   }
   @media only screen and (min-width: 1024px) {
@@ -107,7 +107,7 @@ export const ButtonWrapper = styled.div`
     cursor: pointer;
     width: 240px;
     height: 80px;
-    margin: 0 auto 32px auto;
+    margin: 0 auto 16px auto;
     font-size: 21px;
     display: flex;
     justify-content: center;
@@ -124,9 +124,26 @@ export const ButtonWrapper = styled.div`
       cursor: not-allowed;
     }
   }
+  & > button.orange {
+    background-color: #f5811b;
+    transition: ${theme.transition};
+
+    &:hover {
+      background-color: #ff851c;
+    }
+    &:disabled {
+      color: ${theme.color.white};
+      border: 1px solid #ffffff;
+      background: ${theme.color.secondButton};
+      cursor: not-allowed;
+    }
+  }
   @media only screen and (min-width: 789px) {
     & > button {
       width: 660px;
+    }
+    & > button.orange {
+      width: 560px;
     }
   }
 `;
@@ -188,7 +205,7 @@ export const Counter = styled.div`
 export const Price = styled.div`
   text-align: center;
   color: ${theme.color.whiteGrey};
-  margin-bottom: 54px;
+  margin-bottom: ${({ margin }) => (margin ? "54px" : "32px")};
   font-size: 18px;
   font-weight: 600;
   span {

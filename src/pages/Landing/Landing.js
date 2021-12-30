@@ -22,7 +22,6 @@ import {
 } from "./Landing.styles";
 
 const Landing = () => {
-
   return (
     <Wrapper>
       <Header page="landing" />
@@ -65,30 +64,36 @@ const Landing = () => {
             <h5>Robo Ooga</h5>
             <img src={HeroGameImage} alt="Robo Oogas" />
             <p>
-              Robo Oogas that work in the Factory produce $OG.<span>Join the guild and earn $DMT!</span>
+              Robo Oogas that work in the Factory produce $OG. <br />
+              Upgrade Robo Oogas to make them more productive and gain other
+              features.
             </p>
           </Box>
           <Box>
             <h5>MekaApes</h5>
             <img src={MekaApeImage} alt="Robo Oogas" />
             <p>
-              Guard the Factory! <span>Join the guild and earn $DMT!</span>
+              MekaApes protect the factory and receive a 23% tax of all $OG
+              that's produced.
+              <br />
+              Merge 2 MekaApes to receive a Mega Meka with extra utility.
             </p>
           </Box>
           <Box>
             <h5>$OG</h5>
             <img src={CoinImage} alt="Robo Oogas" />
-            <p>
-              The ony Appes currency. $OG is the ONLY way to mint new guards
-              for your factory.
+            <p className="width">
+              In the Factory, Robo Oogas convert scrap metal into $OG (OOGEAR).
+              $OG is used to craft new Robo Oogas and MekaApes.
             </p>
           </Box>
           <Box>
             <h5>$DMT</h5>
             <img src={CoinImage} alt="Robo Oogas" />
             <p>
-              The ony Appes currency. $OG is the ONLY way to mint new guards
-              for your factory.
+              $DMT (Dark Matter) is a valuable and rare resource. Use $DMT to
+              upgrade Robo Oogas to make them more productive. It can also be
+              used to craft new Robo Oogas.
             </p>
           </Box>
         </BoxesWrapper>

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import StatusBar from "../../../components/StatusBar/StatusBar";
+// ******** Images ********
+import Animation from '../../../assets/level_up.gif';
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
@@ -22,6 +24,7 @@ import {
   DmtBox,
   Text,
   CounterBox,
+  AnimationBox,
 } from "./Crafting.styles";
 
 const EXAMPLE_CURRENT_VALUE = 29223;
@@ -83,8 +86,10 @@ const Crafting = () => {
         <MainBox>
           <TitleBox>
             <h4>Guard the factory!</h4>
-            <h6>(Stake) to earn $DMT</h6>
           </TitleBox>
+          <AnimationBox>
+              <img src={Animation} alt="animation" />
+          </AnimationBox>
           <StatusBar totalNumber={EXAMPLE_CURRENT_VALUE} />
           <CounterBox>
             <OogearBox>
