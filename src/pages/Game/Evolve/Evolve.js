@@ -11,6 +11,8 @@ import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
+// ******** Services ********
+import contract from "../../../services/contract";
 // ******** Styles ********
 import {
   Wrapper,
@@ -181,20 +183,6 @@ const Evolve = () => {
     }
   };
 
-  //   const getActive = (id) => {
-  //     if (selected && selected.length > 0) {
-  //       selected.forEach((ape) => {
-  //         if (ape && ape.id === id) {
-  //           return true;
-  //         } else {
-  //           return false;
-  //         }
-  //       });
-  //     } else {
-  //       return true;
-  //     }
-  //   };
-
   const handleRenderBabyOogas = () => {
     if (data && data.length > 0) {
       return data.map((ape) => (
@@ -245,9 +233,21 @@ const Evolve = () => {
   };
 
   const handleClickEvolve = async () => {
-    setIsActive(true);
-    // TODO evolve call
-    setIsActive(false);
+    if (selected && selected.length > 0) {
+      setIsActive(true);
+      // TODO: get the list of clicked apes - probably token_id
+      const tokenIds = [];
+      selected.forEach((token) => tokenIds.push(token.id));
+
+      try {
+        // TODO: fix the hardcoded number add tokenIds
+        await contract.evolveBabyOoga(2126);
+        // TODO: get the  fresh list of baby oogas, or kick the selected one
+      } catch (error) {
+        console.log(error);
+      }
+      setIsActive(false);
+    }
   };
 
   return (

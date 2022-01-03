@@ -1,73 +1,72 @@
 import { ethers } from "ethers";
 // ******** Services ********
 import metamask from "./metamask";
+// ******** Config ********
+import MekaApesGameJSON from '../config/MekaApesGame.json';
 
 const MEKAAPES_GAME_CONTRACT_ADDRESS =
   process.env.REACT_APP_MEKAAPES_GAME_CONTRACT_ADDRESS;
 
 export class Contract {
-  contract = null;
+  mekaApescontract = null;
 
   constructor() {
-    this.contract = new ethers.Contract(
+    this.mekaApesContract = new ethers.Contract(
       MEKAAPES_GAME_CONTRACT_ADDRESS,
-      MEKAAPES_GAME_CONTRACT_ADDRESS.abi,
+      MekaApesGameJSON.abi,
       metamask.signer
     );
   }
 
   // gives mekaApe to the user
   async evolveBabyOoga(itemId) {
-    return await this.contract.evolveBabyOoga(itemId);
+    return await this.mekaApesContract.evolveBabyOoga(itemId);
   }
 
   // applies only to pre-sale in ETH
   // mints amount new tokens to the user
-  async mint(amount) {
-    return await this.contract.mint(amount);
+  // toStake is boolean if is staked or not
+  async mint(amount, toStake) {
+    return await this.mekaApesContract.mint(amount, toStake);
   }
 
   // mints amount new tokens with $OG
-  async mintWithOG(amount) {
-    return await this.contract.mintWithOG(amount);
-  }
-
-  // mints amount new tokens with $OG and Stake tokens
-  async mintWithOGandStake(amount) {
-    return await this.contract.mintWithOGandStake(amount);
+  // toStake is boolean if is staked or not
+  async mintWithOG(amount, toStake) {
+    return await this.mekaApesContract.mintWithOG(amount, toStake);
   }
 
   // mints amount new tokens with $DMT
   async mintWithDMT(amount) {
-    return await this.contract.mintWithDMT(amount);
+    return await this.mekaApesContract.mintWithDMT(amount);
   }
 
   // stake multiple items
   async stake(itemList) {
-    return await this.contract.stake(itemList);
+    return await this.mekaApesContract.stake(itemList);
   }
 
   // unstake multiple items
   async unstake(itemList) {
-    return await this.contract.unstake(itemList);
+    return await this.mekaApesContract.unstake(itemList);
   }
 
   // claim reward for multiple items
-  async claim(itemList) {
-    return await this.contract.claim(itemList);
+  async claimAvailableAmountMultipleTokens(itemList) {
+    return await this.mekaApesContract.claimAvailableAmountMultipleTokens(itemList);
   }
 
   // level up Robo Ooga
   async levelUpRoboOooga(item) {
-    return await this.contract.levelUpRoboOooga(item);
+    return await this.mekaApesContract.levelUpRoboOooga(item);
   }
 
   // merge two Meka Apes, one will be burned, and another will be kept
   // the burned one will give Mega Meka Ape
   // the first argument is saved token
   // the second argument is burned token
-  async mergeMekaApe(tokenIdSave, tokenIdBurn) {
-    return await this.contract.mergeMekaApe(tokenIdSave, tokenIdBurn);
+  async mergeMekaApes(tokenIdSave, tokenIdBurn) {
+    return await this.mekaApesContract.mergeMekaApes(tokenIdSave, tokenIdBurn);
   }
 }
 

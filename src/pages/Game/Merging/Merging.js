@@ -10,6 +10,8 @@ import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
+// ******** Services ********
+import contract from "../../../services/contract";
 // ******** Styles ********
 import {
   Wrapper,
@@ -116,6 +118,7 @@ const EXAMPLE_DATA = [
     id: 120,
   },
 ];
+// TODO: filter the list of unstake and level 0 meka apes
 
 const Merging = () => {
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
@@ -124,6 +127,7 @@ const Merging = () => {
   const [selectedApe, setSelectedApe] = useState(null);
   const [type, setType] = useState(null);
   const [oppositeApe, setOppositeApe] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
@@ -179,6 +183,21 @@ const Merging = () => {
     }
   };
 
+  const handleClickMerge = async () => {
+    if (burnMeka && keepMeka) {
+      setIsDisabled(true);
+      try {
+        // TODO: pass the proper token id
+        // TODO: first one is saved, second one is burned
+        await contract.mergeMekaApes(1231, 1541);
+        // TODO: get the  fresh list of meka apes
+      } catch (error) {
+        console.log(error);
+      }
+      setIsDisabled(false);
+    }
+  };
+
   return (
     <Wrapper>
       <Header page="game" />
@@ -206,7 +225,11 @@ const Merging = () => {
             </Box>
           </MergingBox>
           <ButtonBox>
-            <button disabled={!(Boolean(keepMeka) && Boolean(burnMeka))}>
+            <button
+              onClick={handleClickMerge}
+              disabled={
+                !(Boolean(keepMeka) && Boolean(burnMeka)) && isDisabled
+              }>
               Merge your MekaApes
             </button>
           </ButtonBox>

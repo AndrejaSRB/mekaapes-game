@@ -17,8 +17,7 @@ import {
   NotFoundItem,
 } from "./LevelRoboOogas.styles";
 
-// TODO
-// Filter out all level 3 RoboOgas from the list and present other
+// TODO: filter out all level 3 RoboOgas from the list and present other
 
 const NoItemFound = () => (
   <NotFoundItem>

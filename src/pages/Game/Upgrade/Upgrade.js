@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 // ******** Components ********
-import { Tooltip } from "antd";
+import { Tooltip, message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import LevelRoboOogas from "../../../components/Modals/LevelRoboOogas/LevelRoboOogas";
@@ -14,6 +14,10 @@ import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
 // ******** Functions ********
 import { getLevelText } from "./helpers";
+// ******** Store ********
+import { BalanceContext } from "../../../store/balance-context";
+// ******** Services ********
+import contract from "../../../services/contract";
 // ******** Styles ********
 import {
   Wrapper,
@@ -117,6 +121,8 @@ const EXAMPLE_DATA = [
   },
 ];
 
+const LEVEL_UP_PRICE = 100;
+
 const LevelBox = ({ level }) => (
   <LevelBoxContainer>
     <LevelBoxWrapper currentLvl={`${level}`}>
@@ -135,12 +141,11 @@ const tooltipText = (
     </li>
     <li>
       {" "}
-      DMT level 1 -{">"} Earn 25% more $OG + Decrease the risk of OOGEAR
-      getting stolen to 25% when unstaking
+      DMT level 1 -{">"} Earn 25% more $OG + Decrease the risk of OOGEAR getting
+      stolen to 25% when unstaking
     </li>
     <li>
-      DMT level 2 -{">"} Earn 50% more $OG + Decrease the unstaking time by
-      25%
+      DMT level 2 -{">"} Earn 50% more $OG + Decrease the unstaking time by 25%
     </li>
     <li>DMT level 3 -{">"} Earn 100% more $OG</li>
     <li>Price for each level is 100 $DMT</li>
@@ -148,12 +153,22 @@ const tooltipText = (
 );
 
 // TODO
-// Disable buttons if the user has less than 100 $DMT
+// Disable buttons if the user has less than 120 $DMT
 // Connect with the contract
 
 const Upgrade = () => {
+  const { dmtBalance } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  useEffect(() => {
+    if (selectedApe) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [selectedApe]);
 
   const handleSaveApe = (ape) => {
     setSelectedApe(ape);
@@ -208,6 +223,37 @@ const Upgrade = () => {
     }
   };
 
+  const getIfItsDisabled = () => {
+    let disabled = true;
+    if (isDisabled) {
+      disabled = true;
+    } else if (selectedApe) {
+      disabled = false;
+    } else {
+      disabled = true;
+    }
+    return disabled;
+  };
+
+  const handleClickButton = async () => {
+    if (dmtBalance > LEVEL_UP_PRICE) {
+      if (selectedApe) {
+        setIsDisabled(true);
+        try {
+          //TODO: fix the hardcoded number with selectedApe.token_id
+          await contract.levelUpRoboOooga(1219);
+          //TODO: get the fresh list of robo oogas
+          //TODO: get the fresh $DMT balance
+        } catch (error) {
+          console.log(error);
+        }
+        setIsDisabled(false);
+      }
+    } else {
+      message.error("Sorry, you don't have enough $DMT.");
+    }
+  };
+
   return (
     <Wrapper>
       <Header page="game" />
@@ -237,11 +283,13 @@ const Upgrade = () => {
           <Middle>
             {renderRoboOoga()}
             <ButtonBox>
-              <button disabled={!Boolean(selectedApe)}>
+              <button disabled={getIfItsDisabled()} onClick={handleClickButton}>
                 Level Up Robo Oogas
               </button>
             </ButtonBox>
-            <HelperText>Spend 100 $DMT to level up your Robo Oogas</HelperText>
+            <HelperText>
+              Spend ${LEVEL_UP_PRICE} $DMT to level up your Robo Oogas
+            </HelperText>
           </Middle>
           <RightSide>
             {selectedApe && (

@@ -18,14 +18,16 @@ const BalanceContextProvider = ({ children }) => {
 
   const getDmtBalance = async () => {
     if (userMetaMaskToken) {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      setDmtBalance(Math.floor(Math.random() * (1000 - 1 + 1) + 1));
+      // TODO: get the DMT Balance
+      // TODO: save the result to the state
     }
   };
 
   const getOogearBalance = () => {
-    // TODO
-    // call contract and save OOGEAR Balance
+    if (userMetaMaskToken) {
+      // TODO: get the DMT Balance | call contract and save OOGEAR Balance
+      // TODO: save the result to the state
+    }
   };
 
   const clearDmtBalance = () => {

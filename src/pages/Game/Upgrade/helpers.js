@@ -1,5 +1,4 @@
 export const getLevelText = (level) => {
-    console.log('level', level);
   switch (level) {
     case 0:
       return (

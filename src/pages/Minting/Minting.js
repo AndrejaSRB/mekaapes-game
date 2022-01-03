@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 // ******** Components ********
+import { message } from "antd";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 // ******** HOC ********
@@ -10,6 +11,7 @@ import { UserContext } from "../../store/user-context";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Services ********
 import metamask from "../../services/metamask";
+import contract from "../../services/contract";
 // ******** Styles ********
 import {
   Wrapper,
@@ -22,18 +24,21 @@ import {
   Price,
 } from "./Minting.styles";
 
-// set allowed to true if its whitelisted or false if the user is not
-// TODO some users can mint maximum 2 and some 4, other which are not listed only 2.
-// Check the ETH balance, and update on every minting transaction
+const PRICE_MINT = 0.055;
+const PRICE_MINT_AND_STAKE = 0.04;
 
-// Check the ETH amount before transaction
+// TODO: set allowed to true if its whitelisted or false if the user is not
+// TODO: some users can mint maximum 2 and some 4, other which are not listed only 2.
+// TODO: get from the contract amount of tokens which can user mint
+// TODO: get new amount of possible new mint
 
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const [, setCurrentETHBalance] = useState(0);
+  const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [allowed] = useState(true);
+  const [maxTokenAmount] = useState(4);
 
   useEffect(() => {
     if (userMetaMaskToken) {
@@ -60,10 +65,51 @@ const Minting = () => {
   }, [allowed, counter]);
 
   const handleCounter = (type) => () => {
-    if (type === "plus" && counter < 4) {
+    if (type === "plus" && counter < maxTokenAmount) {
       setCounter(counter + 1);
     } else if (type === "minus" && counter > 0) {
       setCounter(counter - 1);
+    }
+  };
+
+  const checkCurrentETHBalance = async () => {
+    let balance = await metamask.getBalance(userMetaMaskToken);
+    setCurrentETHBalance(+balance);
+  };
+
+  const handleClickMintAndStake = async () => {
+    if (currentETHBalance > PRICE_MINT_AND_STAKE * counter) {
+      setIsDisabled(true);
+      try {
+        await contract.mint(counter, true).then(async () => {
+          //TODO: get new amount of possible new mint
+          await checkCurrentETHBalance();
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      setCounter(0);
+      setIsDisabled(false);
+    } else {
+      message.error("Sorry, you don't have enough ETH.");
+    }
+  };
+
+  const handleClickMint = async () => {
+    if (currentETHBalance > PRICE_MINT * counter) {
+      setIsDisabled(true);
+      try {
+        await contract.mint(counter, false).then(async () => {
+          // TODO: get new amount of possible new mint
+          await checkCurrentETHBalance();
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      setCounter(0);
+      setIsDisabled(false);
+    } else {
+      message.error("Sorry, you don't have enough ETH.");
     }
   };
 
@@ -107,18 +153,24 @@ const Minting = () => {
             </div>
           </Counter>
           <ButtonWrapper>
-            <button disabled={isDisabled} className="noselect">
+            <button
+              disabled={isDisabled}
+              className="noselect"
+              onClick={handleClickMintAndStake}>
               Mint and Stake
             </button>
             <Price className="noselect">
-              <span>Price 0.04 ETH</span>
+              <span>Price {PRICE_MINT_AND_STAKE} ETH</span>
             </Price>
-            <button disabled={isDisabled} className="noselect orange">
+            <button
+              disabled={isDisabled}
+              className="noselect orange"
+              onClick={handleClickMint}>
               Mint Now
             </button>
           </ButtonWrapper>
           <Price className="noselect" margin>
-            <span>Price 0.055 ETH</span>
+            <span>Price {PRICE_MINT} ETH</span>
             0/10,000
           </Price>
         </MainBox>

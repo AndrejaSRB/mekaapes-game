@@ -18,9 +18,7 @@ import { UserContext } from "./store/user-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
-// TODO
-// Get DMT and OOGEAR balance and set
-// use useeffect and check if the user is connected first
+// TODO: Get DMT and OOGEAR balance and set but before check if the user is connected with useEffect
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
