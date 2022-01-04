@@ -15,6 +15,7 @@ import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
+import { BalanceContext } from "./store/balance-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
@@ -22,6 +23,7 @@ import metamask from "./services/metamask";
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
+  const { getDmtBalance, getOogearBalance } = useContext(BalanceContext);
 
   useEffect(() => {
     document.addEventListener("touchstart", function () {}, false);
@@ -32,7 +34,11 @@ const App = () => {
 
   useEffect(() => {
     metamask.checkMetamaskConnection();
-  }, [userMetaMaskToken]);
+    if (userMetaMaskToken) {
+      getDmtBalance();
+      getOogearBalance();
+    }
+  }, [userMetaMaskToken, getDmtBalance, getOogearBalance]);
 
   useEffect(() => {
     let userAddress = localStorage.getItem("mekaape_useraddress");

@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+import Loading from "../../../components/Modals/Loading/Loading";
+import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
@@ -104,6 +106,8 @@ const Evolve = () => {
   const [selected, setSelected] = useState([]);
   const [isActive, setIsActive] = useState(null);
   const [minElementNumber, setMinElementNumber] = useState(16);
+  const [loader, setLoader] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   useEffect(() => {
     let length = EXAMPLE_DATA.length;
@@ -241,11 +245,17 @@ const Evolve = () => {
 
       try {
         // TODO: fix the hardcoded number add tokenIds
-        await contract.evolveBabyOoga(2126);
+        let tsx = await contract.evolveBabyOoga(2851);
+        setLoader(true);
+        tsx.wait().then(() => {
+          setLoader(false);
+          setIsSuccessModalOpen(true);
+        });
         // TODO: get the  fresh list of baby oogas, or kick the selected one
       } catch (error) {
         console.log(error);
       }
+      setSelected([]);
       setIsActive(false);
     }
   };
@@ -279,6 +289,13 @@ const Evolve = () => {
         </MainBox>
       </Content>
       <Footer page="game" />
+      <Loading open={loader} />
+      <SuccessModal
+        open={isSuccessModalOpen}
+        title="And here’s what heppend..."
+        text="The new MekaApe has evolved."
+        handleClose={() => setIsSuccessModalOpen(false)}
+      />
     </Wrapper>
   );
 };

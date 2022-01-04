@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import { ethers } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../components/Header/Header";
@@ -12,6 +13,7 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Services ********
 import metamask from "../../services/metamask";
 import contract from "../../services/contract";
+import prices from "../../services/prices";
 // ******** Styles ********
 import {
   Wrapper,
@@ -24,33 +26,63 @@ import {
   Price,
 } from "./Minting.styles";
 
-const PRICE_MINT = 0.055;
-const PRICE_MINT_AND_STAKE = 0.04;
-
-// TODO: set allowed to true if its whitelisted or false if the user is not
-// TODO: some users can mint maximum 2 and some 4, other which are not listed only 2.
-// TODO: get from the contract amount of tokens which can user mint
-// TODO: get new amount of possible new mint
-
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [allowed] = useState(true);
-  const [maxTokenAmount] = useState(4);
+  const [maxTokenAmount, setMaxTokenAmount] = useState(4);
+  const [priceMint, setPriceMint] = useState(0);
+  const [priceMintAndStake, setPriceMintAndStake] = useState(0);
 
+  // Get the maxTokenAmount
+  useEffect(() => {
+    if (userMetaMaskToken) {
+      const getMaxTokenAmount = async () => {
+        try {
+          await contract.allowedToMint(userMetaMaskToken).then((res) => {
+            setMaxTokenAmount(+res.toString());
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
+      getMaxTokenAmount();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userMetaMaskToken]);
+
+  // Get the ETH Balance
   useEffect(() => {
     if (userMetaMaskToken) {
       const getETHBalance = async () => {
         let balance = await metamask.getBalance(userMetaMaskToken);
-        setCurrentETHBalance(+balance);
+        setCurrentETHBalance(balance);
       };
       getETHBalance();
     } else {
       setCurrentETHBalance(0);
     }
   }, [userMetaMaskToken]);
+
+  // Get the Mint ETH Price
+  useEffect(() => {
+    const getPriceMint = async () => {
+      let price = await prices.getMintPrice();
+      setPriceMint(price);
+    };
+    getPriceMint();
+  }, []);
+
+  // Get the Mint&Stake ETH Price
+  useEffect(() => {
+    const getPriceMintAndStake = async () => {
+      let price = await prices.getMintStakePrice();
+      setPriceMintAndStake(price);
+    };
+    getPriceMintAndStake();
+  }, []);
 
   useEffect(() => {
     if (allowed) {
@@ -74,15 +106,25 @@ const Minting = () => {
 
   const checkCurrentETHBalance = async () => {
     let balance = await metamask.getBalance(userMetaMaskToken);
-    setCurrentETHBalance(+balance);
+    setCurrentETHBalance(balance);
+  };
+
+  const getMaxTokenAmount = async () => {
+    try {
+      await contract.allowedToMint(userMetaMaskToken).then((res) => {
+        setMaxTokenAmount(+res.toString());
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   const handleClickMintAndStake = async () => {
-    if (currentETHBalance > PRICE_MINT_AND_STAKE * counter) {
+    if (currentETHBalance.toString() > priceMintAndStake.toString() * counter) {
       setIsDisabled(true);
       try {
         await contract.mint(counter, true).then(async () => {
-          //TODO: get new amount of possible new mint
+          await getMaxTokenAmount();
           await checkCurrentETHBalance();
         });
       } catch (error) {
@@ -96,11 +138,11 @@ const Minting = () => {
   };
 
   const handleClickMint = async () => {
-    if (currentETHBalance > PRICE_MINT * counter) {
+    if (currentETHBalance.toString() > priceMint.toString() * counter) {
       setIsDisabled(true);
       try {
         await contract.mint(counter, false).then(async () => {
-          // TODO: get new amount of possible new mint
+          await getMaxTokenAmount();
           await checkCurrentETHBalance();
         });
       } catch (error) {
@@ -110,6 +152,14 @@ const Minting = () => {
       setIsDisabled(false);
     } else {
       message.error("Sorry, you don't have enough ETH.");
+    }
+  };
+
+  const getSmallETHPrice = (price) => {
+    if (price) {
+      return ethers.utils.formatUnits(price);
+    } else {
+      return price;
     }
   };
 
@@ -148,7 +198,9 @@ const Minting = () => {
               <MinusOutlined />
             </div>
             <div className="number noselect">{counter}</div>
-            <div className="icon" onClick={handleCounter("plus")}>
+            <div
+              className={maxTokenAmount === counter ? "icon disabled" : "icon"}
+              onClick={handleCounter("plus")}>
               <PlusOutlined />
             </div>
           </Counter>
@@ -160,7 +212,7 @@ const Minting = () => {
               Mint and Stake
             </button>
             <Price className="noselect">
-              <span>Price {PRICE_MINT_AND_STAKE} ETH</span>
+              <span>Price {getSmallETHPrice(priceMintAndStake)} ETH</span>
             </Price>
             <button
               disabled={isDisabled}
@@ -170,7 +222,7 @@ const Minting = () => {
             </button>
           </ButtonWrapper>
           <Price className="noselect" margin>
-            <span>Price {PRICE_MINT} ETH</span>
+            <span>Price {getSmallETHPrice(priceMint)} ETH</span>
             0/10,000
           </Price>
         </MainBox>

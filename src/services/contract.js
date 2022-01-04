@@ -2,18 +2,37 @@ import { ethers } from "ethers";
 // ******** Services ********
 import metamask from "./metamask";
 // ******** Config ********
-import MekaApesGameJSON from '../config/MekaApesGame.json';
+import MekaApesGameJSON from "../config/MekaApesGame.json";
+import DMT_ERC20JSON from "../config/DMT_ERC20.json";
+import OG_ERC20JSON from "../config/OG_ERC20.json";
 
 const MEKAAPES_GAME_CONTRACT_ADDRESS =
   process.env.REACT_APP_MEKAAPES_GAME_CONTRACT_ADDRESS;
+const DMT_ERC20_CONTRACT_ADDRESS =
+  process.env.REACT_APP_DMT_ERC20_CONTRACT_ADDRESS;
+const OG_ERC20_CONTRACT_ADDRESS =
+  process.env.REACT_APP_OG_ERC20_CONTRACT_ADDRESS;
 
+//TODO: call prices from MekaApesGame contract
 export class Contract {
   mekaApescontract = null;
+  dmtERC20Contract = null;
+  ogERC20Contract = null;
 
   constructor() {
     this.mekaApesContract = new ethers.Contract(
       MEKAAPES_GAME_CONTRACT_ADDRESS,
       MekaApesGameJSON.abi,
+      metamask.signer
+    );
+    this.dmtERC20Contract = new ethers.Contract(
+      DMT_ERC20_CONTRACT_ADDRESS,
+      DMT_ERC20JSON.abi,
+      metamask.signer
+    );
+    this.ogERC20Contract = new ethers.Contract(
+      OG_ERC20_CONTRACT_ADDRESS,
+      OG_ERC20JSON.abi,
       metamask.signer
     );
   }
@@ -28,6 +47,10 @@ export class Contract {
   // toStake is boolean if is staked or not
   async mint(amount, toStake) {
     return await this.mekaApesContract.mint(amount, toStake);
+  }
+
+  async allowedToMint(address) {
+    return await this.mekaApesContract.allowedToMint(address);
   }
 
   // mints amount new tokens with $OG
@@ -53,7 +76,9 @@ export class Contract {
 
   // claim reward for multiple items
   async claimAvailableAmountMultipleTokens(itemList) {
-    return await this.mekaApesContract.claimAvailableAmountMultipleTokens(itemList);
+    return await this.mekaApesContract.claimAvailableAmountMultipleTokens(
+      itemList
+    );
   }
 
   // level up Robo Ooga
@@ -67,6 +92,20 @@ export class Contract {
   // the second argument is burned token
   async mergeMekaApes(tokenIdSave, tokenIdBurn) {
     return await this.mekaApesContract.mergeMekaApes(tokenIdSave, tokenIdBurn);
+  }
+
+  // DMT_ERC20 Contract functions:
+
+  async getDMTBalance(address) {
+    const balance = await this.dmtERC20Contract.balanceOf(address);
+    return ethers.utils.formatUnits(balance);
+  }
+
+  // OG_ERC20 Contract functions:
+
+  async getOGBalance(address) {
+    const balance = await this.ogERC20Contract.balanceOf(address);
+    return ethers.utils.formatUnits(balance);
   }
 }
 

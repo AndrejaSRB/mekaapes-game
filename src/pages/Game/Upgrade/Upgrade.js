@@ -1,4 +1,5 @@
 import { useState, useContext, useEffect } from "react";
+import { ethers } from "ethers";
 // ******** Components ********
 import { Tooltip, message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -18,6 +19,7 @@ import { getLevelText } from "./helpers";
 import { BalanceContext } from "../../../store/balance-context";
 // ******** Services ********
 import contract from "../../../services/contract";
+import prices from "../../../services/prices";
 // ******** Styles ********
 import {
   Wrapper,
@@ -121,8 +123,6 @@ const EXAMPLE_DATA = [
   },
 ];
 
-const LEVEL_UP_PRICE = 100;
-
 const LevelBox = ({ level }) => (
   <LevelBoxContainer>
     <LevelBoxWrapper currentLvl={`${level}`}>
@@ -161,6 +161,16 @@ const Upgrade = () => {
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [price, setPrice] = useState(0);
+
+   // Get the LevelUp $DMT Price
+   useEffect(() => {
+    const getPriceMintAndStake = async () => {
+      let price = await prices.getMintStakePrice();
+      setPrice(ethers.utils.formatEther(price));
+    };
+    getPriceMintAndStake();
+  }, []);
 
   useEffect(() => {
     if (selectedApe) {
@@ -236,7 +246,7 @@ const Upgrade = () => {
   };
 
   const handleClickButton = async () => {
-    if (dmtBalance > LEVEL_UP_PRICE) {
+    if (dmtBalance > price) {
       if (selectedApe) {
         setIsDisabled(true);
         try {
@@ -288,7 +298,7 @@ const Upgrade = () => {
               </button>
             </ButtonBox>
             <HelperText>
-              Spend ${LEVEL_UP_PRICE} $DMT to level up your Robo Oogas
+              Spend ${price} $DMT to level up your Robo Oogas
             </HelperText>
           </Middle>
           <RightSide>

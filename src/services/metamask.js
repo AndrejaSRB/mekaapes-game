@@ -23,7 +23,7 @@ export class Metamask {
 
   async getBalance(address) {
     const balance = await this.provider.getBalance(address);
-    return ethers.utils.formatEther(balance);
+    return balance;
   }
 
   checkMetamaskConnection() {

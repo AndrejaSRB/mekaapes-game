@@ -1,9 +1,11 @@
 import { useState, useEffect, useContext } from "react";
+import { ethers } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import StatusBar from "../../../components/StatusBar/StatusBar";
+import Loading from "../../../components/Modals/Loading/Loading";
 // ******** Images ********
 import Animation from "../../../assets/level_up.gif";
 // ******** HOC ********
@@ -14,6 +16,7 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { BalanceContext } from "../../../store/balance-context";
 // ******** Services ********
 import contract from "../../../services/contract";
+import prices from "../../../services/prices";
 // ******** Styles ********
 import {
   Wrapper,
@@ -33,8 +36,8 @@ import {
 } from "./Crafting.styles";
 
 const EXAMPLE_CURRENT_VALUE = 29223;
-const DMT_MINT_PRICE = 120;
 const MAX_TOKEN_AMOUNT = 20;
+const INTERVAL_PERIOD = 30000;
 
 // Prices
 // 10,001 - 25,000: 4,000 $OG
@@ -44,14 +47,23 @@ const MAX_TOKEN_AMOUNT = 20;
 //TODO: Disable minting with $DTM after 10k of total minted
 //TODO: get the total amount of minted tokens
 //TODO: get the total amount of minted tokens with $DMT
+//TODO: set loader state when call total status and $DMT total status
 
 const Crafting = () => {
   const { dmtBalance, oogearBalance } = useContext(BalanceContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
-  const [OGPrice, setOGPrice] = useState(4000);
+  const [OGPrice, setOGPrice] = useState(0);
+  const [dmtPrice, setDMTPrice] = useState(0);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
   const [isDisableDMTButton, setIsDisableDMTButton] = useState(true);
+  const [isDMTApproved] = useState(true);
+  const [loading, setLoading] = useState({
+    status: false,
+    OGprice: false,
+    DMTprice: false,
+    DMTstatus: false,
+  });
 
   // TODO: fix the proper variable for total number
   useEffect(() => {
@@ -62,22 +74,66 @@ const Crafting = () => {
     }
   }, []);
 
-  // TODO: fix the proper variable for total number
+  //   // TODO: fix the proper variable for total number
+  //   useEffect(() => {
+  //     // Change the minting price depend of the amount of minted tokens
+  //     if (EXAMPLE_CURRENT_VALUE >= 10001 && EXAMPLE_CURRENT_VALUE < 25001) {
+  //       setOGPrice(4000);
+  //     } else if (
+  //       EXAMPLE_CURRENT_VALUE >= 25001 &&
+  //       EXAMPLE_CURRENT_VALUE < 40000
+  //     ) {
+  //       setOGPrice(6000);
+  //     } else if (
+  //       EXAMPLE_CURRENT_VALUE >= 40001 &&
+  //       EXAMPLE_CURRENT_VALUE < 55000
+  //     ) {
+  //       setOGPrice(12000);
+  //     }
+  //   }, []);
+
+  // Get the Mint $DMT Price
   useEffect(() => {
-    // Change the minting price depend of the amount of minted tokens
-    if (EXAMPLE_CURRENT_VALUE >= 10001 && EXAMPLE_CURRENT_VALUE < 25001) {
-      setOGPrice(4000);
-    } else if (
-      EXAMPLE_CURRENT_VALUE >= 25001 &&
-      EXAMPLE_CURRENT_VALUE < 40000
-    ) {
-      setOGPrice(6000);
-    } else if (
-      EXAMPLE_CURRENT_VALUE >= 40001 &&
-      EXAMPLE_CURRENT_VALUE < 55000
-    ) {
-      setOGPrice(12000);
-    }
+    const getPriceMintAndStake = async () => {
+      setLoading({
+        ...loading,
+        DMTprice: true,
+      });
+      let price = await prices.getMintDMTPrice();
+      setDMTPrice(ethers.utils.formatUnits(price));
+    };
+    getPriceMintAndStake();
+    setLoading((prevState) => ({
+      ...prevState,
+      DMTprice: false,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Get the Mint $OG Price
+  useEffect(() => {
+    const getPriceMintAndStake = async () => {
+      setLoading({
+        ...loading,
+        OGprice: true,
+      });
+      let price = await prices.getMintOGStakePrice();
+      setOGPrice(ethers.utils.formatUnits(price));
+    };
+    getPriceMintAndStake();
+    setLoading({
+      ...loading,
+      OGprice: false,
+    });
+
+    let interval = setInterval(async () => {
+      let price = await prices.getMintOGStakePrice();
+      setOGPrice(ethers.utils.formatUnits(price, 18));
+    }, INTERVAL_PERIOD);
+    return () => {
+      clearInterval(interval);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // TODO: disable DMT button if it's minted 10k tokens with $DMT
@@ -98,10 +154,12 @@ const Crafting = () => {
   }, [oogearCounter]);
 
   const handleDmtCounter = (type) => () => {
-    if (type === "plus" && dmtCounter < MAX_TOKEN_AMOUNT) {
-      setDmtCounter(dmtCounter + 1);
-    } else if (type === "minus" && dmtCounter > 0) {
-      setDmtCounter(dmtCounter - 1);
+    if (isDMTApproved) {
+      if (type === "plus" && dmtCounter < MAX_TOKEN_AMOUNT) {
+        setDmtCounter(dmtCounter + 1);
+      } else if (type === "minus" && dmtCounter > 0) {
+        setDmtCounter(dmtCounter - 1);
+      }
     }
   };
 
@@ -131,6 +189,15 @@ const Crafting = () => {
       disabled = false;
     }
     return disabled;
+  };
+
+  const getIsLoading = () => {
+    const { status, OGprice, DMTprice, DMTstatus } = loading;
+    if (status || OGprice || DMTprice || DMTstatus) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const handleClickMintWithOG = async () => {
@@ -173,7 +240,7 @@ const Crafting = () => {
 
   const handleClickMintWithDMT = async () => {
     if (dmtCounter > 0) {
-      if (+dmtCounter * DMT_MINT_PRICE < +dmtBalance) {
+      if (+dmtCounter * dmtPrice < +dmtBalance) {
         setIsDisableDMTButton(true);
         try {
           await contract.mintWithDMT(dmtCounter);
@@ -259,13 +326,18 @@ const Crafting = () => {
                   <PlusOutlined />
                 </div>
               </Counter>
-              <Button
-                disabled={getDMTBtnIsDisabled()}
-                onClick={handleClickMintWithDMT}>
-                Mint $DMT
-              </Button>
+
+              {isDMTApproved ? (
+                <Button
+                  disabled={getDMTBtnIsDisabled()}
+                  onClick={handleClickMintWithDMT}>
+                  Mint $DMT
+                </Button>
+              ) : (
+                <Button>Approve $DMT Transaction</Button>
+              )}
               <HelperText>
-                Price {DMT_MINT_PRICE} $DMT <span>1231/10,000</span>
+                Price {dmtPrice} $DMT <span>1231/10,000</span>
               </HelperText>
             </DmtBox>
           </CounterBox>
@@ -273,6 +345,7 @@ const Crafting = () => {
         </MainBox>
       </Content>
       <Footer page="game" />
+      <Loading open={getIsLoading()} />
     </Wrapper>
   );
 };

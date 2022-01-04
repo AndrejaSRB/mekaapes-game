@@ -469,7 +469,7 @@ export const ClaimAndUnstakeButton = styled.button`
   cursor: pointer;
   width: 240px;
   height: 50px;
-  margin: 16px auto 0 auto;
+  margin: 32px auto 0 auto;
   font-size: 16px;
   display: flex;
   flex-direction: column;

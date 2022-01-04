@@ -1,6 +1,8 @@
 import { useState, createContext, useContext } from "react";
 // ******** Stores ********
 import { UserContext } from "./user-context";
+// ******** Services ********
+import contract from "../services/contract";
 
 export const BalanceContext = createContext({
   dmtBalance: null,
@@ -18,15 +20,23 @@ const BalanceContextProvider = ({ children }) => {
 
   const getDmtBalance = async () => {
     if (userMetaMaskToken) {
-      // TODO: get the DMT Balance
-      // TODO: save the result to the state
+      try {
+        let balance = await contract.getDMTBalance(userMetaMaskToken);
+        setDmtBalance(balance);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
-  const getOogearBalance = () => {
+  const getOogearBalance = async () => {
     if (userMetaMaskToken) {
-      // TODO: get the DMT Balance | call contract and save OOGEAR Balance
-      // TODO: save the result to the state
+      try {
+        let balance = await contract.getOGBalance(userMetaMaskToken);
+        setoogearBalance(balance);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { gql, useQuery } from "@apollo/client";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -17,6 +18,8 @@ import {
   handleClickStakedApe,
   arrangeStakedMobileList,
 } from "./helper";
+// ******** Store ********
+import { BalanceContext } from "../../../store/balance-context";
 // ******** Images ********
 import HeroImage from "../../../assets/landing-image.png";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
@@ -76,12 +79,24 @@ const InProgressApe = () => (
   </ApeInProgress>
 );
 
+const TEST_QUERY = gql`
+  query GetOogas {
+    spaceOogas {
+      id
+      oogaType
+      level
+      isStaked
+    }
+  }
+`;
+
 // TODO
 // Disable buttons if the amount is bigger than the balance in that coin
 // Sum total $OG staked tokens to the unclaimed total bellow the unstake button
 // Add clicked total sum to the Claim button
 
 const Factory = () => {
+  const { dmtBalance, oogearBalance } = useContext(BalanceContext);
   const { width } = useWindowDimenstions();
   const [selectAllStaked, setSelectAllStaked] = useState(false);
   const [selectAllUnstakedMeka, setSelectAllUnstakedMeka] = useState(false);
@@ -93,6 +108,11 @@ const Factory = () => {
 
   const [stakedData, setStakedData] = useState(null);
   const [minStakedElementNo, setMinStakedElementNo] = useState(6);
+  const { loading, error, data } = useQuery(TEST_QUERY);
+
+  console.log("loading", loading);
+  console.log("error", error);
+  console.log("data", data);
 
   useEffect(() => {
     if (width < 388) {
@@ -285,10 +305,10 @@ const Factory = () => {
               <img src={HeroImage} alt="Factory Robo" />
             </div>
             <p>
-              <span>$OG Balance:</span> 1,000,000,000
+              <span>$OG Balance:</span> {oogearBalance}
             </p>
             <p>
-              <span>$DMT Balance:</span> 1,000,000
+              <span>$DMT Balance:</span> {dmtBalance}
             </p>
           </MobileBoxHeader>
           <Boxes>
@@ -322,10 +342,10 @@ const Factory = () => {
             <MiddleBox>
               <img src={HeroImage} alt="hero ape" />
               <p>
-                <span>$OG Balance:</span> 1,000,000,000
+                <span>$OG Balance:</span> {oogearBalance}
               </p>
               <p>
-                <span>$DMT Balance:</span> 1,000,000
+                <span>$DMT Balance:</span> {dmtBalance}
               </p>
             </MiddleBox>
             <Staked>
