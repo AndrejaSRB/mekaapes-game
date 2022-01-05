@@ -13,6 +13,9 @@ const DMT_ERC20_CONTRACT_ADDRESS =
 const OG_ERC20_CONTRACT_ADDRESS =
   process.env.REACT_APP_OG_ERC20_CONTRACT_ADDRESS;
 
+const APPROVE_AMOUNT =
+  "115792089237316195423570985008687907853269984665640564039457584007913129639935"; //(2^256 - 1 )
+
 //TODO: call prices from MekaApesGame contract
 export class Contract {
   mekaApescontract = null;
@@ -99,6 +102,18 @@ export class Contract {
   async getDMTBalance(address) {
     const balance = await this.dmtERC20Contract.balanceOf(address);
     return ethers.utils.formatUnits(balance);
+  }
+
+  async approveDMTtransaction() {
+    return await this.dmtERC20Contract.approve(DMT_ERC20_CONTRACT_ADDRESS, APPROVE_AMOUNT);
+  }
+
+  async isDMTtransactionApproved(address, price) {
+    let isApproved = await this.dmtERC20Contract.allowance(
+      address,
+      DMT_ERC20_CONTRACT_ADDRESS
+    );
+    return +isApproved.toString() > +price;
   }
 
   // OG_ERC20 Contract functions:

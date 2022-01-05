@@ -5,6 +5,7 @@ import { Tooltip, message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import LevelRoboOogas from "../../../components/Modals/LevelRoboOogas/LevelRoboOogas";
+import Loading from "../../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
@@ -17,6 +18,7 @@ import RoboOogaExample from "../../../assets/landing-image.png";
 import { getLevelText } from "./helpers";
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
+import { UserContext } from "../../../store/user-context";
 // ******** Services ********
 import contract from "../../../services/contract";
 import prices from "../../../services/prices";
@@ -157,14 +159,32 @@ const tooltipText = (
 // Connect with the contract
 
 const Upgrade = () => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [price, setPrice] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [isApproved, setIsApproved] = useState(true);
+  const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
 
-   // Get the LevelUp $DMT Price
-   useEffect(() => {
+  // Check if $DMT transaction is approved
+  useEffect(() => {
+    if (userMetaMaskToken && price > 0) {
+      const CheckIfApprovedDMTTransaction = async () => {
+        let isApproved = await contract.isDMTtransactionApproved(
+          userMetaMaskToken,
+          price
+        );
+        setIsApproved(isApproved);
+      };
+      CheckIfApprovedDMTTransaction();
+    }
+  }, [userMetaMaskToken, price]);
+
+  // Get the LevelUp $DMT Price
+  useEffect(() => {
     const getPriceMintAndStake = async () => {
       let price = await prices.getMintStakePrice();
       setPrice(ethers.utils.formatEther(price));
@@ -185,7 +205,11 @@ const Upgrade = () => {
   };
 
   const handleOpenApeModal = () => {
-    setIsApeModalOpen(true);
+    if (isApproved) {
+      setIsApeModalOpen(true);
+    } else {
+      message.info("Please, first approve $DMT transaction.");
+    }
   };
 
   const handleCloseApeModal = () => {
@@ -245,6 +269,25 @@ const Upgrade = () => {
     return disabled;
   };
 
+  const handleClickApproveDMT = async () => {
+    setIsApprovedBtnDisabled(true);
+    try {
+      let tsx = await contract.approveDMTtransaction();
+      setLoading(true);
+      tsx.wait().then(async () => {
+        let isApproved = await contract.isDMTtransactionApproved(
+          userMetaMaskToken,
+          price
+        );
+        setIsApproved(isApproved);
+        setLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setIsApprovedBtnDisabled(false);
+  };
+
   const handleClickButton = async () => {
     if (dmtBalance > price) {
       if (selectedApe) {
@@ -293,9 +336,19 @@ const Upgrade = () => {
           <Middle>
             {renderRoboOoga()}
             <ButtonBox>
-              <button disabled={getIfItsDisabled()} onClick={handleClickButton}>
-                Level Up Robo Oogas
-              </button>
+              {isApproved ? (
+                <button
+                  disabled={getIfItsDisabled()}
+                  onClick={handleClickButton}>
+                  Level Up Robo Oogas
+                </button>
+              ) : (
+                <button
+                  disabled={isApprovedBtnDisabled}
+                  onClick={handleClickApproveDMT}>
+                  Approve $DMT Transaction
+                </button>
+              )}
             </ButtonBox>
             <HelperText>
               Spend ${price} $DMT to level up your Robo Oogas
@@ -322,6 +375,7 @@ const Upgrade = () => {
           selectedApe={selectedApe}
         />
       )}
+      <Loading open={loading} />
     </Wrapper>
   );
 };

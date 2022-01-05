@@ -14,6 +14,7 @@ import withConnect from "../../../hoc/withConnect";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Stores ********
 import { BalanceContext } from "../../../store/balance-context";
+import { UserContext } from "../../../store/user-context";
 // ******** Services ********
 import contract from "../../../services/contract";
 import prices from "../../../services/prices";
@@ -50,6 +51,7 @@ const INTERVAL_PERIOD = 30000;
 //TODO: set loader state when call total status and $DMT total status
 
 const Crafting = () => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance, oogearBalance } = useContext(BalanceContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
@@ -57,13 +59,23 @@ const Crafting = () => {
   const [dmtPrice, setDMTPrice] = useState(0);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
   const [isDisableDMTButton, setIsDisableDMTButton] = useState(true);
-  const [isDMTApproved] = useState(true);
-  const [loading, setLoading] = useState({
-    status: false,
-    OGprice: false,
-    DMTprice: false,
-    DMTstatus: false,
-  });
+  const [isDMTApproved, setIsDMTApproved] = useState(true);
+  const [disabledApproveBtn, setDisableApproveBtn] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Check if $DMT transaction is approved
+  useEffect(() => {
+    if (userMetaMaskToken && dmtPrice > 0) {
+      const CheckIfApprovedDMTTransaction = async () => {
+        let isApproved = await contract.isDMTtransactionApproved(
+          userMetaMaskToken,
+          dmtPrice
+        );
+        setIsDMTApproved(isApproved);
+      };
+      CheckIfApprovedDMTTransaction();
+    }
+  }, [userMetaMaskToken, dmtPrice]);
 
   // TODO: fix the proper variable for total number
   useEffect(() => {
@@ -95,37 +107,19 @@ const Crafting = () => {
   // Get the Mint $DMT Price
   useEffect(() => {
     const getPriceMintAndStake = async () => {
-      setLoading({
-        ...loading,
-        DMTprice: true,
-      });
       let price = await prices.getMintDMTPrice();
       setDMTPrice(ethers.utils.formatUnits(price));
     };
     getPriceMintAndStake();
-    setLoading((prevState) => ({
-      ...prevState,
-      DMTprice: false,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Get the Mint $OG Price
   useEffect(() => {
     const getPriceMintAndStake = async () => {
-      setLoading({
-        ...loading,
-        OGprice: true,
-      });
       let price = await prices.getMintOGStakePrice();
       setOGPrice(ethers.utils.formatUnits(price));
     };
     getPriceMintAndStake();
-    setLoading({
-      ...loading,
-      OGprice: false,
-    });
-
     let interval = setInterval(async () => {
       let price = await prices.getMintOGStakePrice();
       setOGPrice(ethers.utils.formatUnits(price, 18));
@@ -133,7 +127,6 @@ const Crafting = () => {
     return () => {
       clearInterval(interval);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // TODO: disable DMT button if it's minted 10k tokens with $DMT
@@ -160,6 +153,8 @@ const Crafting = () => {
       } else if (type === "minus" && dmtCounter > 0) {
         setDmtCounter(dmtCounter - 1);
       }
+    } else {
+      message.info("Please, first approve $DMT transaction.");
     }
   };
 
@@ -191,13 +186,23 @@ const Crafting = () => {
     return disabled;
   };
 
-  const getIsLoading = () => {
-    const { status, OGprice, DMTprice, DMTstatus } = loading;
-    if (status || OGprice || DMTprice || DMTstatus) {
-      return true;
-    } else {
-      return false;
+  const handleClickApproveDMT = async () => {
+    setDisableApproveBtn(true);
+    try {
+      let tsx = await contract.approveDMTtransaction();
+      setLoading(true);
+      tsx.wait().then(async () => {
+        let isApproved = await contract.isDMTtransactionApproved(
+          userMetaMaskToken,
+          dmtPrice
+        );
+        setIsDMTApproved(isApproved);
+        setLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
     }
+    setDisableApproveBtn(false);
   };
 
   const handleClickMintWithOG = async () => {
@@ -334,7 +339,11 @@ const Crafting = () => {
                   Mint $DMT
                 </Button>
               ) : (
-                <Button>Approve $DMT Transaction</Button>
+                <Button
+                  disabled={disabledApproveBtn}
+                  onClick={handleClickApproveDMT}>
+                  Approve $DMT Transaction
+                </Button>
               )}
               <HelperText>
                 Price {dmtPrice} $DMT <span>1231/10,000</span>
@@ -345,7 +354,7 @@ const Crafting = () => {
         </MainBox>
       </Content>
       <Footer page="game" />
-      <Loading open={getIsLoading()} />
+      <Loading open={loading} />
     </Wrapper>
   );
 };

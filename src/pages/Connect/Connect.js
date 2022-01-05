@@ -11,6 +11,8 @@ import { UserContext } from "../../store/user-context";
 import { Title, Subtitle, Wrapper, Button, Content } from "./Connect.styles";
 import metamask from "../../services/metamask";
 
+//TODO: Check connect page on laptop, footer is weird
+
 const Connect = ({ page }) => {
   const navigate = useNavigate();
   const { saveUserMetaMaskToken } = useContext(UserContext);
