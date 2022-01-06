@@ -156,6 +156,7 @@ export const Text = styled.span`
   margin: 24px 0 32px 0;
   font-size: 15px;
   text-align: center;
+  line-height: 1.5;
   @media only screen and (min-width: 789px) {
     font-size: 18px;
   }

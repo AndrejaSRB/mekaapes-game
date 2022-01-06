@@ -9,7 +9,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import { UserContext } from "../../store/user-context";
 // ******** Images ********
 import WalletIcon from "../../assets/wallet_icon.svg";
-import LogoImg from '../../assets/logo.svg';
+import LogoImg from "../../assets/logo.svg";
 // ******** Styles ********
 import {
   Wrapper,
@@ -99,12 +99,12 @@ const Header = ({ page }) => {
       <NavLink
         to="/game/merging"
         className={({ isActive }) => (isActive ? "active" : "")}>
-        Merging
+        Meka Merge
       </NavLink>
       <NavLink
         to="/game/upgrade"
         className={({ isActive }) => (isActive ? "active" : "")}>
-        Upgrade
+        Robo Upgrade
       </NavLink>
       <NavLink
         to="/game/evolve"
@@ -114,7 +114,7 @@ const Header = ({ page }) => {
       <NavLink
         to="/game/statistics"
         className={({ isActive }) => (isActive ? "active" : "")}>
-        Game Statistics
+        Statistics
       </NavLink>
     </NavList>
   );
@@ -147,7 +147,7 @@ const Header = ({ page }) => {
           )}
           <Logo>
             <Link to="/">
-                <img src={LogoImg} alt="Logo" />
+              <img src={LogoImg} alt="Logo" />
             </Link>
           </Logo>
           {renderNavigation(page)}

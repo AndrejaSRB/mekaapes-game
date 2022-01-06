@@ -11,23 +11,6 @@ const StatusBar = ({ totalNumber }) => {
   return (
     <Wrapper>
       <Color width={percentage()} />
-      {/* <Box place="first" width="20">0</Box>
-      <Box width="20">
-        10 <span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box>
-      <Box width="20">
-        25<span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box>
-      <Box width="20">
-        40<span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box>
-      <Box place="last" width="20">
-        55<span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box> */}
       <Box width="18.18" place="first">
         10 <span className="mobile">k</span>{" "}
         <span className="desktop">,000</span>

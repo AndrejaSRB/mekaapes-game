@@ -294,11 +294,11 @@ const Factory = () => {
     <Wrapper>
       <Header page="game" />
       <Content>
-        <Title>Guard the factory</Title>
+        <Title>Enter the Factory</Title>
         <MainBox>
           <TitleBox>
-            <h4>Guard the factory!</h4>
-            <h6>(Stake) to earn $DMT</h6>
+            <h4>The Factory</h4>
+            <h6>Stake Robo Oogas and MekaApes to earn $OG</h6>
           </TitleBox>
           <MobileBoxHeader>
             <div>
@@ -326,7 +326,7 @@ const Factory = () => {
                 {renderUnstakedRobo()}
               </NftList>
               <Subtitle>
-                <h6 className="meka">MekaApe:</h6>
+                <h6 className="meka">MekaApes:</h6>
                 <CustomUnstakeCheckbox
                   onChange={hadnleChangeUnstakedMekaCheckbox}
                   checked={selectAllUnstakedMeka}>
@@ -336,8 +336,8 @@ const Factory = () => {
               <NftList meka lenght={getListLenght(exampleMekaOogasUnstaked)}>
                 {renderUnstakedMeka()}
               </NftList>
-              <Button type="stake">Stake and Guard!</Button>
-              <HelperText>Select your NFTs to Claim</HelperText>
+              <Button type="stake">Stake in Factory!</Button>
+              <HelperText>Select the NFTs you want to stake</HelperText>
             </Unstaked>
             <MiddleBox>
               <img src={HeroImage} alt="hero ape" />
@@ -351,7 +351,7 @@ const Factory = () => {
             <Staked>
               <h5>Staked</h5>
               <div className="subtitle">
-                <h6>Guard the factory:</h6>
+                <h6>In the Factory:</h6>
                 <CustomCheckbox
                   onChange={hadnleChangeStakedCheckbox}
                   checked={selectAllStaked}>
@@ -366,9 +366,9 @@ const Factory = () => {
               </ClaimAndUnstakeButton>
               <StakedText>
                 <p>
-                  Unclaimed: <span>1000 $OG</span>
+                  Unclaimed: <span>xxxx $OG</span>
                 </p>
-                <p>Select your DMT to claim rewards!</p>
+                <p>A Robo Ooga can only be unstaked when it has accumulated min. 6,000 $OG</p>
               </StakedText>
             </Staked>
           </Boxes>

@@ -27,7 +27,7 @@ export const Title = styled.h1`
   & > span {
     display: block;
     width: 100%;
-    color: ${theme.color.red}
+    color: ${theme.color.red};
   }
   @media only screen and (min-width: 650px) {
     & > span {
@@ -226,6 +226,7 @@ export const Box = styled.div`
     margin: 24px 0 25px 0;
     border-radius: 20px;
     filter: drop-shadow(0px 0px 40px #11051b);
+    width: 168px;
   }
   & > p {
     color: ${theme.color.whiteGrey};
@@ -240,10 +241,29 @@ export const Box = styled.div`
     }
     & > p {
       font-size: 18px;
+      a {
+        color: ${theme.color.white};
+        transition: ${theme.transition};
+        cursor: pointer;
+        font-weight: bold;
+        &:hover {
+          color: ${theme.color.green};
+        }
+      }
     }
     & > p.width {
-        width: 235px;
-        margin: 0 auto;
+      width: 235px;
+      margin: 0 auto;
+    }
+    & > p.small-width {
+      width: 225px;
+      margin: 0 auto;
+      span {
+        width: 100%;
+      }
+    }
+    & > img {
+      width: 175px;
     }
   }
 `;

@@ -112,18 +112,17 @@ const LevelRoboOogas = ({
       maskClosable={false}>
       <div className="content">
         <Title>Robo Oogas</Title>
-        <Subtitle>
-          Choose your Robo Ooga to upgrade it to another Level.
-        </Subtitle>
+        <Subtitle>Select the Robo Ooga you want to upgrade.</Subtitle>
         <RoboApesBox length={listLength}>{handleRenderElements()}</RoboApesBox>
         <ButtonWrapper>
           <Button disabled={getIfBtnIsDisabled()} onClick={handleClickButton}>
-            Choose
+            Select
           </Button>
           <CancelBtn onClick={handleCloseModal}>Cancel</CancelBtn>
         </ButtonWrapper>
         <Text>
-          By clicking choose you will available to upgrade your Robo Ooga.
+          Click "Select" to see what features your Robo Ooga will gain when
+          upgrading to the next level.
         </Text>
       </div>
     </ModalWrapper>

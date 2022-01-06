@@ -57,14 +57,14 @@ const MobileMenu = ({
         <NavLink
           to="/game/merging"
           className={({ isActive }) => (isActive ? "active" : "")}>
-          Merging
+          Meka Merge
         </NavLink>
       </div>
       <div>
         <NavLink
           to="/game/upgrade"
           className={({ isActive }) => (isActive ? "active" : "")}>
-          Upgrade
+          Robo Upgrade
         </NavLink>
       </div>
       <div>
@@ -78,7 +78,7 @@ const MobileMenu = ({
         <NavLink
           to="/game/statistics"
           className={({ isActive }) => (isActive ? "active" : "")}>
-          Game Statistics
+          Statistics
         </NavLink>
       </div>
     </NavList>

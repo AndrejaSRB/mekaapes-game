@@ -34,6 +34,7 @@ import {
   Text,
   CounterBox,
   AnimationBox,
+  HelperOGText,
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 20;
@@ -47,7 +48,8 @@ const INITIAL_EHT_MINT = 10000;
 // 25,001 - 40,000: 8,000 $OG
 // 40,001 - 55,000: 12,000 $OG
 
-//TODO: check the status styles
+//TODO: Check the balance with the counter * price by clicking on button
+//TODO: Get the mintOGstakePrice from the contract
 
 const Crafting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
@@ -56,6 +58,7 @@ const Crafting = () => {
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
   const [OGPrice, setOGPrice] = useState(0);
+  const [OGStakePrice, setOGStakePrice] = useState(0);
   const [dmtPrice, setDMTPrice] = useState(0);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
   const [isDisableDMTButton, setIsDisableDMTButton] = useState(true);
@@ -115,14 +118,30 @@ const Crafting = () => {
 
   // Get the Mint $OG Price
   useEffect(() => {
+    const getPriceMintOG = async () => {
+      let price = await prices.getMintOGprice();
+      setOGPrice(ethers.utils.formatUnits(price));
+    };
+    getPriceMintOG();
+    let interval = setInterval(async () => {
+      let price = await prices.getMintOGprice();
+      setOGPrice(ethers.utils.formatUnits(price, 18));
+    }, INTERVAL_PERIOD);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Get the Mint&Stake $OG Price
+  useEffect(() => {
     const getPriceMintAndStake = async () => {
       let price = await prices.getMintOGStakePrice();
-      setOGPrice(ethers.utils.formatUnits(price));
+      setOGStakePrice(ethers.utils.formatUnits(price));
     };
     getPriceMintAndStake();
     let interval = setInterval(async () => {
       let price = await prices.getMintOGStakePrice();
-      setOGPrice(ethers.utils.formatUnits(price, 18));
+      setOGStakePrice(ethers.utils.formatUnits(price, 18));
     }, INTERVAL_PERIOD);
     return () => {
       clearInterval(interval);
@@ -307,12 +326,10 @@ const Crafting = () => {
     <Wrapper>
       <Header page="game" />
       <Content>
-        <Title>
-          Factory <span>Minting</span>
-        </Title>
+        <Title>Crafting</Title>
         <MainBox>
           <TitleBox>
-            <h4>Guard the factory!</h4>
+            <h4>Mint new Robo Oogas!</h4>
           </TitleBox>
           <AnimationBox>
             <img src={Animation} alt="animation" />
@@ -348,15 +365,18 @@ const Crafting = () => {
                 <button
                   disabled={getOGBtnIsDisabled()}
                   onClick={handleClickMintWithOG}>
-                  Mint Now
+                  $OG Mint
                 </button>
                 <button
                   disabled={getOGBtnIsDisabled()}
                   onClick={handleClickMintWithOGAndStake}>
-                  Mint & Stake
+                  $OG Mint & Stake
                 </button>
               </ButtonBox>
-              <HelperText>Price {OGPrice} $OG</HelperText>
+              <HelperOGText>
+                Mint Price: {OGPrice} $OG{" "}
+                <span>Mint & Stake Price: {OGStakePrice} $OG</span>
+              </HelperOGText>
             </OogearBox>
             <DmtBox>
               <Counter>
@@ -374,7 +394,8 @@ const Crafting = () => {
                 </div>
                 <div
                   className={
-                    dmtCounter === MAX_TOKEN_AMOUNT || totalMintedTokens < INITIAL_EHT_MINT
+                    dmtCounter === MAX_TOKEN_AMOUNT ||
+                    totalMintedTokens < INITIAL_EHT_MINT
                       ? "plus disabled"
                       : "plus"
                   }
@@ -387,7 +408,7 @@ const Crafting = () => {
                 <Button
                   disabled={getDMTBtnIsDisabled()}
                   onClick={handleClickMintWithDMT}>
-                  Mint $DMT
+                  $DMT Mint
                 </Button>
               ) : (
                 <Button
@@ -402,7 +423,13 @@ const Crafting = () => {
               </HelperText>
             </DmtBox>
           </CounterBox>
-          <Text>(Stake) to earn $DMT</Text>
+          <Text>
+            When minting Robo Oogas with $OG or $DMT there is a 10% chance that
+            you'll receive a MekaApe instead of a Robo Ooga! There is also a 10%
+            risk that the Mint gets gifted to a random Mega Meka holder. Minting
+            with $DMT reduces that risk to only 5%. $DMT Mint is limited to
+            10,000 mints and your NFTs will be staked automatically.
+          </Text>
         </MainBox>
       </Content>
       <Footer page="game" />

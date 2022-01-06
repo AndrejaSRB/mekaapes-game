@@ -100,8 +100,9 @@ export const TitleBox = styled.div`
     }
     h6 {
       font-size: 18px;
-      line-height: 49px;
+      line-height: 1.5;
       margin-bottom: 38px;
+      margin-top: 42px;
     }
   }
 `;
@@ -141,12 +142,21 @@ export const ButtonBox = styled.div`
 export const HelperText = styled.p`
   color: ${theme.color.whiteGrey};
   font-size: 16px;
-  line-height: 21px;
+  line-height: 1.5;
   text-align: center;
   margin-top: 16px;
   margin-bottom: 0;
   span {
     display: block;
+  }
+  a {
+    color: ${theme.color.red};
+    transition: ${theme.transition};
+    font-weight: bold;
+    padding-left: 5px;
+    &:hover {
+      color: ${theme.color.green};
+    }
   }
   @media only screen and (min-width: 789px) {
     margin-top: 24px;
@@ -157,7 +167,7 @@ export const HelperText = styled.p`
 `;
 
 export const LevelBoxContainer = styled.div`
-    min-height: 80px;
+  min-height: 80px;
 `;
 
 export const LevelBoxWrapper = styled.div`
@@ -312,10 +322,17 @@ export const InfoIcon = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 21px;
-  cursor: help;
   position: absolute;
   right: 15px;
   top: 10px;
+  cursor: pointer;
+  transition: ${theme.transition};
+  &:hover {
+    background: ${theme.color.white};
+    svg {
+      color: ${theme.color.green};
+    }
+  }
   @media only screen and (min-width: 1024px) {
     width: 64px;
     height: 64px;
@@ -323,8 +340,4 @@ export const InfoIcon = styled.div`
     top: 54px;
     right: 90px;
   }
-`;
-
-export const TooltipList = styled.div`
-    color: ${theme.color.black};
 `;

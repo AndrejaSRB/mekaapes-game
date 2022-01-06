@@ -99,6 +99,7 @@ export const TitleBox = styled.div`
       font-size: 18px;
       line-height: 49px;
       margin-bottom: 38px;
+      line-height: 1.5;
     }
   }
 `;
@@ -116,7 +117,7 @@ export const MergingBox = styled.div`
     max-width: 542px;
     margin-bottom: 100px;
     img {
-        width: 58px;
+      width: 58px;
     }
   }
 `;
@@ -212,5 +213,8 @@ export const HelperText = styled.p`
   }
   @media only screen and (min-width: 1200px) {
     font-size: 18px;
+    line-height: 1.5;
+    width: 550px;
+    margin: 24px auto 0 auto;
   }
 `;

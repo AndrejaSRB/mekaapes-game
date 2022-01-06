@@ -214,7 +214,7 @@ const Minting = () => {
     <Wrapper>
       <Header page="minting" />
       <Content>
-        <Title>{allowed ? "You are the worthy!" : "You shall not pass"}</Title>
+        <Title>Your wallet has <span>6</span> mint more</Title>
         <MainBox>
           {allowed ? (
             <h4>Welcome!</h4>
@@ -229,10 +229,10 @@ const Minting = () => {
           )}
           {allowed ? (
             <IntroText>
-              You have secured your place as the first defender of the Factory!{" "}
+              You have secured your place on the whitelist!{" "}
               <span>
-                Begin the defensive by minting a unique Defender in the form of
-                a Robo Oogas or MekaApes.
+                Choose "Mint and Stake" to safe one transaction and earn $OG
+                immediately.
               </span>
             </IntroText>
           ) : (
@@ -256,7 +256,7 @@ const Minting = () => {
               disabled={isDisabled}
               className="noselect"
               onClick={handleClickMintAndStake}>
-              Mint and Stake
+              Mint & Stake
             </button>
             <Price className="noselect">
               <span>Price {getSmallETHPrice(priceMintAndStake)} ETH</span>
@@ -265,7 +265,7 @@ const Minting = () => {
               disabled={isDisabled}
               className="noselect orange"
               onClick={handleClickMint}>
-              Mint Now
+              Mint Only
             </button>
           </ButtonWrapper>
           <Price className="noselect" margin>

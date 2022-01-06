@@ -31,6 +31,7 @@ const MergeMekaApes = ({
   selectedApe,
   list,
   oppositeApe,
+  type,
 }) => {
   const [clickedApe, setClickedApe] = useState(null);
   const [data, setData] = useState(null);
@@ -126,7 +127,10 @@ const MergeMekaApes = ({
       maskClosable={false}>
       <div className="content">
         <Title>MekaApes</Title>
-        <Subtitle>Choose your MekaApes to merge it with another one.</Subtitle>
+        <Subtitle>
+          Select the MekaApe you want to merge. Staked MekaApes can't be merged.
+          You need to unstake the MekaApes you want to merge first.
+        </Subtitle>
         <MekaApesBox length={listLength}>{handleRenderElements()}</MekaApesBox>
         <ButtonWrapper>
           <Button disabled={getIfBtnIsDisabled()} onClick={handleClickButton}>
@@ -135,7 +139,10 @@ const MergeMekaApes = ({
           <CancelBtn onClick={handleCloseModal}>Cancel</CancelBtn>
         </ButtonWrapper>
         <Text>
-          By clicking choose you will available to merge your MekaApes
+          {type === "keep"
+            ? `You will keep the MekaApe you select. It will receive a random Mega
+          Level.`
+            : `The MekaApe you select will get burned.`}
         </Text>
       </div>
     </ModalWrapper>

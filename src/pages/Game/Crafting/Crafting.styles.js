@@ -212,6 +212,31 @@ export const ButtonBox = styled.div`
   }
 `;
 
+export const HelperOGText = styled.p`
+  margin-top: 16px;
+  margin-bottom: 0;
+  color: ${theme.color.white};
+  font-size: 18px;
+  line-height: 23px;
+  text-align: center;
+  span {
+    display: block;
+    margin-top: 7px;
+  }
+  @media only screen and (min-width: 1200px) {
+    font-size: 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 30px;
+    span {
+      display: inline;
+      padding-left: 0;
+      margin-top: 0;
+    }
+  }
+`;
+
 export const HelperText = styled.p`
   margin-top: 16px;
   margin-bottom: 0;
@@ -225,7 +250,7 @@ export const HelperText = styled.p`
     margin-top: 7px;
   }
   @media only screen and (min-width: 1200px) {
-    font-size: 21px;
+    font-size: 18px;
     span {
       display: inline;
       padding-left: 24px;
@@ -275,6 +300,10 @@ export const Text = styled.p`
   text-align: center;
   margin-top: 32px;
   margin-bottom: 0;
+  @media only screen and (min-width: 1200px) {
+    width: 1100px;
+    margin: 48px auto 0 auto;
+  }
 `;
 
 export const CounterBox = styled.div`

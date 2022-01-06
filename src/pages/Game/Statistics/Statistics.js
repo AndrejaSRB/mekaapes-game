@@ -46,11 +46,11 @@ const Statistics = () => {
                 <span className="number">3.212</span>
               </Stats>
               <Stats>
-                <span>MekaApes Stolen:</span>
+                <span>MekaApes Gifted:</span>
                 <span className="number">3.212</span>
               </Stats>
               <Stats position="last">
-                <span>Robo Oogas Stolen:</span>
+                <span>Robo Oogas Gifted:</span>
                 <span className="number">3.212</span>
               </Stats>
             </div>
@@ -59,7 +59,7 @@ const Statistics = () => {
             </TotalText>
           </Box>
           <LeaderboardsBox>
-            <h4>Leaderboards</h4>
+            <h4>Leaderboard</h4>
             <BoardWrapper>
               <Place position="first">
                 <span>0x9677...9123</span>

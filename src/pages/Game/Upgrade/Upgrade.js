@@ -1,10 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import { ethers } from "ethers";
 // ******** Components ********
-import { Tooltip, message } from "antd";
+import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import LevelRoboOogas from "../../../components/Modals/LevelRoboOogas/LevelRoboOogas";
+import UpgradeInfo from "../../../components/Modals/UpgradeInfo/UpgradeInfo";
 import Loading from "../../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -40,7 +41,6 @@ import {
   LevelList,
   Name,
   InfoIcon,
-  TooltipList,
   LevelBoxContainer,
 } from "./Upgrade.styles";
 
@@ -134,30 +134,6 @@ const LevelBox = ({ level }) => (
   </LevelBoxContainer>
 );
 
-const tooltipText = (
-  <TooltipList>
-    <li>Infuse Robo Oogas with $DMT to level up.</li>
-    <li>
-      The Robo Oogas get a trait named “DMT” with the value “Level 1, Level 2,
-      Level 3”{" "}
-    </li>
-    <li>
-      {" "}
-      DMT level 1 -{">"} Earn 25% more $OG + Decrease the risk of OOGEAR getting
-      stolen to 25% when unstaking
-    </li>
-    <li>
-      DMT level 2 -{">"} Earn 50% more $OG + Decrease the unstaking time by 25%
-    </li>
-    <li>DMT level 3 -{">"} Earn 100% more $OG</li>
-    <li>Price for each level is 100 $DMT</li>
-  </TooltipList>
-);
-
-// TODO
-// Disable buttons if the user has less than 120 $DMT
-// Connect with the contract
-
 const Upgrade = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance, getDmtBalance } = useContext(BalanceContext);
@@ -168,6 +144,7 @@ const Upgrade = () => {
   const [loading, setLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
+  const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
 
   // Check if $DMT transaction is approved
   useEffect(() => {
@@ -316,17 +293,20 @@ const Upgrade = () => {
       <Header page="game" />
       <Content>
         <Title>
-          Upgrade your <span>Robo Ooga</span>
+          Robo Ooga <span>Upgrade</span>
         </Title>
         <MainBox>
-          <Tooltip placement="top" title={tooltipText} color="white">
-            <InfoIcon>
+            <InfoIcon onClick={() => setIsOpenUpgradeInfoModal(true)}>
               <InfoOutlined />
             </InfoIcon>
-          </Tooltip>
           <TitleBox>
-            <h4>Robo Ooga Leveling</h4>
-            <h6>Levelin Up your Robo Oogas get stronger.</h6>
+            <h4>Infuse Robo Oogas with $DMT</h4>
+            <h6>
+              Level-up Robo Oogas using $DMT to make them produce more $OG and
+              gain other features. You don't need to unstake Robo Oogas to
+              upgrade them! Every Robo Ooga starts as a Garbage Compactor (Lvl
+              1) and can get upgraded to become an Executive Bot (Lvl 4).
+            </h6>
           </TitleBox>
           <LeftSide>
             {selectedApe && (
@@ -344,7 +324,7 @@ const Upgrade = () => {
                 <button
                   disabled={getIfItsDisabled()}
                   onClick={handleClickButton}>
-                  Level Up Robo Oogas
+                  Upgrade Robo Ooga!
                 </button>
               ) : (
                 <button
@@ -355,7 +335,14 @@ const Upgrade = () => {
               )}
             </ButtonBox>
             <HelperText>
-              Spend ${price} $DMT to level up your Robo Oogas
+              Each Level-Up costs {price} $DMT. You can convert $OG to $DMT
+              here:
+              <a
+                href="https://opensea.io/collection/oogaverse"
+                target="_blank"
+                rel="noreferrer">
+                SushiSwap
+              </a>
             </HelperText>
           </Middle>
           <RightSide>
@@ -380,6 +367,10 @@ const Upgrade = () => {
         />
       )}
       <Loading open={loading} />
+      <UpgradeInfo
+        open={isOpenUpgradeInfoModal}
+        handleClose={() => setIsOpenUpgradeInfoModal(false)}
+      />
     </Wrapper>
   );
 };

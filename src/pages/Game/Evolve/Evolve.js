@@ -245,7 +245,7 @@ const Evolve = () => {
 
       try {
         // TODO: fix the hardcoded number add tokenIds
-        let tsx = await contract.evolveBabyOoga(2851);
+        let tsx = await contract.evolveBabyOoga(2651);
         setLoader(true);
         tsx.wait().then(() => {
           setLoader(false);
@@ -265,11 +265,11 @@ const Evolve = () => {
       <Header page="game" />
       <Content>
         <Title>
-          Evolve Your <span>Baby Oogas</span>
+          Baby Ooga <span>Evolution</span>
         </Title>
         <MainBox>
           <TitleBox>
-            <h4>Evolve Baby Oogas</h4>
+            <h4>Evolve your Baby Oogas to MekaApes!</h4>
           </TitleBox>
           <SubtitleBox>
             <p>Guarding the Factory:</p>
@@ -284,7 +284,7 @@ const Evolve = () => {
             </button>
           </ButtonBox>
           <HelperText>
-            Every Baby Ooga can claim one MekaApe (Only one!)
+            Every Baby Ooga can claim a MekaApe. You are only paying for gas.
           </HelperText>
         </MainBox>
       </Content>

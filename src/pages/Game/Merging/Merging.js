@@ -166,7 +166,7 @@ const Merging = () => {
       return (
         <>
           <img src={PlaceholderApe} alt="ape" />
-          <span>1.</span>
+          <span>Select</span>
         </>
       );
     }
@@ -179,7 +179,7 @@ const Merging = () => {
       return (
         <>
           <img src={PlaceholderApe} alt="ape" />
-          <span>2.</span>
+          <span>Select</span>
         </>
       );
     }
@@ -209,14 +209,16 @@ const Merging = () => {
       <Header page="game" />
       <Content>
         <Title>
-          Mekaapes <span>Merging</span>
+          Meka <span>Merge</span>
         </Title>
         <MainBox>
           <TitleBox>
-            <h4>MekaApes Merging</h4>
+            <h4>Become a Mega Meka!</h4>
             <h6>
-              You will always save Meka from 1 box and for 2 box it will get
-              burn.
+              Select two MekaApes you want to merge. The MekaApe on the left
+              will receive a random Mega Level. The MekaApe on the right will
+              get burned. With the Mega Level, MekaApes get a bigger share of
+              the $OG tax and also gain the ability to be gifted new mints.
             </h6>
           </TitleBox>
           <MergingBox>
@@ -236,14 +238,12 @@ const Merging = () => {
               disabled={
                 !(Boolean(keepMeka) && Boolean(burnMeka)) && isDisabled
               }>
-              Merge your MekaApes
+              Merge MekaApes!
             </button>
           </ButtonBox>
           <HelperText>
-            Player can merge 2 MekaApes
-            <span>
-              (Burn one and keep the other one) to receive a Mega trait level
-            </span>
+            After 1-3 minutes your MekaApe will receive the Mega Level trait.
+            You might need to refresh the Metadata on OpenSea to see it.
           </HelperText>
         </MainBox>
       </Content>
@@ -256,6 +256,7 @@ const Merging = () => {
           handleSavePickedApe={handleSavePickedApe}
           list={EXAMPLE_DATA}
           oppositeApe={oppositeApe}
+          type={type}
         />
       )}
       <Loading open={loading} />
