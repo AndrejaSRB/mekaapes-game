@@ -15,8 +15,6 @@ const OG_ERC20_CONTRACT_ADDRESS =
 
 const APPROVE_AMOUNT =
   "115792089237316195423570985008687907853269984665640564039457584007913129639935"; //(2^256 - 1 )
-
-//TODO: call prices from MekaApesGame contract
 export class Contract {
   mekaApescontract = null;
   dmtERC20Contract = null;
@@ -48,8 +46,10 @@ export class Contract {
   // applies only to pre-sale in ETH
   // mints amount new tokens to the user
   // toStake is boolean if is staked or not
-  async mint(amount, toStake) {
-    return await this.mekaApesContract.mint(amount, toStake);
+  async mint(amount, toStake, value) {
+    return await this.mekaApesContract.mint(amount, toStake, {
+      value: value,
+    });
   }
 
   async allowedToMint(address) {
@@ -78,6 +78,11 @@ export class Contract {
   }
 
   // claim reward for multiple items
+  async claimReward(itemList) {
+    return await this.mekaApesContract.claimReward(itemList);
+  }
+
+  // get $OG claimable amount for token list at same order as sent
   async claimAvailableAmountMultipleTokens(itemList) {
     return await this.mekaApesContract.claimAvailableAmountMultipleTokens(
       itemList
@@ -97,6 +102,18 @@ export class Contract {
     return await this.mekaApesContract.mergeMekaApes(tokenIdSave, tokenIdBurn);
   }
 
+  // total minted tokens
+  async getTotalAmountMintedTokens() {
+    let total = await this.mekaApesContract.totalMintedTokens();
+    return total.toNumber();
+  }
+
+  // total $DMT minted tokens
+  async getTotalDMTMintedTokens() {
+    let total = await this.mekaApesContract.tokensMintedWithDMT();
+    return total.toNumber();
+  }
+
   // DMT_ERC20 Contract functions:
 
   async getDMTBalance(address) {
@@ -105,7 +122,10 @@ export class Contract {
   }
 
   async approveDMTtransaction() {
-    return await this.dmtERC20Contract.approve(DMT_ERC20_CONTRACT_ADDRESS, APPROVE_AMOUNT);
+    return await this.dmtERC20Contract.approve(
+      DMT_ERC20_CONTRACT_ADDRESS,
+      APPROVE_AMOUNT
+    );
   }
 
   async isDMTtransactionApproved(address, price) {
@@ -121,6 +141,13 @@ export class Contract {
   async getOGBalance(address) {
     const balance = await this.ogERC20Contract.balanceOf(address);
     return ethers.utils.formatUnits(balance);
+  }
+
+  // Test functions
+
+  // Get free baby oogas
+  async freeBabyOogas(address) {
+    return await this.mekaApesContract.freeMintManyBabyNext(address, 1);
   }
 }
 

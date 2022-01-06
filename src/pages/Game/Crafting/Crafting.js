@@ -36,23 +36,23 @@ import {
   AnimationBox,
 } from "./Crafting.styles";
 
-const EXAMPLE_CURRENT_VALUE = 29223;
 const MAX_TOKEN_AMOUNT = 20;
 const INTERVAL_PERIOD = 30000;
+const TOTAL_MINTED_AMOUNT = 55000;
+const TOTAL_MINTED_DMT_AMOUNT = 10000;
+const INITIAL_EHT_MINT = 10000;
 
 // Prices
 // 10,001 - 25,000: 4,000 $OG
 // 25,001 - 40,000: 8,000 $OG
 // 40,001 - 55,000: 12,000 $OG
 
-//TODO: Disable minting with $DTM after 10k of total minted
-//TODO: get the total amount of minted tokens
-//TODO: get the total amount of minted tokens with $DMT
-//TODO: set loader state when call total status and $DMT total status
+//TODO: check the status styles
 
 const Crafting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const { dmtBalance, oogearBalance } = useContext(BalanceContext);
+  const { dmtBalance, oogearBalance, getOogearBalance, getDmtBalance } =
+    useContext(BalanceContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
   const [OGPrice, setOGPrice] = useState(0);
@@ -62,47 +62,47 @@ const Crafting = () => {
   const [isDMTApproved, setIsDMTApproved] = useState(true);
   const [disabledApproveBtn, setDisableApproveBtn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [totalMintedTokens, setTotalMintedTokens] = useState(0);
+  const [totalMintedDMTTokens, setTotalMintedDMTTokens] = useState(0);
+
+  // Get amount of total minted tokens
+  useEffect(() => {
+    const getTotalMintedTokens = async () => {
+      let totalMinted = await contract.getTotalAmountMintedTokens();
+      setTotalMintedTokens(totalMinted);
+    };
+    getTotalMintedTokens();
+  }, []);
+
+  // Get amount of total minted DMT tokens
+  useEffect(() => {
+    const getTotalMintedDMTTokens = async () => {
+      let totalMinted = await contract.getTotalDMTMintedTokens();
+      setTotalMintedDMTTokens(totalMinted);
+    };
+    getTotalMintedDMTTokens();
+  }, []);
 
   // Check if $DMT transaction is approved
   useEffect(() => {
     if (userMetaMaskToken && dmtPrice > 0) {
-      const CheckIfApprovedDMTTransaction = async () => {
+      const checkIfApprovedDMTTransaction = async () => {
         let isApproved = await contract.isDMTtransactionApproved(
           userMetaMaskToken,
           dmtPrice
         );
         setIsDMTApproved(isApproved);
       };
-      CheckIfApprovedDMTTransaction();
+      checkIfApprovedDMTTransaction();
     }
   }, [userMetaMaskToken, dmtPrice]);
 
-  // TODO: fix the proper variable for total number
   useEffect(() => {
-    // Disable all buttons if we reach 55k
-    if (EXAMPLE_CURRENT_VALUE === 55000) {
+    if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
       setIsDisableOGButtons(true);
       setIsDisableDMTButton(true);
     }
-  }, []);
-
-  //   // TODO: fix the proper variable for total number
-  //   useEffect(() => {
-  //     // Change the minting price depend of the amount of minted tokens
-  //     if (EXAMPLE_CURRENT_VALUE >= 10001 && EXAMPLE_CURRENT_VALUE < 25001) {
-  //       setOGPrice(4000);
-  //     } else if (
-  //       EXAMPLE_CURRENT_VALUE >= 25001 &&
-  //       EXAMPLE_CURRENT_VALUE < 40000
-  //     ) {
-  //       setOGPrice(6000);
-  //     } else if (
-  //       EXAMPLE_CURRENT_VALUE >= 40001 &&
-  //       EXAMPLE_CURRENT_VALUE < 55000
-  //     ) {
-  //       setOGPrice(12000);
-  //     }
-  //   }, []);
+  }, [totalMintedTokens]);
 
   // Get the Mint $DMT Price
   useEffect(() => {
@@ -129,40 +129,57 @@ const Crafting = () => {
     };
   }, []);
 
-  // TODO: disable DMT button if it's minted 10k tokens with $DMT
   useEffect(() => {
-    if (dmtCounter < 1) {
+    if (totalMintedTokens < INITIAL_EHT_MINT) {
+      setIsDisableDMTButton(true);
+    } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
+      setIsDisableDMTButton(true);
+    } else if (totalMintedDMTTokens === TOTAL_MINTED_DMT_AMOUNT) {
+      setIsDisableDMTButton(true);
+    } else if (dmtCounter < 1) {
       setIsDisableDMTButton(true);
     } else {
       setIsDisableDMTButton(false);
     }
-  }, [dmtCounter]);
+  }, [dmtCounter, totalMintedDMTTokens, totalMintedTokens]);
 
   useEffect(() => {
-    if (oogearCounter < 1) {
+    if (totalMintedTokens < INITIAL_EHT_MINT) {
+      setIsDisableDMTButton(true);
+    } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
+      setIsDisableOGButtons(true);
+    } else if (oogearCounter < 1) {
       setIsDisableOGButtons(true);
     } else {
       setIsDisableOGButtons(false);
     }
-  }, [oogearCounter]);
+  }, [oogearCounter, totalMintedTokens]);
 
   const handleDmtCounter = (type) => () => {
-    if (isDMTApproved) {
-      if (type === "plus" && dmtCounter < MAX_TOKEN_AMOUNT) {
-        setDmtCounter(dmtCounter + 1);
-      } else if (type === "minus" && dmtCounter > 0) {
-        setDmtCounter(dmtCounter - 1);
+    if (totalMintedTokens > INITIAL_EHT_MINT) {
+      if (isDMTApproved) {
+        if (type === "plus" && dmtCounter < MAX_TOKEN_AMOUNT) {
+          setDmtCounter(dmtCounter + 1);
+        } else if (type === "minus" && dmtCounter > 0) {
+          setDmtCounter(dmtCounter - 1);
+        }
+      } else {
+        message.info("Please, first approve $DMT transaction.");
       }
     } else {
-      message.info("Please, first approve $DMT transaction.");
+      message.info("Minting with ETH is still ongoing.");
     }
   };
 
   const handleOogearCounter = (type) => () => {
-    if (type === "plus" && oogearCounter < MAX_TOKEN_AMOUNT) {
-      setOogeaerCounter(oogearCounter + 1);
-    } else if (type === "minus" && oogearCounter > 0) {
-      setOogeaerCounter(oogearCounter - 1);
+    if (totalMintedTokens > INITIAL_EHT_MINT) {
+      if (type === "plus" && oogearCounter < MAX_TOKEN_AMOUNT) {
+        setOogeaerCounter(oogearCounter + 1);
+      } else if (type === "minus" && oogearCounter > 0) {
+        setOogeaerCounter(oogearCounter - 1);
+      }
+    } else {
+      message.info("Minting with ETH is still ongoing.");
     }
   };
 
@@ -184,6 +201,10 @@ const Crafting = () => {
       disabled = false;
     }
     return disabled;
+  };
+
+  const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   const handleClickApproveDMT = async () => {
@@ -210,9 +231,15 @@ const Crafting = () => {
       if (+oogearCounter * OGPrice < +oogearBalance) {
         setIsDisableOGButtons(true);
         try {
-          await contract.mintWithOG(+oogearCounter, false);
-          //TODO: get the fresh $OG balance
-          //TODO: get the fresh total minted token amount
+          let tsx = await contract.mintWithOG(+oogearCounter, false);
+          setLoading(true);
+          tsx.wait().then(async () => {
+            getOogearBalance();
+            let totalMinted = await contract.getTotalAmountMintedTokens();
+            setTotalMintedTokens(totalMinted);
+            //TODO: Get the fresh token list ? think about this
+            setLoading(false);
+          });
         } catch (error) {
           console.log(error);
         }
@@ -229,9 +256,15 @@ const Crafting = () => {
       if (+oogearCounter * OGPrice < +oogearBalance) {
         setIsDisableOGButtons(true);
         try {
-          await contract.mintWithOG(+oogearCounter, true);
-          //TODO: get the fresh $OG balance
-          //TODO: get the fresh total minted token amount
+          let tsx = await contract.mintWithOG(+oogearCounter, true);
+          setLoading(true);
+          tsx.wait().then(async () => {
+            getOogearBalance();
+            let totalMinted = await contract.getTotalAmountMintedTokens();
+            setTotalMintedTokens(totalMinted);
+            //TODO: Get the fresh token list ? think about this
+            setLoading(false);
+          });
         } catch (error) {
           console.log(error);
         }
@@ -248,10 +281,17 @@ const Crafting = () => {
       if (+dmtCounter * dmtPrice < +dmtBalance) {
         setIsDisableDMTButton(true);
         try {
-          await contract.mintWithDMT(dmtCounter);
-          //TODO: get the fresh $DMT balance
-          //TODO: get the fresh total minted token amount
-          //TODO: get the fresh $DMT total minted token amount
+          let tsx = await contract.mintWithDMT(dmtCounter);
+          setLoading(true);
+          tsx.wait().then(async () => {
+            getDmtBalance();
+            let totalMinted = await contract.getTotalAmountMintedTokens();
+            setTotalMintedTokens(totalMinted);
+            let totalDMTMinted = await contract.getTotalDMTMintedTokens();
+            setTotalMintedDMTTokens(totalDMTMinted);
+            setLoading(false);
+          });
+          //TODO: Get the fresh token list ? think about this
         } catch (error) {
           console.log(error);
         }
@@ -277,12 +317,16 @@ const Crafting = () => {
           <AnimationBox>
             <img src={Animation} alt="animation" />
           </AnimationBox>
-          <StatusBar totalNumber={EXAMPLE_CURRENT_VALUE} />
+          <StatusBar totalNumber={totalMintedTokens} />
           <CounterBox>
             <OogearBox>
               <Counter>
                 <div
-                  className={oogearCounter === 0 ? "minus disabled" : "minus"}
+                  className={
+                    oogearCounter === 0 || totalMintedTokens < INITIAL_EHT_MINT
+                      ? "minus disabled"
+                      : "minus"
+                  }
                   onClick={handleOogearCounter("minus")}>
                   <MinusOutlined />
                 </div>
@@ -291,7 +335,8 @@ const Crafting = () => {
                 </div>
                 <div
                   className={
-                    oogearCounter === MAX_TOKEN_AMOUNT
+                    oogearCounter === MAX_TOKEN_AMOUNT ||
+                    totalMintedTokens < INITIAL_EHT_MINT
                       ? "plus disabled"
                       : "plus"
                   }
@@ -316,7 +361,11 @@ const Crafting = () => {
             <DmtBox>
               <Counter>
                 <div
-                  className={dmtCounter === 0 ? "minus disabled" : "minus"}
+                  className={
+                    dmtCounter === 0 || totalMintedTokens < INITIAL_EHT_MINT
+                      ? "minus disabled"
+                      : "minus"
+                  }
                   onClick={handleDmtCounter("minus")}>
                   <MinusOutlined />
                 </div>
@@ -325,7 +374,9 @@ const Crafting = () => {
                 </div>
                 <div
                   className={
-                    dmtCounter === MAX_TOKEN_AMOUNT ? "plus disabled" : "plus"
+                    dmtCounter === MAX_TOKEN_AMOUNT || totalMintedTokens < INITIAL_EHT_MINT
+                      ? "plus disabled"
+                      : "plus"
                   }
                   onClick={handleDmtCounter("plus")}>
                   <PlusOutlined />
@@ -346,7 +397,8 @@ const Crafting = () => {
                 </Button>
               )}
               <HelperText>
-                Price {dmtPrice} $DMT <span>1231/10,000</span>
+                Price {dmtPrice} $DMT{" "}
+                <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
               </HelperText>
             </DmtBox>
           </CounterBox>

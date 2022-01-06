@@ -160,7 +160,7 @@ const tooltipText = (
 
 const Upgrade = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const { dmtBalance } = useContext(BalanceContext);
+  const { dmtBalance, getDmtBalance } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -172,14 +172,14 @@ const Upgrade = () => {
   // Check if $DMT transaction is approved
   useEffect(() => {
     if (userMetaMaskToken && price > 0) {
-      const CheckIfApprovedDMTTransaction = async () => {
+      const checkIfApprovedDMTTransaction = async () => {
         let isApproved = await contract.isDMTtransactionApproved(
           userMetaMaskToken,
           price
         );
         setIsApproved(isApproved);
       };
-      CheckIfApprovedDMTTransaction();
+      checkIfApprovedDMTTransaction();
     }
   }, [userMetaMaskToken, price]);
 
@@ -294,9 +294,13 @@ const Upgrade = () => {
         setIsDisabled(true);
         try {
           //TODO: fix the hardcoded number with selectedApe.token_id
-          await contract.levelUpRoboOooga(1219);
-          //TODO: get the fresh list of robo oogas
-          //TODO: get the fresh $DMT balance
+          let tsx = await contract.levelUpRoboOooga(1219);
+          setLoading(true);
+          tsx.wait().then(async () => {
+            //TODO: get the fresh list of robo oogas
+            getDmtBalance();
+            setLoading(false);
+          });
         } catch (error) {
           console.log(error);
         }

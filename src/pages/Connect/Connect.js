@@ -12,7 +12,7 @@ import { Title, Subtitle, Wrapper, Button, Content } from "./Connect.styles";
 import metamask from "../../services/metamask";
 
 //TODO: Check connect page on laptop, footer is weird
-
+// Think maybe you can get the current height of the page and do something?
 const Connect = ({ page }) => {
   const navigate = useNavigate();
   const { saveUserMetaMaskToken } = useContext(UserContext);
@@ -38,9 +38,7 @@ const Connect = ({ page }) => {
       <Header page="landing" />
       {!token ? (
         <Content>
-          <Title>
-            {/* Let's <span>Connect</span> */}
-          </Title>
+          <Title>{/* Let's <span>Connect</span> */}</Title>
           <Subtitle>You need to connect your wallet.</Subtitle>
           <Button onClick={handleClickMetamask}>Connect Wallet</Button>
         </Content>

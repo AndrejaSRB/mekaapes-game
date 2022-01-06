@@ -34,7 +34,7 @@ export const Box = styled.div`
       return ` 2px solid ${theme.color.borderColor}`;
     }
   }};
-  width: 20%;
+  width: ${({ width }) => `${width}%`};
   font-size: 12px;
   line-height: 16px;
   text-align: center;

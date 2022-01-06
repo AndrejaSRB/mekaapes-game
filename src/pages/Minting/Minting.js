@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { message } from "antd";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import Loading from "../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../hoc/withConnect";
 // ******** stores ********
@@ -26,6 +27,8 @@ import {
   Price,
 } from "./Minting.styles";
 
+//TODO: Call get total amount on every minute
+
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
@@ -35,6 +38,17 @@ const Minting = () => {
   const [maxTokenAmount, setMaxTokenAmount] = useState(4);
   const [priceMint, setPriceMint] = useState(0);
   const [priceMintAndStake, setPriceMintAndStake] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [totalMintedTokens, setTotalMintedTokens] = useState(0);
+
+  // Get amount of total minted tokens
+  useEffect(() => {
+    const getTotalMintedTokens = async () => {
+      let totalMinted = await contract.getTotalAmountMintedTokens();
+      setTotalMintedTokens(totalMinted);
+    };
+    getTotalMintedTokens();
+  }, []);
 
   // Get the maxTokenAmount
   useEffect(() => {
@@ -45,7 +59,7 @@ const Minting = () => {
             setMaxTokenAmount(+res.toString());
           });
         } catch (error) {
-          console.log("error", error);
+          console.log(error);
         }
       };
       getMaxTokenAmount();
@@ -115,17 +129,33 @@ const Minting = () => {
         setMaxTokenAmount(+res.toString());
       });
     } catch (error) {
-      console.log("error", error);
+      console.log(error);
     }
   };
 
+  const getTotalMintedTokens = async () => {
+    let totalMinted = await contract.getTotalAmountMintedTokens();
+    setTotalMintedTokens(totalMinted);
+  };
+
   const handleClickMintAndStake = async () => {
-    if (currentETHBalance.toString() > priceMintAndStake.toString() * counter) {
+    if (
+      currentETHBalance.toString() >
+      +priceMintAndStake.toString() * counter
+    ) {
       setIsDisabled(true);
       try {
-        await contract.mint(counter, true).then(async () => {
+        let tsx = await contract.mint(
+          counter,
+          true,
+          priceMintAndStake.mul(counter)
+        );
+        setLoading(true);
+        tsx.wait().then(async () => {
           await getMaxTokenAmount();
           await checkCurrentETHBalance();
+          await getTotalMintedTokens();
+          setLoading(false);
         });
       } catch (error) {
         console.log(error);
@@ -141,9 +171,13 @@ const Minting = () => {
     if (currentETHBalance.toString() > priceMint.toString() * counter) {
       setIsDisabled(true);
       try {
-        await contract.mint(counter, false).then(async () => {
+        let tsx = await contract.mint(counter, false, priceMint.mul(counter));
+        setLoading(true);
+        tsx.wait().then(async () => {
           await getMaxTokenAmount();
           await checkCurrentETHBalance();
+          await getTotalMintedTokens();
+          setLoading(false);
         });
       } catch (error) {
         console.log(error);
@@ -160,6 +194,19 @@ const Minting = () => {
       return ethers.utils.formatUnits(price);
     } else {
       return price;
+    }
+  };
+
+  const getCurrentAmount = () => {
+    if (totalMintedTokens > 0) {
+      let number = totalMintedTokens;
+      if (number < 10000) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      } else {
+        return "10,000";
+      }
+    } else {
+      return 0;
     }
   };
 
@@ -223,11 +270,12 @@ const Minting = () => {
           </ButtonWrapper>
           <Price className="noselect" margin>
             <span>Price {getSmallETHPrice(priceMint)} ETH</span>
-            0/10,000
+            {getCurrentAmount()}/10,000
           </Price>
         </MainBox>
       </Content>
       <Footer page="minting" />
+      <Loading open={loading} />
     </Wrapper>
   );
 };

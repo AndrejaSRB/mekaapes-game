@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import MergeMekaApesModal from "../../../components/Modals/MergeMekaApes/MergeMekaApes";
+import Loading from "../../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
@@ -128,6 +129,7 @@ const Merging = () => {
   const [type, setType] = useState(null);
   const [oppositeApe, setOppositeApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
@@ -189,8 +191,12 @@ const Merging = () => {
       try {
         // TODO: pass the proper token id
         // TODO: first one is saved, second one is burned
-        await contract.mergeMekaApes(1231, 1541);
-        // TODO: get the  fresh list of meka apes
+        let tsx = await contract.mergeMekaApes(1231, 1541);
+        setLoading(true);
+        tsx.wait().then(() => {
+          // TODO: get the  fresh list of meka apes
+          setLoading(false);
+        });
       } catch (error) {
         console.log(error);
       }
@@ -252,6 +258,7 @@ const Merging = () => {
           oppositeApe={oppositeApe}
         />
       )}
+      <Loading open={loading} />
     </Wrapper>
   );
 };
