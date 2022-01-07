@@ -3,6 +3,7 @@ import styled from "styled-components";
 import * as theme from "../../theme";
 // ******** Images ********
 import BackgroundImage from "../../assets/background.png";
+import BackgroundSmallImage from "../../assets/background-small.png";
 
 export const Wrapper = styled.div`
   background-image: url(${BackgroundImage});
@@ -83,8 +84,8 @@ export const Button = styled.button`
 `;
 
 export const FooterApp = styled.div`
-  background-image: url(${BackgroundImage});
+  background-image: url(${BackgroundSmallImage});
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: bottom;
+  background-position: center;
 `;

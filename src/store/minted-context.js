@@ -1,4 +1,6 @@
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, useContext } from "react";
+// ******** Stores ********
+import { UserContext } from "./user-context";
 // ******** Services ********
 import contract from "../services/contract";
 
@@ -10,18 +12,21 @@ export const MintedContext = createContext({
 const INTERVAL_PERIOD = 30000; // 30 seconds
 
 const MintedContextProvider = ({ children }) => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const [totalMintedTokens, setTotalMinted] = useState(0);
 
   // Get the total minted number on interval
   useEffect(() => {
-    let interval = setInterval(async () => {
-      let balance = await contract.getTotalAmountMintedTokens();
-      setTotalMinted(balance);
-    }, INTERVAL_PERIOD);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    if (userMetaMaskToken) {
+      let interval = setInterval(async () => {
+        let balance = await contract.getTotalAmountMintedTokens();
+        setTotalMinted(balance);
+      }, INTERVAL_PERIOD);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [userMetaMaskToken]);
 
   const getTotalMinted = async () => {
     try {

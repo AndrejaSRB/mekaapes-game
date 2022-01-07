@@ -37,8 +37,9 @@ const App = () => {
     if (userMetaMaskToken) {
       getDmtBalance();
       getOogearBalance();
+      getTotalMinted();
     }
-  }, [userMetaMaskToken, getDmtBalance, getOogearBalance]);
+  }, [userMetaMaskToken, getDmtBalance, getOogearBalance, getTotalMinted]);
 
   useEffect(() => {
     let userAddress = localStorage.getItem("mekaape_useraddress");
@@ -46,11 +47,6 @@ const App = () => {
       saveUserMetaMaskToken(userAddress);
     }
   }, [saveUserMetaMaskToken]);
-
-  // Get total minted number
-  useEffect(() => {
-    getTotalMinted();
-  }, [getTotalMinted]);
 
   return (
     <BrowserRouter>

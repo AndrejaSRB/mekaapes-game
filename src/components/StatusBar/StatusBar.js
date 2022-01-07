@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Wrapper, Box, Color } from "./StatusBar.styles";
 
 const StatusBar = ({ totalNumber }) => {
-  console.log("totalNumber", totalNumber);
   const percentage = () => {
     return (100 * totalNumber) / 55000;
   };

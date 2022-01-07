@@ -17,7 +17,7 @@ import metamask from "../../services/metamask";
 import contract from "../../services/contract";
 import prices from "../../services/prices";
 // ******** Text ********
-import { DONT_ENOUGH_ETH } from '../../messages';
+import { DONT_ENOUGH_ETH } from "../../messages";
 // ******** Styles ********
 import {
   Wrapper,
@@ -36,7 +36,6 @@ const Minting = () => {
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [allowed] = useState(true);
   const [maxTokenAmount, setMaxTokenAmount] = useState(4);
   const [priceMint, setPriceMint] = useState(0);
   const [priceMintAndStake, setPriceMintAndStake] = useState(0);
@@ -91,16 +90,12 @@ const Minting = () => {
   }, []);
 
   useEffect(() => {
-    if (allowed) {
-      if (counter > 0) {
-        setIsDisabled(false);
-      } else {
-        setIsDisabled(true);
-      }
+    if (counter > 0) {
+      setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
-  }, [allowed, counter]);
+  }, [counter]);
 
   const handleCounter = (type) => () => {
     if (type === "plus" && counter < maxTokenAmount) {
@@ -197,34 +192,23 @@ const Minting = () => {
     }
   };
 
+
   return (
     <Wrapper>
       <Header page="minting" />
       <Content>
-        <Title>Your wallet has <span>6</span> mint more</Title>
+        <Title>
+          Your wallet has <span>6</span> mint more
+        </Title>
         <MainBox>
-          {allowed ? (
-            <h4>Welcome!</h4>
-          ) : (
-            <h4>
-              Sorry...{" "}
-              <span>
-                Your wallet is not whitelisted. You need to wait for the public
-                mint.
-              </span>
-            </h4>
-          )}
-          {allowed ? (
-            <IntroText>
-              You have secured your place on the whitelist!{" "}
-              <span>
-                Choose "Mint and Stake" to safe one transaction and earn $OG
-                immediately.
-              </span>
-            </IntroText>
-          ) : (
-            <IntroText></IntroText>
-          )}
+          <h4>Welcome!</h4>
+          <IntroText>
+            You have secured your place on the whitelist!{" "}
+            <span>
+              Choose "Mint and Stake" to safe one transaction and earn $OG
+              immediately.
+            </span>
+          </IntroText>
           <Counter>
             <div
               className={counter === 0 ? "icon disabled" : "icon"}
