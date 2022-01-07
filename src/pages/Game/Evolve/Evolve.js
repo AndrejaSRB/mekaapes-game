@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 // ******** Components ********
+import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
@@ -15,6 +16,10 @@ import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
 // ******** Services ********
 import contract from "../../../services/contract";
+// ******** Store ********
+import { MintedContext } from "../../../store/minted-context";
+// ******** Text ********
+import { PRE_SALE_IS_ONGOING } from '../../../messages';
 // ******** Styles ********
 import {
   Wrapper,
@@ -99,8 +104,11 @@ const EXAMPLE_DATA = [
   //   }
 ];
 
+const PRE_SALE_AMOUNT = 10000;
+
 const Evolve = () => {
   const { width } = useWindowDimenstions();
+  const { totalMintedTokens } = useContext(MintedContext);
   const [selectAll, setSelectAll] = useState(false);
   const [data, setData] = useState(null);
   const [selected, setSelected] = useState([]);
@@ -237,26 +245,30 @@ const Evolve = () => {
   };
 
   const handleClickEvolve = async () => {
-    if (selected && selected.length > 0) {
-      setIsActive(true);
-      // TODO: get the list of clicked apes - probably token_id
-      const tokenIds = [];
-      selected.forEach((token) => tokenIds.push(token.id));
+    if (totalMintedTokens > PRE_SALE_AMOUNT) {
+      if (selected && selected.length > 0) {
+        setIsActive(true);
+        // TODO: get the list of clicked apes - probably token_id
+        const tokenIds = [];
+        selected.forEach((token) => tokenIds.push(token.id));
 
-      try {
-        // TODO: fix the hardcoded number add tokenIds
-        let tsx = await contract.evolveBabyOoga(2651);
-        setLoader(true);
-        tsx.wait().then(() => {
-          setLoader(false);
-          setIsSuccessModalOpen(true);
-        });
-        // TODO: get the  fresh list of baby oogas, or kick the selected one
-      } catch (error) {
-        console.log(error);
+        try {
+          // TODO: fix the hardcoded number add tokenIds
+          let tsx = await contract.evolveBabyOogas([2221]);
+          setLoader(true);
+          tsx.wait().then(() => {
+            setLoader(false);
+            setIsSuccessModalOpen(true);
+          });
+          // TODO: get the  fresh list of baby oogas, or kick the selected one
+        } catch (error) {
+          console.log(error);
+        }
+        setSelected([]);
+        setIsActive(false);
       }
-      setSelected([]);
-      setIsActive(false);
+    } else {
+      message.info(PRE_SALE_IS_ONGOING);
     }
   };
 

@@ -16,12 +16,14 @@ import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
 import { BalanceContext } from "./store/balance-context";
+import { MintedContext } from "./store/minted-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
   const { getDmtBalance, getOogearBalance } = useContext(BalanceContext);
+  const { getTotalMinted } = useContext(MintedContext);
 
   useEffect(() => {
     document.addEventListener("touchstart", function () {}, false);
@@ -44,6 +46,11 @@ const App = () => {
       saveUserMetaMaskToken(userAddress);
     }
   }, [saveUserMetaMaskToken]);
+
+  // Get total minted number
+  useEffect(() => {
+    getTotalMinted();
+  }, [getTotalMinted]);
 
   return (
     <BrowserRouter>

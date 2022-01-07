@@ -79,4 +79,12 @@ export const Button = styled.button`
   @media screen and (min-height: 1200px) and (min-width: 1300px) {
     margin-bottom: 256px;
   }
+
+`;
+
+export const FooterApp = styled.div`
+  background-image: url(${BackgroundImage});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
 `;

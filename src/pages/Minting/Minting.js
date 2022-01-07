@@ -9,12 +9,15 @@ import Loading from "../../components/Modals/Loading/Loading";
 import withConnect from "../../hoc/withConnect";
 // ******** stores ********
 import { UserContext } from "../../store/user-context";
+import { MintedContext } from "../../store/minted-context";
 // ******** Icons ********
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Services ********
 import metamask from "../../services/metamask";
 import contract from "../../services/contract";
 import prices from "../../services/prices";
+// ******** Text ********
+import { DONT_ENOUGH_ETH } from '../../messages';
 // ******** Styles ********
 import {
   Wrapper,
@@ -27,10 +30,9 @@ import {
   Price,
 } from "./Minting.styles";
 
-//TODO: Call get total amount on every minute
-
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
+  const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -39,16 +41,6 @@ const Minting = () => {
   const [priceMint, setPriceMint] = useState(0);
   const [priceMintAndStake, setPriceMintAndStake] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [totalMintedTokens, setTotalMintedTokens] = useState(0);
-
-  // Get amount of total minted tokens
-  useEffect(() => {
-    const getTotalMintedTokens = async () => {
-      let totalMinted = await contract.getTotalAmountMintedTokens();
-      setTotalMintedTokens(totalMinted);
-    };
-    getTotalMintedTokens();
-  }, []);
 
   // Get the maxTokenAmount
   useEffect(() => {
@@ -133,11 +125,6 @@ const Minting = () => {
     }
   };
 
-  const getTotalMintedTokens = async () => {
-    let totalMinted = await contract.getTotalAmountMintedTokens();
-    setTotalMintedTokens(totalMinted);
-  };
-
   const handleClickMintAndStake = async () => {
     if (
       currentETHBalance.toString() >
@@ -152,9 +139,9 @@ const Minting = () => {
         );
         setLoading(true);
         tsx.wait().then(async () => {
+          getTotalMinted();
           await getMaxTokenAmount();
           await checkCurrentETHBalance();
-          await getTotalMintedTokens();
           setLoading(false);
         });
       } catch (error) {
@@ -163,7 +150,7 @@ const Minting = () => {
       setCounter(0);
       setIsDisabled(false);
     } else {
-      message.error("Sorry, you don't have enough ETH.");
+      message.error(DONT_ENOUGH_ETH);
     }
   };
 
@@ -174,9 +161,9 @@ const Minting = () => {
         let tsx = await contract.mint(counter, false, priceMint.mul(counter));
         setLoading(true);
         tsx.wait().then(async () => {
+          getTotalMinted();
           await getMaxTokenAmount();
           await checkCurrentETHBalance();
-          await getTotalMintedTokens();
           setLoading(false);
         });
       } catch (error) {
@@ -185,7 +172,7 @@ const Minting = () => {
       setCounter(0);
       setIsDisabled(false);
     } else {
-      message.error("Sorry, you don't have enough ETH.");
+      message.error(DONT_ENOUGH_ETH);
     }
   };
 

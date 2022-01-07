@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 // ******** Components ********
+import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import MergeMekaApesModal from "../../../components/Modals/MergeMekaApes/MergeMekaApes";
@@ -13,6 +14,10 @@ import RoboOogaExample from "../../../assets/landing-image.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
 // ******** Services ********
 import contract from "../../../services/contract";
+// ******** Store ********
+import { MintedContext } from "../../../store/minted-context";
+// ******** Text ********
+import { PRE_SALE_IS_ONGOING } from "../../../messages";
 // ******** Styles ********
 import {
   Wrapper,
@@ -119,9 +124,13 @@ const EXAMPLE_DATA = [
     id: 120,
   },
 ];
-// TODO: filter the list of unstake and level 0 meka apes
+
+const PRE_SALE_AMOUNT = 10000;
+
+//TODO: filter the list of unstake and level 0 meka apes
 
 const Merging = () => {
+  const { totalMintedTokens } = useContext(MintedContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [keepMeka, setKeepMeka] = useState(null);
   const [burnMeka, setBurnMeka] = useState(null);
@@ -186,21 +195,25 @@ const Merging = () => {
   };
 
   const handleClickMerge = async () => {
-    if (burnMeka && keepMeka) {
-      setIsDisabled(true);
-      try {
-        // TODO: pass the proper token id
-        // TODO: first one is saved, second one is burned
-        let tsx = await contract.mergeMekaApes(1231, 1541);
-        setLoading(true);
-        tsx.wait().then(() => {
-          // TODO: get the  fresh list of meka apes
-          setLoading(false);
-        });
-      } catch (error) {
-        console.log(error);
+    if (totalMintedTokens > PRE_SALE_AMOUNT) {
+      if (burnMeka && keepMeka) {
+        setIsDisabled(true);
+        try {
+          // TODO: pass the proper token id
+          // TODO: first one is saved, second one is burned
+          let tsx = await contract.mergeMekaApes(1231, 1541);
+          setLoading(true);
+          tsx.wait().then(() => {
+            // TODO: get the  fresh list of meka apes
+            setLoading(false);
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        setIsDisabled(false);
       }
-      setIsDisabled(false);
+    } else {
+      message.info(PRE_SALE_IS_ONGOING);
     }
   };
 

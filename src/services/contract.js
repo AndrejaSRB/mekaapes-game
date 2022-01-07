@@ -38,9 +38,9 @@ export class Contract {
     );
   }
 
-  // gives mekaApe to the user
-  async evolveBabyOoga(itemId) {
-    return await this.mekaApesContract.evolveBabyOoga(itemId);
+  // gives mekaApes to the user
+  async evolveBabyOogas(itemIds) {
+    return await this.mekaApesContract.evolveBabyOogas(itemIds);
   }
 
   // applies only to pre-sale in ETH

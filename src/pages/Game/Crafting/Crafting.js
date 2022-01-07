@@ -15,9 +15,12 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Stores ********
 import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
+import { MintedContext } from "../../../store/minted-context";
 // ******** Services ********
 import contract from "../../../services/contract";
 import prices from "../../../services/prices";
+// ******** Text ********
+import { APPROVE_DMT_TRANSACTION, PRE_SALE_IS_ONGOING, DONT_ENOUGH_OG, DONT_ENOUGH_DMT } from '../../../messages';
 // ******** Styles ********
 import {
   Wrapper,
@@ -48,13 +51,11 @@ const INITIAL_EHT_MINT = 10000;
 // 25,001 - 40,000: 8,000 $OG
 // 40,001 - 55,000: 12,000 $OG
 
-//TODO: Check the balance with the counter * price by clicking on button
-//TODO: Get the mintOGstakePrice from the contract
-
 const Crafting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance, oogearBalance, getOogearBalance, getDmtBalance } =
     useContext(BalanceContext);
+  const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
   const [OGPrice, setOGPrice] = useState(0);
@@ -65,17 +66,7 @@ const Crafting = () => {
   const [isDMTApproved, setIsDMTApproved] = useState(true);
   const [disabledApproveBtn, setDisableApproveBtn] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [totalMintedTokens, setTotalMintedTokens] = useState(0);
   const [totalMintedDMTTokens, setTotalMintedDMTTokens] = useState(0);
-
-  // Get amount of total minted tokens
-  useEffect(() => {
-    const getTotalMintedTokens = async () => {
-      let totalMinted = await contract.getTotalAmountMintedTokens();
-      setTotalMintedTokens(totalMinted);
-    };
-    getTotalMintedTokens();
-  }, []);
 
   // Get amount of total minted DMT tokens
   useEffect(() => {
@@ -183,10 +174,10 @@ const Crafting = () => {
           setDmtCounter(dmtCounter - 1);
         }
       } else {
-        message.info("Please, first approve $DMT transaction.");
+        message.info(APPROVE_DMT_TRANSACTION);
       }
     } else {
-      message.info("Minting with ETH is still ongoing.");
+      message.info(PRE_SALE_IS_ONGOING);
     }
   };
 
@@ -198,7 +189,7 @@ const Crafting = () => {
         setOogeaerCounter(oogearCounter - 1);
       }
     } else {
-      message.info("Minting with ETH is still ongoing.");
+      message.info(PRE_SALE_IS_ONGOING);
     }
   };
 
@@ -254,8 +245,7 @@ const Crafting = () => {
           setLoading(true);
           tsx.wait().then(async () => {
             getOogearBalance();
-            let totalMinted = await contract.getTotalAmountMintedTokens();
-            setTotalMintedTokens(totalMinted);
+            getTotalMinted();
             //TODO: Get the fresh token list ? think about this
             setLoading(false);
           });
@@ -265,22 +255,21 @@ const Crafting = () => {
         setOogeaerCounter(0);
         setIsDisableOGButtons(false);
       } else {
-        message.error("Sorry, you don't have enough $OG.");
+        message.error(DONT_ENOUGH_OG);
       }
     }
   };
 
   const handleClickMintWithOGAndStake = async () => {
     if (oogearCounter > 0) {
-      if (+oogearCounter * OGPrice < +oogearBalance) {
+      if (+oogearCounter * OGStakePrice < +oogearBalance) {
         setIsDisableOGButtons(true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true);
           setLoading(true);
           tsx.wait().then(async () => {
             getOogearBalance();
-            let totalMinted = await contract.getTotalAmountMintedTokens();
-            setTotalMintedTokens(totalMinted);
+            getTotalMinted();
             //TODO: Get the fresh token list ? think about this
             setLoading(false);
           });
@@ -290,7 +279,7 @@ const Crafting = () => {
         setOogeaerCounter(0);
         setIsDisableOGButtons(false);
       } else {
-        message.error("Sorry, you don't have enough $OG.");
+        message.error(DONT_ENOUGH_OG);
       }
     }
   };
@@ -304,8 +293,7 @@ const Crafting = () => {
           setLoading(true);
           tsx.wait().then(async () => {
             getDmtBalance();
-            let totalMinted = await contract.getTotalAmountMintedTokens();
-            setTotalMintedTokens(totalMinted);
+            getTotalMinted();
             let totalDMTMinted = await contract.getTotalDMTMintedTokens();
             setTotalMintedDMTTokens(totalDMTMinted);
             setLoading(false);
@@ -317,7 +305,7 @@ const Crafting = () => {
         setDmtCounter(0);
         setIsDisableDMTButton(false);
       } else {
-        message.error("Sorry, you don't have enough $DMT.");
+        message.error(DONT_ENOUGH_DMT);
       }
     }
   };

@@ -14,11 +14,12 @@ import LogoImage from "../../assets/logo.svg";
 import { FooterWrapper, Logo, Button, SocialWrapper } from "./Footer.styles";
 
 const Footer = ({ page }) => {
+
   return (
     <FooterWrapper page={page}>
       <div className="content">
         <Logo>
-          <Link to='/'>
+          <Link to="/">
             <img src={LogoImage} alt="logo" />
           </Link>
         </Logo>

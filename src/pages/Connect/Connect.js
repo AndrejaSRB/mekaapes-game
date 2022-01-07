@@ -8,11 +8,11 @@ import Footer from "../../components/Footer/Footer";
 // ******** Stores ********
 import { UserContext } from "../../store/user-context";
 // ******** Styled ********
-import { Title, Subtitle, Wrapper, Button, Content } from "./Connect.styles";
+import { Title, Subtitle, Wrapper, Button, Content, FooterApp } from "./Connect.styles";
 import metamask from "../../services/metamask";
+// ******** Text ********
+import { METAMASK_ERROR } from "../../messages";
 
-//TODO: Check connect page on laptop, footer is weird
-// Think maybe you can get the current height of the page and do something?
 const Connect = ({ page }) => {
   const navigate = useNavigate();
   const { saveUserMetaMaskToken } = useContext(UserContext);
@@ -29,16 +29,33 @@ const Connect = ({ page }) => {
         navigate(page);
       }
     } else {
-      message.error("Metamask wallet not found. Please install it.");
+      message.error(METAMASK_ERROR);
     }
   };
 
   return (
+    // <Wrapper>
+    //   <Header page="landing" />
+    //   {!token ? (
+    //     <Content>
+    //       <Title>{/* Let's <span>Connect</span> */}</Title>
+    //       <Subtitle>You need to connect your wallet.</Subtitle>
+    //       <Button onClick={handleClickMetamask}>Connect Wallet</Button>
+    //     </Content>
+    //   ) : (
+    //     <Content>
+    //       <Title>
+    //         Welcome, you are <span>conected!</span>
+    //       </Title>
+    //       <Subtitle>You can switch the page.</Subtitle>
+    //     </Content>
+    //   )}
+    //   <Footer page="connect" />
+    // </Wrapper>
     <Wrapper>
       <Header page="landing" />
       {!token ? (
         <Content>
-          <Title>{/* Let's <span>Connect</span> */}</Title>
           <Subtitle>You need to connect your wallet.</Subtitle>
           <Button onClick={handleClickMetamask}>Connect Wallet</Button>
         </Content>
@@ -50,7 +67,9 @@ const Connect = ({ page }) => {
           <Subtitle>You can switch the page.</Subtitle>
         </Content>
       )}
-      <Footer page="connect" />
+      <FooterApp>
+        <Footer page="connect" />
+      </FooterApp>
     </Wrapper>
   );
 };

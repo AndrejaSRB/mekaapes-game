@@ -23,6 +23,8 @@ import { UserContext } from "../../../store/user-context";
 // ******** Services ********
 import contract from "../../../services/contract";
 import prices from "../../../services/prices";
+// ******** Text ********
+import { APPROVE_DMT_TRANSACTION, DONT_ENOUGH_DMT } from '../../../messages';
 // ******** Styles ********
 import {
   Wrapper,
@@ -185,7 +187,7 @@ const Upgrade = () => {
     if (isApproved) {
       setIsApeModalOpen(true);
     } else {
-      message.info("Please, first approve $DMT transaction.");
+      message.info(APPROVE_DMT_TRANSACTION);
     }
   };
 
@@ -284,7 +286,7 @@ const Upgrade = () => {
         setIsDisabled(false);
       }
     } else {
-      message.error("Sorry, you don't have enough $DMT.");
+      message.error(DONT_ENOUGH_DMT);
     }
   };
 
