@@ -5,7 +5,6 @@ import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
-import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
@@ -14,12 +13,13 @@ import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
+import EvolveAnimation from "../../../assets/level_up.gif";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
 import { MintedContext } from "../../../store/minted-context";
 // ******** Text ********
-import { PRE_SALE_IS_ONGOING } from '../../../messages';
+import { PRE_SALE_IS_ONGOING } from "../../../messages";
 // ******** Styles ********
 import {
   Wrapper,
@@ -34,6 +34,10 @@ import {
   ApeImage,
   SubtitleBox,
   CustomCheckbox,
+  Box,
+  LeftSide,
+  RightSide,
+  Animation,
 } from "./Evolve.styles";
 
 const EXAMPLE_DATA = [
@@ -95,7 +99,6 @@ const Evolve = () => {
   const [isActive, setIsActive] = useState(null);
   const [minElementNumber, setMinElementNumber] = useState(16);
   const [loader, setLoader] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   useEffect(() => {
     let length = EXAMPLE_DATA.length;
@@ -238,7 +241,6 @@ const Evolve = () => {
           setLoader(true);
           tsx.wait().then(() => {
             setLoader(false);
-            setIsSuccessModalOpen(true);
           });
           // TODO: get the  fresh list of baby oogas, or kick the selected one
         } catch (error) {
@@ -263,31 +265,37 @@ const Evolve = () => {
           <TitleBox>
             <h4>Evolve your Baby Oogas to MekaApes!</h4>
           </TitleBox>
-          <SubtitleBox>
-            <p>Guarding the Factory:</p>
-            <CustomCheckbox onChange={hadnleChangeCheckbox} checked={selectAll}>
-              Select All:
-            </CustomCheckbox>
-          </SubtitleBox>
-          <ApesBox length={getLength()}>{handleRenderBabyOogas()}</ApesBox>
+          <Box>
+            <LeftSide>
+              <Animation>
+                <img src={EvolveAnimation} alt="Evolve Animation" />
+              </Animation>
+            </LeftSide>
+            <RightSide>
+              <SubtitleBox>
+                <p>Your Baby Oogas:</p>
+                <CustomCheckbox
+                  onChange={hadnleChangeCheckbox}
+                  checked={selectAll}>
+                  Select All:
+                </CustomCheckbox>
+              </SubtitleBox>
+              <ApesBox length={getLength()}>{handleRenderBabyOogas()}</ApesBox>
+            </RightSide>
+          </Box>
           <ButtonBox>
             <button disabled={getIfDisabled()} onClick={handleClickEvolve}>
               Evolve
             </button>
           </ButtonBox>
           <HelperText>
-            Every Baby Ooga can claim a MekaApe. You are only paying for gas.
+            Every Baby Ooga can claim a MekaApe. You are only paying for gas and
+            also keep the Baby Ooga. It won't get burned.
           </HelperText>
         </MainBox>
       </Content>
       <Footer page="game" />
       <Loading open={loader} />
-      <SuccessModal
-        open={isSuccessModalOpen}
-        title="And here’s what heppend..."
-        text="The new MekaApe has evolved."
-        handleClose={() => setIsSuccessModalOpen(false)}
-      />
     </Wrapper>
   );
 };

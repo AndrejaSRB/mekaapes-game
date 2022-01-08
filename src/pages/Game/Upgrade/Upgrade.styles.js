@@ -157,6 +157,9 @@ export const HelperText = styled.p`
     &:hover {
       color: ${theme.color.green};
     }
+    &:visited {
+      color: ${theme.color.red};
+    }
   }
   @media only screen and (min-width: 789px) {
     margin-top: 24px;

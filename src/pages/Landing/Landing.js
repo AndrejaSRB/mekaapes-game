@@ -3,7 +3,8 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { Link } from "react-router-dom";
 // ******** Images ********
-import HeroGameImage from "../../assets/landing-image.png";
+import HeroLandingAnimation from "../../assets/main_landing_animation.gif";
+import RoboOogaImage from "../../assets/robo-ooga-landing.png";
 import MekaApeImage from "../../assets/mekaape_landing.png";
 import OGToken from "../../assets/og_token.png";
 import DMTToken from "../../assets/dmt_token.gif";
@@ -50,7 +51,7 @@ const Landing = () => {
           </IntroText>
           <BottomContent>
             <HeroImage>
-              <img src={HeroGameImage} alt="mekaape hero" />
+              <img src={HeroLandingAnimation} alt="mekaape hero" />
             </HeroImage>
             <Text>Use $OG or $DMT exclusively to add to your force.</Text>
             <ButtonWrapper>
@@ -63,7 +64,7 @@ const Landing = () => {
         <BoxesWrapper>
           <Box>
             <h5>Robo Ooga</h5>
-            <img src={HeroGameImage} alt="Robo Oogas" />
+            <img src={RoboOogaImage} alt="Robo Oogas" />
             <p>
               Robo Oogas produce $OG when they are staked in the factory. There
               are 4 levels - Use $DMT to level up a Robo Oogas and make them

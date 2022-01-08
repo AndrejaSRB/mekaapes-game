@@ -164,7 +164,7 @@ export const Ape = styled.div`
   margin: 8px;
   width: 80px;
   height: 80px;
-  cursor: ${({placeholder}) => placeholder ? "default" : "pointer"};
+  cursor: ${({ placeholder }) => (placeholder ? "default" : "pointer")};
   @media only screen and (min-width: 900px) {
     width: 110px;
     height: 110px;
@@ -228,3 +228,33 @@ export const CustomCheckbox = styled(Checkbox)`
     justify-content: flex-start;
   }
 `;
+
+export const Box = styled.div`
+  @media only screen and (min-width: 1300px) {
+    display: flex;
+  }
+`;
+export const LeftSide = styled.div`
+  display: none;
+  @media only screen and (min-width: 1300px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 62px;
+  }
+`;
+
+export const Animation = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    border-radius: 30px;
+    filter: drop-shadow(0px 0px 40px #11051b);
+    height: 280px;
+    position: relative;
+    top: -15px;
+  }
+`;
+
+export const RightSide = styled.div``;

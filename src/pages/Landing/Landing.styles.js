@@ -249,6 +249,9 @@ export const Box = styled.div`
         &:hover {
           color: ${theme.color.green};
         }
+        &:visited {
+          color: ${theme.color.white};
+        }
       }
     }
     & > p.width {

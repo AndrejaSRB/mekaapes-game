@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 // ******** Image ********
-import LoadingImage from "../../../assets/landing-image.png";
+import LoadingImage from "../../../assets/loading-animation.gif";
 // ******** Styles ********
 import { ModalWrapper, LoadingPicture, Text, Dot } from "./Loading.styles";
 

@@ -7,7 +7,7 @@ import Footer from "../../../components/Footer/Footer";
 import StatusBar from "../../../components/StatusBar/StatusBar";
 import Loading from "../../../components/Modals/Loading/Loading";
 // ******** Images ********
-import Animation from "../../../assets/level_up.gif";
+import Animation from "../../../assets/crafting_animation.gif";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********

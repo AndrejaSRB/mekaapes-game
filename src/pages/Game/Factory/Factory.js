@@ -21,7 +21,7 @@ import {
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
 // ******** Images ********
-import HeroImage from "../../../assets/landing-image.png";
+import HeroImage from "../../../assets/factory_animation.gif";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Styles ********
 import {
