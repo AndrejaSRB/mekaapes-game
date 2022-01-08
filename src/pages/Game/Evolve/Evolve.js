@@ -82,26 +82,6 @@ const EXAMPLE_DATA = [
     name: "Ape",
     id: 9,
   },
-  //   {
-  //     img: MekaApeExample,
-  //     name: "Ape",
-  //     id: 10,
-  //   },
-  //   {
-  //     img: RoboOogaExample,
-  //     name: "Ape",
-  //     id: 11,
-  //   },
-  //   {
-  //     img: MekaApeExample,
-  //     name: "Ape",
-  //     id: 12,
-  //   },
-  //   {
-  //     img: RoboOogaExample,
-  //     name: "Ape",
-  //     id: 13,
-  //   }
 ];
 
 const PRE_SALE_AMOUNT = 10000;

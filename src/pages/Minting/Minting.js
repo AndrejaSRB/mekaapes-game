@@ -192,14 +192,17 @@ const Minting = () => {
     }
   };
 
-
   return (
     <Wrapper>
       <Header page="minting" />
       <Content>
-        <Title>
-          Your wallet has <span>6</span> mint more
-        </Title>
+        {+maxTokenAmount > 0 ? (
+          <Title>
+            Your wallet has <span>{maxTokenAmount}</span> mint more
+          </Title>
+        ) : (
+          <Title>Your wallet doesn't have any more mint</Title>
+        )}
         <MainBox>
           <h4>Welcome!</h4>
           <IntroText>

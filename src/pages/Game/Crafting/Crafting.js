@@ -238,7 +238,7 @@ const Crafting = () => {
 
   const handleClickMintWithOG = async () => {
     if (oogearCounter > 0) {
-      if (+oogearCounter * OGPrice < +oogearBalance) {
+      if (+oogearCounter * +OGPrice < +oogearBalance) {
         setIsDisableOGButtons(true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, false);
@@ -262,7 +262,7 @@ const Crafting = () => {
 
   const handleClickMintWithOGAndStake = async () => {
     if (oogearCounter > 0) {
-      if (+oogearCounter * OGStakePrice < +oogearBalance) {
+      if (+oogearCounter * +OGStakePrice < +oogearBalance) {
         setIsDisableOGButtons(true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true);
@@ -286,7 +286,7 @@ const Crafting = () => {
 
   const handleClickMintWithDMT = async () => {
     if (dmtCounter > 0) {
-      if (+dmtCounter * dmtPrice < +dmtBalance) {
+      if (+dmtCounter * +dmtPrice < +dmtBalance) {
         setIsDisableDMTButton(true);
         try {
           let tsx = await contract.mintWithDMT(dmtCounter);
