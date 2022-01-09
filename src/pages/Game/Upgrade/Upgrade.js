@@ -12,7 +12,7 @@ import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
 import { InfoOutlined } from "@ant-design/icons";
 // ******** Images ********
-import PlaceholderApe from "../../../assets/placeholder_ape.png";
+import Placeholder from "../../../assets/placeholder.png";
 import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
 // ******** Functions ********
@@ -225,7 +225,7 @@ const Upgrade = () => {
       return (
         <ApeBox>
           <Ape currentLvl={""} onClick={handleOpenApeModal}>
-            <img src={PlaceholderApe} alt="ape" />
+            <img src={Placeholder} alt="ape" />
             <p>
               Select <span>Robo Ooga</span>
             </p>

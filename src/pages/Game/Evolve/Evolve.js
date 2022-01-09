@@ -124,7 +124,7 @@ const Evolve = () => {
     } else if (width < 1200) {
       setMinElementNumber(12);
     } else {
-      setMinElementNumber(16);
+      setMinElementNumber(12);
     }
   }, [width]);
 

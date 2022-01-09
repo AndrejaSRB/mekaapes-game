@@ -46,14 +46,15 @@ export class Contract {
   // applies only to pre-sale in ETH
   // mints amount new tokens to the user
   // toStake is boolean if is staked or not
-  async mint(amount, toStake, value) {
-    return await this.mekaApesContract.mint(amount, toStake, {
+  // mintSign is signature object
+  async mint(amount, toStake, value, mintSign) {
+    return await this.mekaApesContract.mint(amount, toStake, mintSign, {
       value: value,
     });
   }
 
-  async allowedToMint(address) {
-    return await this.mekaApesContract.allowedToMint(address);
+  async allowedToMint(address, mintAllowance) {
+    return await this.mekaApesContract.allowedToMint(address, mintAllowance);
   }
 
   // mints amount new tokens with $OG

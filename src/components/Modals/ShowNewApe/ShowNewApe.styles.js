@@ -46,6 +46,7 @@ export const Animation = styled.div`
   img {
     width: 170px;
     border-radius: 30px;
+    -webkit-filter: drop-shadow(0px 0px 40px #11051b);
     filter: drop-shadow(0px 0px 40px #11051b);
   }
   @media only screen and (min-width: 789px) {

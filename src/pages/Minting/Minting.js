@@ -1,10 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import { ethers } from "ethers";
+// ******** Config ********
+import whitelistJSON from "../../config/whitelistMintSignatures.json";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Loading from "../../components/Modals/Loading/Loading";
+import CustomCountdown from "../../components/CustomCountdown/CustomCountdown";
 // ******** HOC ********
 import withConnect from "../../hoc/withConnect";
 // ******** stores ********
@@ -36,19 +39,43 @@ const Minting = () => {
   const [currentETHBalance, setCurrentETHBalance] = useState(0);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [maxTokenAmount, setMaxTokenAmount] = useState(4);
+  const [maxTokenAmount, setMaxTokenAmount] = useState(3);
   const [priceMint, setPriceMint] = useState(0);
   const [priceMintAndStake, setPriceMintAndStake] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [mintSign, setMintSign] = useState(null);
+  const [isChecked, setIsChecked] = useState(false);
+  const [isPreSaleCompleted, setIsPreSaleCompleted] = useState(false);
 
-  // Get the maxTokenAmount
   useEffect(() => {
     if (userMetaMaskToken) {
+      if (whitelistJSON && whitelistJSON.length > 0) {
+        let isWhitelisted = whitelistJSON.find(
+          (users) => users.address === userMetaMaskToken
+        );
+        setIsChecked(true);
+        if (isWhitelisted) {
+          const { mintSign } = isWhitelisted;
+          setMaxTokenAmount(mintSign.mintAllowance);
+          setMintSign(mintSign);
+        } else {
+          setMaxTokenAmount(0);
+          setMintSign(null);
+        }
+      }
+    }
+  }, [userMetaMaskToken]);
+
+  //   Get the maxTokenAmount
+  useEffect(() => {
+    if (userMetaMaskToken && isChecked) {
       const getMaxTokenAmount = async () => {
         try {
-          await contract.allowedToMint(userMetaMaskToken).then((res) => {
-            setMaxTokenAmount(+res.toString());
-          });
+          await contract
+            .allowedToMint(userMetaMaskToken, maxTokenAmount)
+            .then((res) => {
+              setMaxTokenAmount(+res.toString());
+            });
         } catch (error) {
           console.log(error);
         }
@@ -56,7 +83,7 @@ const Minting = () => {
       getMaxTokenAmount();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userMetaMaskToken]);
+  }, [userMetaMaskToken, isChecked]);
 
   // Get the ETH Balance
   useEffect(() => {
@@ -112,9 +139,11 @@ const Minting = () => {
 
   const getMaxTokenAmount = async () => {
     try {
-      await contract.allowedToMint(userMetaMaskToken).then((res) => {
-        setMaxTokenAmount(+res.toString());
-      });
+      await contract
+        .allowedToMint(userMetaMaskToken, maxTokenAmount)
+        .then((res) => {
+          setMaxTokenAmount(+res.toString());
+        });
     } catch (error) {
       console.log(error);
     }
@@ -130,7 +159,8 @@ const Minting = () => {
         let tsx = await contract.mint(
           counter,
           true,
-          priceMintAndStake.mul(counter)
+          priceMintAndStake.mul(counter),
+          mintSign
         );
         setLoading(true);
         tsx.wait().then(async () => {
@@ -153,7 +183,12 @@ const Minting = () => {
     if (currentETHBalance.toString() > priceMint.toString() * counter) {
       setIsDisabled(true);
       try {
-        let tsx = await contract.mint(counter, false, priceMint.mul(counter));
+        let tsx = await contract.mint(
+          counter,
+          false,
+          priceMint.mul(counter),
+          mintSign
+        );
         setLoading(true);
         tsx.wait().then(async () => {
           getTotalMinted();
@@ -196,22 +231,32 @@ const Minting = () => {
     <Wrapper>
       <Header page="minting" />
       <Content>
-        {+maxTokenAmount > 0 ? (
-          <Title>
-            Your wallet has <span>{maxTokenAmount}</span> mint more
-          </Title>
-        ) : (
-          <Title>Your wallet doesn't have any more mint</Title>
-        )}
+        <Title>
+          You're currently able to mint: <span>{maxTokenAmount}</span>
+        </Title>
         <MainBox>
-          <h4>Welcome!</h4>
-          <IntroText>
-            You have secured your place on the whitelist!{" "}
-            <span>
-              Choose "Mint and Stake" to safe one transaction and earn $OG
-              immediately.
-            </span>
-          </IntroText>
+          {isPreSaleCompleted ? (
+            <h4>MekaApes Game Public Sale</h4>
+          ) : (
+            <h4>MekaApes Game Whitelist Sale</h4>
+          )}
+          {isPreSaleCompleted ? (
+            <IntroText>
+              Public mint is live! The game starts immediately after the public sale!{" "}
+              <span>
+                Choose "Mint and Stake" to safe one transaction and earn $OG
+                immediately.
+              </span>
+            </IntroText>
+          ) : (
+            <IntroText>
+              The whitelist sale will turn into public sale when the timer runs out. The game starts immediately after the public sale!{" "}
+              <span>
+                Choose "Mint and Stake" to safe one transaction and earn $OG
+                immediately.
+              </span>
+            </IntroText>
+          )}
           <Counter>
             <div
               className={counter === 0 ? "icon disabled" : "icon"}
@@ -244,8 +289,11 @@ const Minting = () => {
           </ButtonWrapper>
           <Price className="noselect" margin>
             <span>Price {getSmallETHPrice(priceMint)} ETH</span>
-            {getCurrentAmount()}/10,000
           </Price>
+          <CustomCountdown
+            getCurrentAmount={getCurrentAmount}
+            setIsPreSaleCompleted={setIsPreSaleCompleted}
+          />
         </MainBox>
       </Content>
       <Footer page="minting" />

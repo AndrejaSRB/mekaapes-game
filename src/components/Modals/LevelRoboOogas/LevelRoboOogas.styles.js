@@ -139,6 +139,7 @@ export const Ape = styled.div`
 export const ApeImage = styled.img`
   width: 100px;
   height: 100px;
+  -webkit-filter: drop-shadow(0px 0px 40px #11051b);
   filter: drop-shadow(0px 0px 10px #11051b);
   border: ${({ currentLvl }) => {
     if (currentLvl) {

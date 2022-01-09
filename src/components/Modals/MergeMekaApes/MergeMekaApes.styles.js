@@ -139,7 +139,8 @@ export const Ape = styled.div`
 export const ApeImage = styled.img`
   width: 100px;
   height: 100px;
-  filter: drop-shadow(0px 0px 10px #11051b);
+  -webkit-filter: drop-shadow(0px 0px 40px #11051b);
+    filter: drop-shadow(0px 0px 40px #11051b);
   border: ${({ selected }) =>
     selected ? `5px solid ${theme.color.green}` : `5px solid transparent`};
   border-radius: 15px;

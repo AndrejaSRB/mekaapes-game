@@ -8,7 +8,7 @@ import Loading from "../../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
-import PlaceholderApe from "../../../assets/placeholder_ape.png";
+import Placeholder from "../../../assets/placeholder.png";
 import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
@@ -174,8 +174,8 @@ const Merging = () => {
     } else {
       return (
         <>
-          <img src={PlaceholderApe} alt="ape" />
-          <span>Select</span>
+          <img src={Placeholder} alt="ape" />
+          <span>Click to Select</span>
         </>
       );
     }
@@ -187,8 +187,8 @@ const Merging = () => {
     } else {
       return (
         <>
-          <img src={PlaceholderApe} alt="ape" />
-          <span>Select</span>
+          <img src={Placeholder} alt="ape" />
+          <span>Click to Select</span>
         </>
       );
     }

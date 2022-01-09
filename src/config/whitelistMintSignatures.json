@@ -1,0 +1,38 @@
+[
+    {
+        "address": "0x1733c7dEFE47c96dfda8D7e6b935a72D99Bac6b1",
+        "mintSign": {
+            "mintAllowance": 57,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0xff7e6b585dc68b3cb27c6be48c962e1034f40e60d121698d251dc6f181dc94"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x7a6b6e4a0300f1cabf5b16f1172e48ed337deb2961c025e4d0ac1d248a373480"
+            }
+        }
+    },
+    {
+        "address": "0x8Cf3307AaF2Dc94b6D10ea859eA8151c70Be5EcB",
+        "mintSign": {
+            "mintAllowance": 3,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x63d0423576df2b167ec3d84450bc8178b1e6578e9820cab75d1143af63a0d6eb"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x853684d1cc0585040314f976dfbc08718721282b23c23b6536bf1935888b80b5"
+            }
+        }
+    }
+]

@@ -101,8 +101,9 @@ export const TitleBox = styled.div`
     h6 {
       font-size: 18px;
       line-height: 1.5;
-      margin-bottom: 38px;
       margin-top: 42px;
+      width: 900px;
+      margin: 0 auto 38px auto;
     }
   }
 `;
@@ -154,11 +155,11 @@ export const HelperText = styled.p`
     transition: ${theme.transition};
     font-weight: bold;
     padding-left: 5px;
-    &:hover {
-      color: ${theme.color.green};
-    }
     &:visited {
       color: ${theme.color.red};
+    }
+    &:hover {
+      color: ${theme.color.green};
     }
   }
   @media only screen and (min-width: 789px) {

@@ -86,13 +86,15 @@ export const IntroText = styled.p`
   color: ${theme.color.whiteGrey};
   text-align: center;
   @media only screen and (min-width: 790px) {
-    width: 768px;
-    margin: 0 auto;
     & > span {
       display: block;
+      font-weight: 600;
+      color: ${theme.color.green};
     }
   }
   @media only screen and (min-width: 1024px) {
+    width: 680px;
+    margin: 0 auto;
     font-size: 18px;
   }
 `;
@@ -219,3 +221,4 @@ export const Price = styled.div`
     }
   }
 `;
+

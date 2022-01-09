@@ -112,7 +112,8 @@ export const MobileBoxHeader = styled.div`
     & > img {
       width: 100%;
       border-radius: 30px;
-      filter: drop-shadow(0px 0px 40px #11051b);
+      -webkit-filter: drop-shadow(0px 0px 40px #11051b);
+    filter: drop-shadow(0px 0px 40px #11051b);
     }
   }
   p {
@@ -518,10 +519,12 @@ export const MiddleBox = styled.div`
     display: block;
     text-align: center;
     img {
-      width: 207px;
+      width: 215px;
+      height: 215px;
       margin: 0 auto 25px auto;
       border-radius: 30px;
-      filter: drop-shadow(0px 0px 40px #11051b);
+      -webkit-filter: drop-shadow(0px 0px 40px #11051b);
+    filter: drop-shadow(0px 0px 40px #11051b);
     }
     p {
       color: ${theme.color.white};

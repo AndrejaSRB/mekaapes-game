@@ -98,8 +98,9 @@ export const TitleBox = styled.div`
     h6 {
       font-size: 18px;
       line-height: 49px;
-      margin-bottom: 38px;
       line-height: 1.5;
+      width: 860px;
+      margin: 0 auto 38px auto;
     }
   }
 `;
@@ -136,7 +137,9 @@ export const Box = styled.div`
   span {
     position: absolute;
     color: ${theme.color.white};
-    font-size: 24px;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -158,7 +161,7 @@ export const Box = styled.div`
       height: 200px;
     }
     span {
-      font-size: 38px;
+      font-size: 26px;
     }
     p {
       font-size: 28px;

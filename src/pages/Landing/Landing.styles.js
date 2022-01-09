@@ -17,6 +17,33 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const LogoImage = styled.div`
+  margin-top: 64px;
+  margin-bottom: 16px;
+  text-align: center;
+  img {
+    height: 60px;
+  }
+  @media only screen and (min-width: 769px) {
+    img {
+      height: 100px;
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    margin-bottom: 45px;
+    margin-top: 100px;
+    img {
+      height: 140px;
+    }
+  }
+  @media only screen and (min-width: 1300px) {
+    margin-top: 150px;
+  }
+  @media only screen and (min-width: 1520px) {
+    margin-top: 285px;
+  }
+`;
+
 export const Title = styled.h1`
   color: ${theme.color.white};
   text-align: center;
@@ -150,6 +177,7 @@ export const HeroImage = styled.div`
   & > img {
     width: 100%;
     border-radius: 30px;
+    -webkit-filter: drop-shadow(0px 0px 40px #11051b);
     filter: drop-shadow(0px 0px 40px #11051b);
   }
   @media only screen and (min-width: 1024px) {
@@ -225,6 +253,7 @@ export const Box = styled.div`
   & > img {
     margin: 24px 0 25px 0;
     border-radius: 20px;
+    -webkit-filter: drop-shadow(0px 0px 40px #11051b);
     filter: drop-shadow(0px 0px 40px #11051b);
     width: 168px;
   }
@@ -242,15 +271,15 @@ export const Box = styled.div`
     & > p {
       font-size: 18px;
       a {
-        color: ${theme.color.white};
+        color: ${theme.color.red};
         transition: ${theme.transition};
         cursor: pointer;
-        font-weight: bold;
+        font-weight: 600;
+        &:visited {
+          color: ${theme.color.red};
+        }
         &:hover {
           color: ${theme.color.green};
-        }
-        &:visited {
-          color: ${theme.color.white};
         }
       }
     }

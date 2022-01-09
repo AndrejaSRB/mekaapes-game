@@ -8,10 +8,11 @@ import RoboOogaImage from "../../assets/robo-ooga-landing.png";
 import MekaApeImage from "../../assets/mekaape_landing.png";
 import OGToken from "../../assets/og_token.png";
 import DMTToken from "../../assets/dmt_token.gif";
+import Logo from '../../assets/logo.svg';
 // ******** Styled ********
 import {
   Wrapper,
-  Title,
+  LogoImage,
   ButtonWrapper,
   Content,
   MainBox,
@@ -28,9 +29,9 @@ const Landing = () => {
     <Wrapper>
       <Header page="landing" />
       <Content>
-        <Title>
-          MEKAAPES GAME: <span>GENESIS</span>
-        </Title>
+        <LogoImage>
+            <img src={Logo} alt="Meka Apes" />
+        </LogoImage>
         <MainBox>
           <h4 className="desktop">Welcome!</h4>
           <IntroText>

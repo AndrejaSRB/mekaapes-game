@@ -92,7 +92,7 @@ export const TitleBox = styled.div`
     h4 {
       font-size: 38px;
       line-height: 49px;
-      margin-bottom: 24px;
+      margin-bottom: 48px;
     }
     h6 {
       font-size: 18px;
@@ -318,14 +318,15 @@ export const AnimationBox = styled.div`
   margin-bottom: 32px;
   img {
     border-radius: 30px;
+    -webkit-filter: drop-shadow(0px 0px 40px #11051b);
     filter: drop-shadow(0px 0px 40px #11051b);
     width: 160px;
     height: 160px;
   }
   @media only screen and (min-width: 1024px) {
     img {
-      width: 220px;
-      height: 220px;
+      width: 215px;
+      height: 215px;
     }
   }
 `;

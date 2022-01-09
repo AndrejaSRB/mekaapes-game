@@ -174,7 +174,8 @@ export const Ape = styled.div`
 export const ApeImage = styled.img`
   width: 80px;
   height: 80px;
-  filter: drop-shadow(0px 0px 10px #11051b);
+  -webkit-filter: drop-shadow(0px 0px 40px #11051b);
+    filter: drop-shadow(0px 0px 40px #11051b);
   border: ${({ selected }) =>
     selected ? `5px solid ${theme.color.green}` : `5px solid transparent`};
   border-radius: 15px;
@@ -250,6 +251,7 @@ export const Animation = styled.div`
   align-items: center;
   img {
     border-radius: 30px;
+    -webkit-filter: drop-shadow(0px 0px 40px #11051b);
     filter: drop-shadow(0px 0px 40px #11051b);
     height: 280px;
     position: relative;
