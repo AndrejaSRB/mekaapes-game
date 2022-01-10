@@ -110,9 +110,38 @@ const Factory = () => {
   const [minStakedElementNo, setMinStakedElementNo] = useState(6);
   const { loading, error, data } = useQuery(TEST_QUERY);
 
+  const [totalClaim, setTotalClaim] = useState(0);
+  const [totalSelectedClaim, setTotalSelectedClaim] = useState(0);
+
   console.log("loading", loading);
   console.log("error", error);
   console.log("data", data);
+
+  // Sum all token claim amount
+  useEffect(() => {
+    if (exampleStaked && exampleStaked.length > 0) {
+      let total = 0;
+      exampleStaked.forEach((nft) => {
+        total = nft.number + total;
+      });
+      setTotalClaim(total.toFixed(2));
+    } else {
+      setTotalClaim(0);
+    }
+  }, []);
+
+  // Sum selected token claim amount
+  useEffect(() => {
+    if (selectedStaked && selectedStaked.length > 0) {
+      let total = 0;
+      selectedStaked.forEach((nft) => {
+        total = nft.number + total;
+      });
+      setTotalSelectedClaim(total.toFixed(2));
+    } else {
+      setTotalSelectedClaim(0);
+    }
+  }, [selectedStaked]);
 
   useEffect(() => {
     if (width < 388) {
@@ -245,7 +274,7 @@ const Factory = () => {
           <img src={ape.img} alt={ape.name} />
           {!ape.placeholder && (
             <div>
-              <span>312.08</span>
+              <span>{ape.number}</span>
             </div>
           )}
         </ApeNft>
@@ -279,7 +308,7 @@ const Factory = () => {
                   <img src={ape.img} alt={ape.name} />
                   {!ape.placeholder && (
                     <div>
-                      <span>312.08</span>
+                      <span>{ape.number}</span>
                     </div>
                   )}
                 </ApeNft>
@@ -360,15 +389,18 @@ const Factory = () => {
               </div>
               <ApeList>{renderMobileStakedApes()}</ApeList>
               <ApeListDesktop>{renderDesktopStakedApes()}</ApeListDesktop>
-              <ButtonClaim>Claim xxxx $OG</ButtonClaim>
+              <ButtonClaim>Claim {totalSelectedClaim} $OG</ButtonClaim>
               <ClaimAndUnstakeButton disabled>
                 Claim $OG and Unstake
               </ClaimAndUnstakeButton>
               <StakedText>
                 <p>
-                  Unclaimed: <span>xxxx $OG</span>
+                  Unclaimed: <span>{totalClaim} $OG</span>
                 </p>
-                <p>A Robo Ooga can only be unstaked when it has accumulated min. 6,000 $OG</p>
+                <p>
+                  A Robo Ooga can only be unstaked when it has accumulated min.
+                  6,000 $OG
+                </p>
               </StakedText>
             </Staked>
           </Boxes>

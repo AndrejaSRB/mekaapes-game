@@ -139,6 +139,24 @@ export const IntroText = styled.div`
       font-size: 16px;
       line-height: 21px;
       margin: 0 0 8px 0;
+      a {
+        color: ${theme.color.red};
+        transition: ${theme.transition};
+        cursor: pointer;
+        font-weight: 600;
+        &:visited {
+          color: ${theme.color.red};
+        }
+        &:hover {
+          color: ${theme.color.green};
+        }
+      }
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    & > div > p {
+      width: 660px;
+      margin: 0 auto 8px auto;
     }
   }
   @media only screen and (min-width: 1024px) {
@@ -146,7 +164,8 @@ export const IntroText = styled.div`
     justify-content: space-between;
     & > div > p {
       font-size: 18px;
-      line-height: 23px;
+      line-height: 27px;
+      width: 290px;
       &:first-child {
         margin-bottom: 16px;
       }
@@ -191,6 +210,11 @@ export const Text = styled.p`
   font-size: 18px;
   line-height: 23px;
   margin-bottom: 32px;
+  @media only screen and (min-width: 900px) {
+    width: 660px;
+    margin: 0 auto 32px auto;
+    line-height: 1.5
+  }
 `;
 
 export const ButtonWrapper = styled.div`

@@ -13,8 +13,14 @@ import withConnect from "../../../hoc/withConnect";
 import { InfoOutlined } from "@ant-design/icons";
 // ******** Images ********
 import Placeholder from "../../../assets/placeholder.png";
-import MekaApeExample from "../../../assets/meka-ape-landing.png";
-import RoboOogaExample from "../../../assets/landing-image.png";
+// ******** Demo Images ********
+import RoboImageOne from '../../../assets/Demo/RoboUpgrade/Level_1/Kopie_von_Robo_1_1.png'
+import RoboImageTwo from '../../../assets/Demo/RoboUpgrade/Level_1/Kopie_von_Robo_1_2.png'
+import RoboImageThree from '../../../assets/Demo/RoboUpgrade/Level_1/Kopie_von_Robo_1_3.png'
+import RoboImageFour from '../../../assets/Demo/RoboUpgrade/Level_2/Kopie_von_Robo_2_1.png'
+import RoboImageFive from '../../../assets/Demo/RoboUpgrade/Level_2/Kopie_von_Robo_2_2.png'
+import RoboImageSix from '../../../assets/Demo/RoboUpgrade/Level_3/Kopie_von_Robo_3_1.png';
+import RoboImageSeven from '../../../assets/Demo/RoboUpgrade/Level_3/Kopie_von_Robo_3_2.png';
 // ******** Functions ********
 import { getLevelText } from "./helpers";
 // ******** Store ********
@@ -48,82 +54,46 @@ import {
 
 const EXAMPLE_DATA = [
   {
-    img: RoboOogaExample,
-    name: "Ape #2323",
+    img: RoboImageOne,
+    name: "Robo Ooga #2323",
     level: 0,
     id: 1,
   },
   {
-    img: MekaApeExample,
-    name: "Ape #1121",
-    level: 1,
+    img: RoboImageTwo,
+    name: "Robo Ooga #1121",
+    level: 0,
     id: 2,
   },
   {
-    img: RoboOogaExample,
-    name: "Ape #12",
-    level: 1,
+    img: RoboImageThree,
+    name: "Robo Ooga #122",
+    level: 0,
     id: 3,
   },
   {
-    img: RoboOogaExample,
-    name: "Ape #31231",
-    level: 2,
+    img: RoboImageFour,
+    name: "Robo Ooga #31231",
+    level: 1,
     id: 4,
   },
   {
-    img: MekaApeExample,
-    name: "Ape #9393",
-    level: 3,
+    img: RoboImageFive,
+    name: "Robo Ooga #9393",
+    level: 1,
     id: 5,
   },
   {
-    img: RoboOogaExample,
-    name: "Ape #1123",
-    level: 0,
+    img: RoboImageSix,
+    name: "Robo Ooga #1123",
+    level: 2,
     id: 6,
   },
   {
-    img: MekaApeExample,
-    name: "Ape #8828",
-    level: 0,
+    img: RoboImageSeven,
+    name: "Robo Ooga #8828",
+    level: 2,
     id: 7,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #838",
-    level: 1,
-    id: 8,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #1231",
-    level: 2,
-    id: 9,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #111",
-    level: 2,
-    id: 32,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #989",
-    level: 0,
-    id: 73,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #642",
-    level: 3,
-    id: 19,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #100",
-    level: 1,
-    id: 770,
   },
 ];
 
@@ -131,7 +101,7 @@ const LevelBox = ({ level }) => (
   <LevelBoxContainer>
     <LevelBoxWrapper currentLvl={`${level}`}>
       <span>lvl</span>
-      <p>{level}</p>
+      <p>{+level + 1}</p>
     </LevelBoxWrapper>
   </LevelBoxContainer>
 );

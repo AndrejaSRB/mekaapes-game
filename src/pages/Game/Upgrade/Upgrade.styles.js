@@ -177,6 +177,7 @@ export const LevelBoxContainer = styled.div`
 export const LevelBoxWrapper = styled.div`
   width: 80px;
   height: 80px;
+  -webkit-box-shadow: 0px 0px 40px #11051b;
   box-shadow: 0px 0px 40px #11051b;
   border-radius: 15px;
   display: flex;
@@ -253,6 +254,7 @@ export const Ape = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  -webkit-box-shadow: 0px 0px 40px #11051b;
   box-shadow: 0px 0px 40px #11051b;
   border-radius: 15px;
   overflow: hidden;

@@ -8,7 +8,7 @@ import RoboOogaImage from "../../assets/robo-ooga-landing.png";
 import MekaApeImage from "../../assets/mekaape_landing.png";
 import OGToken from "../../assets/og_token.png";
 import DMTToken from "../../assets/dmt_token.gif";
-import Logo from '../../assets/logo.svg';
+import Logo from "../../assets/logo.svg";
 // ******** Styled ********
 import {
   Wrapper,
@@ -30,23 +30,29 @@ const Landing = () => {
       <Header page="landing" />
       <Content>
         <LogoImage>
-            <img src={Logo} alt="Meka Apes" />
+          <img src={Logo} alt="Meka Apes" />
         </LogoImage>
         <MainBox>
           <h4 className="desktop">Welcome!</h4>
           <IntroText>
             <div>
-              <p>The danger of attack is imminent.</p>
               <p>
-                Factory needs to be protected. <span>Build your team.</span>
+                With MekaApes Game, OogaVerse introduces exciting new game
+                mechanics such as evolution, fusion and a unique levelling-up
+                system.
               </p>
             </div>
             <div>
               <p>
-                Recruit unique Robo Apes and <span>Apes to the fight.</span>
-              </p>
-              <p>
-                Earn $OG or $DMT as your <span>champions battle!</span>
+                The interconnection with the expansive{" "}
+                <a
+                  href="https://opensea.io/collection/oogaverse"
+                  target="_blank"
+                  rel="noreferrer">
+                  OogaVerse collection
+                </a>
+                , makes MekaApes the most in depth strategy game available on
+                the Ethereum blockchain.
               </p>
             </div>
           </IntroText>
@@ -54,7 +60,10 @@ const Landing = () => {
             <HeroImage>
               <img src={HeroLandingAnimation} alt="mekaape hero" />
             </HeroImage>
-            <Text>Use $OG or $DMT exclusively to add to your force.</Text>
+            <Text>
+              Stake Robo Oogas and MekaApes in the factory to earn $OG. Upgrade
+              Robo Oogas or merge two MekaApes to unlock extra utility!
+            </Text>
             <ButtonWrapper>
               <Link to="/minting">Minting</Link>
               <Link to="/game/factory">Enter the Game</Link>
@@ -85,8 +94,8 @@ const Landing = () => {
             <h5>$OG</h5>
             <img src={OGToken} alt="Robo Oogas" />
             <p className="width">
-              In the Factory, Robo Oogas convert scrap metal into $OG (OOGEAR).
-              $OG is used to craft new Robo Oogas and MekaApes.
+              In the Factory, Robo Oogas convert scrap metal into $OG which is
+              used to craft new Roba Oogas and MekaApes.
             </p>
           </Box>
           <Box>

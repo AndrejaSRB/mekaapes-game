@@ -14,6 +14,14 @@ import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import MekaApeExample from "../../../assets/meka-ape-landing.png";
 import RoboOogaExample from "../../../assets/landing-image.png";
 import EvolveAnimation from "../../../assets/level_up.gif";
+// ******** Demo Images ********
+import BabyImageOne from '../../../assets/Demo/Evolve/Booga1.png';
+import BabyImageTwo from '../../../assets/Demo/Evolve/Booga2.png';
+import BabyImageThree from '../../../assets/Demo/Evolve/Booga3.png';
+import BabyImageFour from '../../../assets/Demo/Evolve/Booga4.png';
+import BabyImageFive from '../../../assets/Demo/Evolve/Booga5.png';
+import BabyImageSix from '../../../assets/Demo/Evolve/Booga6.png';
+import BabyImageSeven from '../../../assets/Demo/Evolve/Booga7.png';
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
@@ -42,49 +50,39 @@ import {
 
 const EXAMPLE_DATA = [
   {
-    img: RoboOogaExample,
+    img: BabyImageOne,
     name: "Ape",
     id: 1,
   },
   {
-    img: MekaApeExample,
+    img: BabyImageTwo,
     name: "Ape",
     id: 2,
   },
   {
-    img: RoboOogaExample,
+    img: BabyImageThree,
     name: "Ape",
     id: 3,
   },
   {
-    img: RoboOogaExample,
+    img: BabyImageFour,
     name: "Ape",
     id: 4,
   },
   {
-    img: MekaApeExample,
+    img: BabyImageFive,
     name: "Ape",
     id: 5,
   },
   {
-    img: RoboOogaExample,
+    img: BabyImageSix,
     name: "Ape",
     id: 6,
   },
   {
-    img: MekaApeExample,
+    img: BabyImageSeven,
     name: "Ape",
     id: 7,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape",
-    id: 8,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape",
-    id: 9,
   },
 ];
 

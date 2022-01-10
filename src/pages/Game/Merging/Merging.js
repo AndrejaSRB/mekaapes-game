@@ -9,9 +9,11 @@ import Loading from "../../../components/Modals/Loading/Loading";
 import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
 import Placeholder from "../../../assets/placeholder.png";
-import MekaApeExample from "../../../assets/meka-ape-landing.png";
-import RoboOogaExample from "../../../assets/landing-image.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
+// ******** Demo images ********
+import MekaImageOne from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_1.png';
+import MekaImageTwo from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0-2.png';
+import MekaImageThree from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_3.png';
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
@@ -33,95 +35,25 @@ import {
 
 const EXAMPLE_DATA = [
   {
-    img: RoboOogaExample,
+    img: MekaImageOne,
     name: "Ape #2323",
     level: 0,
     status: "staked",
     id: 1,
   },
   {
-    img: MekaApeExample,
-    name: "Ape #1121",
-    level: 1,
+    img: MekaImageTwo,
+    name: "Ape #2323",
+    level: 0,
     status: "staked",
     id: 2,
   },
   {
-    img: RoboOogaExample,
-    name: "Ape #12",
+    img: MekaImageThree,
+    name: "Ape #2323",
     level: 0,
     status: "staked",
     id: 3,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #31231",
-    level: 0,
-    status: "unstaked",
-    id: 4,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #9393",
-    level: 1,
-    status: "unstaked",
-    id: 5,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #1123",
-    level: 0,
-    status: "staked",
-    id: 6,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #8828",
-    level: 0,
-    status: "staked",
-    id: 7,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #838",
-    level: 1,
-    status: "unstaked",
-    id: 8,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #1231",
-    level: 0,
-    status: "staked",
-    id: 92,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #111",
-    level: 1,
-    status: "staked",
-    id: 212,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #989",
-    level: 0,
-    status: "staked",
-    id: 13,
-  },
-  {
-    img: MekaApeExample,
-    name: "Ape #642",
-    level: 0,
-    status: "staked",
-    id: 11,
-  },
-  {
-    img: RoboOogaExample,
-    name: "Ape #100",
-    level: 0,
-    status: "staked",
-    id: 120,
   },
 ];
 
@@ -226,12 +158,13 @@ const Merging = () => {
         </Title>
         <MainBox>
           <TitleBox>
-            <h4>Become a Mega Meka!</h4>
+            <h4>Receive a random Mega Level!</h4>
             <h6>
               Select two MekaApes you want to merge. The MekaApe on the left
-              will receive a random Mega Level. The MekaApe on the right will
-              get burned. With the Mega Level, MekaApes get a bigger share of
-              the $OG tax and also gain the ability to be gifted new mints.
+              will receive a random Mega Level (M1, M2 or M3). The MekaApe on
+              the right will get burned. With the Mega Level, MekaApes get a
+              bigger share of the $OG tax and also gain the ability to be gifted
+              new mints.
             </h6>
           </TitleBox>
           <MergingBox>
