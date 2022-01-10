@@ -11,8 +11,6 @@ import withConnect from "../../../hoc/withConnect";
 import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
-import MekaApeExample from "../../../assets/meka-ape-landing.png";
-import RoboOogaExample from "../../../assets/landing-image.png";
 import EvolveAnimation from "../../../assets/level_up.gif";
 // ******** Demo Images ********
 import BabyImageOne from '../../../assets/Demo/Evolve/Booga1.png';
