@@ -40,7 +40,7 @@ export const LogoImage = styled.div`
     margin-top: 150px;
   }
   @media only screen and (min-width: 1520px) {
-    margin-top: 190px;
+    margin-top: 110px;
   }
 `;
 

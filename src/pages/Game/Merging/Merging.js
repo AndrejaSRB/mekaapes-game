@@ -165,7 +165,7 @@ const Merging = () => {
               will receive a random Mega Level (M1, M2 or M3). The MekaApe on
               the right will get burned. With the Mega Level, MekaApes get a
               bigger share of the $OG tax and also gain the ability to be gifted
-              new mints.
+              new mints. Merging costs 2,000 $OG.
             </h6>
           </TitleBox>
           <MergingBox>
@@ -190,7 +190,7 @@ const Merging = () => {
           </ButtonBox>
           <HelperText>
             After 1-3 minutes your MekaApe will receive the Mega Level trait.
-            You might need to refresh the Metadata on OpenSea to see it. Merging costs 2,000 $OG.
+            You might need to refresh the Metadata on OpenSea to see it.
           </HelperText>
         </MainBox>
       </Content>

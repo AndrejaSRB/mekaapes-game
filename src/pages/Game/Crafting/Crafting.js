@@ -396,7 +396,7 @@ const Crafting = () => {
                 <Button
                   disabled={getDMTBtnIsDisabled()}
                   onClick={handleClickMintWithDMT}>
-                  $DMT Mint
+                  $DMT Mint & Stake
                 </Button>
               ) : (
                 <Button

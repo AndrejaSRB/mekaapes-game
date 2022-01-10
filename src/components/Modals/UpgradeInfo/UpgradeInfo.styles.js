@@ -44,14 +44,16 @@ export const Picture = styled.div`
   width: 100%;
   text-align: center;
   img {
-    width: 100%;
-    border-radius: 30px;
-    -webkit-filter: drop-shadow(0px 0px 40px #11051b);
-    filter: drop-shadow(0px 0px 40px #11051b);
+    width: 98%;
   }
   @media only screen and (min-width: 789px) {
     img {
       width: 680px;
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    img {
+      width: 900px;
     }
   }
 `;

@@ -6,7 +6,7 @@ import { ModalWrapper, Picture } from "./UpgradeInfo.styles";
 
 const UpgradeInfo = ({ open, handleClose }) => {
   return (
-    <ModalWrapper visible={open} centered width={744} maskClosable={false} onCancel={handleClose}>
+    <ModalWrapper visible={open} centered width={1024} maskClosable={false} onCancel={handleClose}>
       <div className="content">
         <Picture>
           <img src={LoadingImage} alt="Loading" />

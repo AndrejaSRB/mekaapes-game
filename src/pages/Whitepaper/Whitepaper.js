@@ -4,12 +4,14 @@ import Footer from "../../components/Footer/Footer";
 import FactoryTable from "./Tables/Factory/Table";
 import CraftingTable from "./Tables/Crafting/Table";
 import UpgradeTable from "./Tables/Upgrade/Table";
+import MergeTable from "./Tables/Merge/Table";
 // ******** Images ********
 import TheFactory from "../../assets/factory_animation.gif";
 import TheCrafting from "../../assets/crafting_animation.gif";
 import WhitepaperArticleImage from "../../assets/whitepaper-image.png";
 import LandingImage from "../../assets/main_landing_animation.gif";
 import UpgradeRoboOoga from "../../assets/whitepaper-robo-ooga.png";
+import MergeWhitepaper from "../../assets/merge_whitepaper.png";
 import OGToken from "../../assets/og_token.png";
 import EvolveBaby from "../../assets/level_up.gif";
 import Logo from "../../assets/logo.svg";
@@ -305,9 +307,20 @@ const Whitepaper = () => (
             Merge two MekaApes to receive a random Mega Level. The higher the
             level the larger the share of $OG tax is earnt. A higher Level also
             receives proportionally more newly crafted Robo Oogas and MekaApes
-            as a tribute.
+            as a tribute. Merging costs 2,000 $OG.
           </p>
-
+          <Table>
+            <MergeTable />
+          </Table>
+          <p>
+            The level of a MekaApe is displayed as a background. Every newly
+            minted MekaApe that is not merged yet has a basic color gradient
+            background. Mega Mekas also get a trait saying which Mega Level it
+            has.
+          </p>
+          <BoxImage>
+            <img src={MergeWhitepaper} alt="Meka Merge" />
+          </BoxImage>
           <BoxContent>
             <Headline>
               <div className="content">

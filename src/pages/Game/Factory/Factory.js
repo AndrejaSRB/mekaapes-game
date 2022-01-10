@@ -8,8 +8,6 @@ import Footer from "../../../components/Footer/Footer";
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
 import useWindowDimenstions from "../../../hooks/useWindowDimensions";
-// ******** Icons ********
-import { SettingFilled } from "@ant-design/icons";
 // ******** Functions ********
 import {
   getListLenght,
@@ -49,7 +47,6 @@ import {
   ApeListDesktop,
   CustomUnstakeCheckbox,
   Subtitle,
-  ApeInProgress,
   ButtonClaim,
 } from "./Factory.styles";
 // ******** Fake Data ********
@@ -61,22 +58,8 @@ import {
 
 const NoItemFound = () => (
   <NotFoundItem>
-    <img src={PlaceholderApe} alt="placeholder" />
     <p>No items found!</p>
   </NotFoundItem>
-);
-
-// eslint-disable-next-line no-unused-vars
-const InProgressApe = () => (
-  <ApeInProgress>
-    <img src={PlaceholderApe} alt="Robo Ooga" />
-    <div className="icon-one">
-      <SettingFilled spin />
-    </div>
-    <div className="icon-two">
-      <SettingFilled spin />
-    </div>
-  </ApeInProgress>
 );
 
 const TEST_QUERY = gql`
@@ -319,6 +302,25 @@ const Factory = () => {
     }
   };
 
+  const getIfItsClaimDisabled = () => {
+    if (selectedStaked && selectedStaked.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const getIfItsStakeDisabled = () => {
+    if (
+      (selectedUnstakedMeka && selectedUnstakedMeka.length > 0) ||
+      (selectedUnstakedRobo && selectedUnstakedRobo.length > 0)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   return (
     <Wrapper>
       <Header page="game" />
@@ -365,7 +367,9 @@ const Factory = () => {
               <NftList meka lenght={getListLenght(exampleMekaOogasUnstaked)}>
                 {renderUnstakedMeka()}
               </NftList>
-              <Button type="stake">Stake in Factory!</Button>
+              <Button type="stake" disabled={getIfItsStakeDisabled()}>
+                Stake in Factory!
+              </Button>
               <HelperText>Select the NFTs you want to stake</HelperText>
             </Unstaked>
             <MiddleBox>
@@ -389,8 +393,10 @@ const Factory = () => {
               </div>
               <ApeList>{renderMobileStakedApes()}</ApeList>
               <ApeListDesktop>{renderDesktopStakedApes()}</ApeListDesktop>
-              <ButtonClaim>Claim {totalSelectedClaim} $OG</ButtonClaim>
-              <ClaimAndUnstakeButton disabled>
+              <ButtonClaim disabled={getIfItsClaimDisabled()}>
+                Claim {totalSelectedClaim} $OG
+              </ButtonClaim>
+              <ClaimAndUnstakeButton disabled={getIfItsClaimDisabled()}>
                 Claim $OG and Unstake
               </ClaimAndUnstakeButton>
               <StakedText>
