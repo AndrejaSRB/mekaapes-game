@@ -328,7 +328,7 @@ export const Staked = styled.div`
       margin-top: 8px;
       h6 {
         margin-bottom: 24px;
-        text-align: center;
+        text-align: left;
       }
     }
   }

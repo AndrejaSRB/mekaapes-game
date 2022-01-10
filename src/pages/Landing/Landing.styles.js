@@ -210,10 +210,13 @@ export const Text = styled.p`
   font-size: 18px;
   line-height: 23px;
   margin-bottom: 32px;
+  span {
+    display: block;
+  }
   @media only screen and (min-width: 900px) {
     width: 660px;
     margin: 0 auto 32px auto;
-    line-height: 1.5
+    line-height: 1.5;
   }
 `;
 
@@ -236,6 +239,15 @@ export const ButtonWrapper = styled.div`
     justify-content: center;
     align-items: center;
     border-radius: 400px;
+  }
+  & > a:first-child {
+    background-color: transparent;
+    cursor: not-allowed;
+    color: ${theme.color.white};
+    border: 1px solid #ffffff;
+    &:hover {
+      background-color: transparent;
+    }
   }
   @media only screen and (min-width: 789px) {
     & > a {

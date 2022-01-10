@@ -20,7 +20,12 @@ import { MintedContext } from "../../../store/minted-context";
 import contract from "../../../services/contract";
 import prices from "../../../services/prices";
 // ******** Text ********
-import { APPROVE_DMT_TRANSACTION, PRE_SALE_IS_ONGOING, DONT_ENOUGH_OG, DONT_ENOUGH_DMT } from '../../../messages';
+import {
+  APPROVE_DMT_TRANSACTION,
+  PRE_SALE_IS_ONGOING,
+  DONT_ENOUGH_OG,
+  DONT_ENOUGH_DMT,
+} from "../../../messages";
 // ******** Styles ********
 import {
   Wrapper,
@@ -101,8 +106,9 @@ const Crafting = () => {
   // Get the Mint $DMT Price
   useEffect(() => {
     const getPriceMintAndStake = async () => {
-      let price = await prices.getMintDMTPrice();
-      setDMTPrice(ethers.utils.formatUnits(price));
+      await prices.getMintDMTPrice();
+      //   setDMTPrice(ethers.utils.formatUnits(price));
+      setDMTPrice(120);
     };
     getPriceMintAndStake();
   }, []);
@@ -110,13 +116,15 @@ const Crafting = () => {
   // Get the Mint $OG Price
   useEffect(() => {
     const getPriceMintOG = async () => {
-      let price = await prices.getMintOGprice();
-      setOGPrice(ethers.utils.formatUnits(price));
+      await prices.getMintOGprice();
+      //   setOGPrice(ethers.utils.formatUnits(price));
+      setOGPrice(4000);
     };
     getPriceMintOG();
     let interval = setInterval(async () => {
-      let price = await prices.getMintOGprice();
-      setOGPrice(ethers.utils.formatUnits(price, 18));
+      await prices.getMintOGprice();
+      //   setOGPrice(ethers.utils.formatUnits(price, 18));
+      setOGPrice(4000);
     }, INTERVAL_PERIOD);
     return () => {
       clearInterval(interval);
@@ -126,13 +134,15 @@ const Crafting = () => {
   // Get the Mint&Stake $OG Price
   useEffect(() => {
     const getPriceMintAndStake = async () => {
-      let price = await prices.getMintOGStakePrice();
-      setOGStakePrice(ethers.utils.formatUnits(price));
+      await prices.getMintOGStakePrice();
+      //   setOGStakePrice(ethers.utils.formatUnits(price));
+      setOGStakePrice(3200);
     };
     getPriceMintAndStake();
     let interval = setInterval(async () => {
-      let price = await prices.getMintOGStakePrice();
-      setOGStakePrice(ethers.utils.formatUnits(price, 18));
+      await prices.getMintOGStakePrice();
+      //   setOGStakePrice(ethers.utils.formatUnits(price, 18));
+      setOGStakePrice(3200);
     }, INTERVAL_PERIOD);
     return () => {
       clearInterval(interval);

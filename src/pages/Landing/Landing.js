@@ -61,11 +61,14 @@ const Landing = () => {
               <img src={HeroLandingAnimation} alt="mekaape hero" />
             </HeroImage>
             <Text>
-              Stake Robo Oogas and MekaApes in the factory to earn $OG. Upgrade
-              Robo Oogas or merge two MekaApes to unlock extra utility!
+              Stake Robo Oogas and MekaApes in the factory to earn $OG.
+              <span>
+                Upgrade Robo Oogas or merge two MekaApes to unlock extra
+                utility!
+              </span>
             </Text>
             <ButtonWrapper>
-              <Link to="/minting">Minting</Link>
+              <Link to="/">Minting</Link>
               <Link to="/game/factory">Enter the Game</Link>
             </ButtonWrapper>
           </BottomContent>

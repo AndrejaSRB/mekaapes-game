@@ -22,18 +22,7 @@ import MekaImageTwo from "../../../assets/Demo/Factory/Unstaked/Kopie_von_Meka_M
 import MekaImageThree from "../../../assets/Demo/Factory/Unstaked/Kopie_von_Meka_M3.png";
 import MekaImageFour from "../../../assets/Demo/Factory/Unstaked/Kopie_von_Meka_M0_3.png";
 
-export const exampleRoboOogasUnstaked = [
-  {
-    img: RoboImageOne,
-    name: "Ape",
-    id: uuidv4(),
-  },
-  {
-    img: RoboImageTwo,
-    name: "Ape",
-    id: uuidv4(),
-  },
-];
+export const exampleRoboOogasUnstaked = [];
 
 export const exampleMekaOogasUnstaked = [
   {
@@ -130,5 +119,17 @@ export const exampleStaked = [
     name: "Ape",
     id: uuidv4(),
     number: 5431.25,
+  },
+  {
+    img: RoboImageOne,
+    name: "Ape",
+    id: uuidv4(),
+    number: 7131.25,
+  },
+  {
+    img: RoboImageTwo,
+    name: "Ape",
+    id: uuidv4(),
+    number: 2131.25,
   },
 ];

@@ -135,8 +135,8 @@ const Upgrade = () => {
   // Get the LevelUp $DMT Price
   useEffect(() => {
     const getPriceMintAndStake = async () => {
-      let price = await prices.getMintStakePrice();
-      setPrice(ethers.utils.formatEther(price));
+      await prices.getMintStakePrice();
+      setPrice(100);
     };
     getPriceMintAndStake();
   }, []);

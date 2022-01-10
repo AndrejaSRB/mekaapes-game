@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 // ******** Pages ********
 import Landing from "./pages/Landing/Landing";
-import Minting from "./pages/Minting/Minting";
+// import Minting from "./pages/Minting/Minting";
 import TermsOfUse from "./pages/Terms/Terms";
 import Whitepaper from "./pages/Whitepaper/Whitepaper";
 import Factory from "./pages/Game/Factory/Factory";
@@ -55,7 +55,7 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/terms" element={<TermsOfUse />} />
         <Route path="/whitepaper" element={<Whitepaper />} />
-        <Route path="/minting" element={<Minting />} />
+        {/* <Route path="/minting" element={<Minting />} /> */}
         <Route path="/game/factory" element={<Factory />} />
         <Route path="/game/statistics" element={<Statistics />} />
         <Route path="/game/crafting" element={<Crafting />} />
