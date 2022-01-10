@@ -403,7 +403,7 @@ export const NftBox = styled.div`
   display: flex;
   justify-content: ${({ lenght }) => (lenght > 1 ? "center" : "flex-start")};
   flex-wrap: wrap;
-  min-width: 240px;
+  min-width: 172px;
   width: 100%;
   @media only screen and (min-width: 900px) {
     min-width: 330px;
