@@ -60,6 +60,7 @@ const EXAMPLE_DATA = [
 const PRE_SALE_AMOUNT = 10000;
 
 //TODO: filter the list of unstake and level 0 meka apes
+//TODO: get the mekaMerge price and check the price before click
 
 const Merging = () => {
   const { totalMintedTokens } = useContext(MintedContext);
@@ -189,7 +190,7 @@ const Merging = () => {
           </ButtonBox>
           <HelperText>
             After 1-3 minutes your MekaApe will receive the Mega Level trait.
-            You might need to refresh the Metadata on OpenSea to see it.
+            You might need to refresh the Metadata on OpenSea to see it. Merging costs 2,000 $OG.
           </HelperText>
         </MainBox>
       </Content>
