@@ -11,8 +11,6 @@ import withConnect from "../../../hoc/withConnect";
 import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
-import MekaApeExample from "../../../assets/meka-ape-landing.png";
-import RoboOogaExample from "../../../assets/landing-image.png";
 import EvolveAnimation from "../../../assets/level_up.gif";
 // ******** Demo Images ********
 import BabyImageOne from '../../../assets/Demo/Evolve/Booga1.png';
@@ -182,8 +180,7 @@ const Evolve = () => {
         <Ape key={ape.id} onClick={handleClickApe(ape, ape.placeholder)}>
           <ApeImage
             selected={!ape.placeholder && getIfSelected(ape.id)}
-            // active={Boolean(ape.placeholder) ? true : getActive(ape.id)}
-            active={true}
+            active
             src={ape.img}
             alt={ape.name}
           />

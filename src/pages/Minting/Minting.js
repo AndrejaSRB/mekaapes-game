@@ -33,6 +33,13 @@ import {
   Price,
 } from "./Minting.styles";
 
+const emptyMintSign = {
+  mintAllowance: 0,
+  _v: 0,
+  _s: 0,
+  _r: 0,
+};
+
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);
@@ -43,7 +50,7 @@ const Minting = () => {
   const [priceMint, setPriceMint] = useState(0);
   const [priceMintAndStake, setPriceMintAndStake] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [mintSign, setMintSign] = useState(null);
+  const [mintSign, setMintSign] = useState(emptyMintSign);
   const [isChecked, setIsChecked] = useState(false);
   const [isPreSaleCompleted, setIsPreSaleCompleted] = useState(false);
 
@@ -60,7 +67,7 @@ const Minting = () => {
           setMintSign(mintSign);
         } else {
           setMaxTokenAmount(0);
-          setMintSign(null);
+          setMintSign(emptyMintSign);
         }
       }
     }
@@ -242,7 +249,8 @@ const Minting = () => {
           )}
           {isPreSaleCompleted ? (
             <IntroText>
-              Public mint is live! The game starts immediately after the public sale!{" "}
+              Public mint is live! The game starts immediately after the public
+              sale!{" "}
               <span>
                 Choose "Mint and Stake" to safe one transaction and earn $OG
                 immediately.
@@ -250,7 +258,8 @@ const Minting = () => {
             </IntroText>
           ) : (
             <IntroText>
-              The whitelist sale will turn into public sale when the timer runs out. The game starts immediately after the public sale!{" "}
+              The whitelist sale will turn into public sale when the timer runs
+              out. The game starts immediately after the public sale!{" "}
               <span>
                 Choose "Mint and Stake" to safe one transaction and earn $OG
                 immediately.
