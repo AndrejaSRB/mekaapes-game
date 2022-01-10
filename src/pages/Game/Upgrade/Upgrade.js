@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect } from "react";
-import { ethers } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
