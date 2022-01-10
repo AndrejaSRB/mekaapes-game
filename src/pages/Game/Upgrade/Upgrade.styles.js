@@ -310,11 +310,24 @@ export const Name = styled.div`
 `;
 
 export const LevelList = styled.ul`
-  list-style: inside;
   li {
     color: ${theme.color.whiteGrey};
     font-size: 18px;
     line-height: 23px;
+    padding-left: 15px;
+    position: relative;
+    margin: 3px 0;
+    &:before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 100%;
+      background: ${theme.color.whiteGrey};
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 7px;
+    }
   }
 `;
 

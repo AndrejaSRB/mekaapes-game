@@ -165,6 +165,7 @@ export const NftList = styled.div`
   @media only screen and (min-width: 1200px) {
     max-width: 332px;
     margin-bottom: ${({ meka }) => (meka ? "0px" : "35px")};
+    height: 148px;
   }
 `;
 
@@ -264,10 +265,9 @@ export const ButtonClaim = styled.button`
 
 export const NotFoundItem = styled.div`
   text-align: center;
-  img {
-    width: 80px;
-    border-radius: 15px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
   p {
     font-size: 16px;
     color: ${theme.color.white};
@@ -276,6 +276,7 @@ export const NotFoundItem = styled.div`
     font-weight: 600;
   }
   @media only screen and (min-width: 900px) {
+      /* height: 155px; */
     img {
       width: 103px;
     }

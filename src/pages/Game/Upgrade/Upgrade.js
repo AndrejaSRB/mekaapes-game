@@ -27,7 +27,6 @@ import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
 // ******** Services ********
 import contract from "../../../services/contract";
-import prices from "../../../services/prices";
 // ******** Text ********
 import { APPROVE_DMT_TRANSACTION, DONT_ENOUGH_DMT } from '../../../messages';
 // ******** Styles ********
@@ -111,7 +110,7 @@ const Upgrade = () => {
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [price, setPrice] = useState(0);
+  const [price] = useState(100);
   const [loading, setLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
@@ -131,14 +130,14 @@ const Upgrade = () => {
     }
   }, [userMetaMaskToken, price]);
 
-  // Get the LevelUp $DMT Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      await prices.getMintStakePrice();
-      setPrice(100);
-    };
-    getPriceMintAndStake();
-  }, []);
+//   // Get the LevelUp $DMT Price
+//   useEffect(() => {
+//     const getPriceMintAndStake = async () => {
+//       await prices.getMintStakePrice();
+//       setPrice(100);
+//     };
+//     getPriceMintAndStake();
+//   }, []);
 
   useEffect(() => {
     if (selectedApe) {

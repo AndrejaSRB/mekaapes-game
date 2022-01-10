@@ -80,8 +80,8 @@ const Landing = () => {
             <img src={RoboOogaImage} alt="Robo Oogas" />
             <p>
               Robo Oogas produce $OG when they are staked in the factory. There
-              are 4 levels - Use $DMT to level up a Robo Oogas and make them
-              more productive.
+              are 4 levels - Use $DMT to level up Robo Oogas and make them more
+              productive.
             </p>
           </Box>
           <Box>

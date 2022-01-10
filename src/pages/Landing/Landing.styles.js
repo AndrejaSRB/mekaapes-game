@@ -37,10 +37,10 @@ export const LogoImage = styled.div`
     }
   }
   @media only screen and (min-width: 1300px) {
-    margin-top: 150px;
+    margin-top: 110px;
   }
   @media only screen and (min-width: 1520px) {
-    margin-top: 190px;
+    margin-top: 110px;
   }
 `;
 

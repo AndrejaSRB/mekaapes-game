@@ -7,8 +7,6 @@ import Footer from "../../../components/Footer/Footer";
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
 import useWindowDimenstions from "../../../hooks/useWindowDimensions";
-// ******** Icons ********
-import { SettingFilled } from "@ant-design/icons";
 // ******** Functions ********
 import {
   getListLenght,
@@ -48,7 +46,6 @@ import {
   ApeListDesktop,
   CustomUnstakeCheckbox,
   Subtitle,
-  ApeInProgress,
   ButtonClaim,
 } from "./Factory.styles";
 // ******** Fake Data ********
@@ -60,22 +57,8 @@ import {
 
 const NoItemFound = () => (
   <NotFoundItem>
-    <img src={PlaceholderApe} alt="placeholder" />
     <p>No items found!</p>
   </NotFoundItem>
-);
-
-// eslint-disable-next-line no-unused-vars
-const InProgressApe = () => (
-  <ApeInProgress>
-    <img src={PlaceholderApe} alt="Robo Ooga" />
-    <div className="icon-one">
-      <SettingFilled spin />
-    </div>
-    <div className="icon-two">
-      <SettingFilled spin />
-    </div>
-  </ApeInProgress>
 );
 
 // TODO

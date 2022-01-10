@@ -17,7 +17,6 @@ import { UserContext } from "../../../store/user-context";
 import { MintedContext } from "../../../store/minted-context";
 // ******** Services ********
 import contract from "../../../services/contract";
-import prices from "../../../services/prices";
 // ******** Text ********
 import {
   APPROVE_DMT_TRANSACTION,
@@ -45,7 +44,6 @@ import {
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 20;
-const INTERVAL_PERIOD = 30000;
 const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
 const INITIAL_EHT_MINT = 10000;
@@ -62,9 +60,9 @@ const Crafting = () => {
   const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
-  const [OGPrice, setOGPrice] = useState(0);
-  const [OGStakePrice, setOGStakePrice] = useState(0);
-  const [dmtPrice, setDMTPrice] = useState(0);
+  const [OGPrice] = useState(4000);
+  const [OGStakePrice] = useState(3000);
+  const [dmtPrice] = useState(120);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
   const [isDisableDMTButton, setIsDisableDMTButton] = useState(true);
   const [isDMTApproved, setIsDMTApproved] = useState(true);
@@ -102,51 +100,51 @@ const Crafting = () => {
     }
   }, [totalMintedTokens]);
 
-  // Get the Mint $DMT Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      await prices.getMintDMTPrice();
-      //   setDMTPrice(ethers.utils.formatUnits(price));
-      setDMTPrice(120);
-    };
-    getPriceMintAndStake();
-  }, []);
+//   // Get the Mint $DMT Price
+//   useEffect(() => {
+//     const getPriceMintAndStake = async () => {
+//       await prices.getMintDMTPrice();
+//       //   setDMTPrice(ethers.utils.formatUnits(price));
+//       setDMTPrice(120);
+//     };
+//     getPriceMintAndStake();
+//   }, []);
+//
+//   // Get the Mint $OG Price
+//   useEffect(() => {
+//     const getPriceMintOG = async () => {
+//       await prices.getMintOGprice();
+//       //   setOGPrice(ethers.utils.formatUnits(price));
+//       setOGPrice(4000);
+//     };
+//     getPriceMintOG();
+//     let interval = setInterval(async () => {
+//       await prices.getMintOGprice();
+//       //   setOGPrice(ethers.utils.formatUnits(price, 18));
+//       setOGPrice(4000);
+//     }, INTERVAL_PERIOD);
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, []);
 
-  // Get the Mint $OG Price
-  useEffect(() => {
-    const getPriceMintOG = async () => {
-      await prices.getMintOGprice();
-      //   setOGPrice(ethers.utils.formatUnits(price));
-      setOGPrice(4000);
-    };
-    getPriceMintOG();
-    let interval = setInterval(async () => {
-      await prices.getMintOGprice();
-      //   setOGPrice(ethers.utils.formatUnits(price, 18));
-      setOGPrice(4000);
-    }, INTERVAL_PERIOD);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  // Get the Mint&Stake $OG Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      await prices.getMintOGStakePrice();
-      //   setOGStakePrice(ethers.utils.formatUnits(price));
-      setOGStakePrice(3200);
-    };
-    getPriceMintAndStake();
-    let interval = setInterval(async () => {
-      await prices.getMintOGStakePrice();
-      //   setOGStakePrice(ethers.utils.formatUnits(price, 18));
-      setOGStakePrice(3200);
-    }, INTERVAL_PERIOD);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+//   // Get the Mint&Stake $OG Price
+//   useEffect(() => {
+//     const getPriceMintAndStake = async () => {
+//       await prices.getMintOGStakePrice();
+//       //   setOGStakePrice(ethers.utils.formatUnits(price));
+//       setOGStakePrice(3200);
+//     };
+//     getPriceMintAndStake();
+//     let interval = setInterval(async () => {
+//       await prices.getMintOGStakePrice();
+//       //   setOGStakePrice(ethers.utils.formatUnits(price, 18));
+//       setOGStakePrice(3200);
+//     }, INTERVAL_PERIOD);
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, []);
 
   useEffect(() => {
     if (totalMintedTokens < INITIAL_EHT_MINT) {
@@ -405,7 +403,7 @@ const Crafting = () => {
                 <Button
                   disabled={getDMTBtnIsDisabled()}
                   onClick={handleClickMintWithDMT}>
-                  $DMT Mint
+                  $DMT Mint & Stake
                 </Button>
               ) : (
                 <Button
