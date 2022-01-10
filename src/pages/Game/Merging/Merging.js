@@ -11,9 +11,9 @@ import withConnect from "../../../hoc/withConnect";
 import Placeholder from "../../../assets/placeholder.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
 // ******** Demo images ********
-import MekaImageOne from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_1.png';
-import MekaImageTwo from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0-2.png';
-import MekaImageThree from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_3.png';
+import MekaImageOne from "../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_1.png";
+import MekaImageTwo from "../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0-2.png";
+import MekaImageThree from "../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_3.png";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
@@ -189,7 +189,8 @@ const Merging = () => {
           </ButtonBox>
           <HelperText>
             After 1-3 minutes your MekaApe will receive the Mega Level trait.
-            You might need to refresh the Metadata on OpenSea to see it.
+            You might need to refresh the Metadata on OpenSea to see it. Merging
+            costs 2,000 $OG
           </HelperText>
         </MainBox>
       </Content>

@@ -39,7 +39,7 @@ export const Title = styled.h1`
     margin-top: 150px;
   }
   @media only screen and (min-width: 1520px) {
-    margin-top: 285px;
+    margin-top: 150px;
   }
 `;
 

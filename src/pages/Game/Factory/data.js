@@ -1,9 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 // ******** Demo images ********
 // ******** Staked ********
-import StakedImageOne from "../../../assets/Demo/Factory/Staked/Kopie_von_Meka_M0-2.png";
-import StakedImageTwo from "../../../assets/Demo/Factory/Staked/Kopie_von_Meka_M0_1.png";
-import StakedImageThree from "../../../assets/Demo/Factory/Staked/Kopie_von_Meka_M0_3.png";
 import StakedImageFour from "../../../assets/Demo/Factory/Staked/Kopie_von_Meka_M1_2.png";
 import StakedImageFive from "../../../assets/Demo/Factory/Staked/Kopie_von_Meka_M2_1.png";
 import StakedImageSix from "../../../assets/Demo/Factory/Staked/Kopie_von_Meka_M2_2.png";
@@ -48,24 +45,6 @@ export const exampleMekaOogasUnstaked = [
 ];
 
 export const exampleStaked = [
-  {
-    img: StakedImageOne,
-    name: "Ape",
-    id: uuidv4(),
-    number: 3231.21,
-  },
-  {
-    img: StakedImageTwo,
-    name: "Ape",
-    id: uuidv4(),
-    number: 4123.0,
-  },
-  {
-    img: StakedImageThree,
-    name: "Ape",
-    id: uuidv4(),
-    number: 6530.32,
-  },
   {
     img: StakedImageFour,
     name: "Ape",

@@ -3,7 +3,7 @@ export const getLevelText = (level) => {
     case 0:
       return (
         <>
-          <li>Position: Scarp Scour</li>
+          <li>Position: Scrap Scout</li>
           <li>Produce 1,000 $OG per day</li>
         </>
       );
