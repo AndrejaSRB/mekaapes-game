@@ -308,7 +308,7 @@ const Upgrade = () => {
               Each Level-Up costs {price} $DMT. You can convert $OG to $DMT
               here:
               <a
-                href="https://opensea.io/collection/oogaverse"
+                href="https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0x5b1d655c93185b06b00f7925791106132cb3ad75"
                 target="_blank"
                 rel="noreferrer">
                 SushiSwap
