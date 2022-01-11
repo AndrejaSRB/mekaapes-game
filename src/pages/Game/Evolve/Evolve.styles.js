@@ -132,6 +132,18 @@ export const HelperText = styled.p`
   span {
     display: block;
   }
+  a {
+    color: ${theme.color.red};
+    transition: ${theme.transition};
+    cursor: pointer;
+    font-weight: 600;
+    &:visited {
+      color: ${theme.color.red};
+    }
+    &:hover {
+      color: ${theme.color.green};
+    }
+  }
   @media only screen and (min-width: 789px) {
     margin-top: 24px;
   }
@@ -175,7 +187,7 @@ export const ApeImage = styled.img`
   width: 80px;
   height: 80px;
   -webkit-filter: drop-shadow(0px 0px 40px #11051b);
-    filter: drop-shadow(0px 0px 40px #11051b);
+  filter: drop-shadow(0px 0px 40px #11051b);
   border: ${({ selected }) =>
     selected ? `5px solid ${theme.color.green}` : `5px solid transparent`};
   border-radius: 15px;

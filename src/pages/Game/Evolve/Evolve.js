@@ -13,13 +13,13 @@ import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import EvolveAnimation from "../../../assets/level_up.gif";
 // ******** Demo Images ********
-import BabyImageOne from '../../../assets/Demo/Evolve/Booga1.png';
-import BabyImageTwo from '../../../assets/Demo/Evolve/Booga2.png';
-import BabyImageThree from '../../../assets/Demo/Evolve/Booga3.png';
-import BabyImageFour from '../../../assets/Demo/Evolve/Booga4.png';
-import BabyImageFive from '../../../assets/Demo/Evolve/Booga5.png';
-import BabyImageSix from '../../../assets/Demo/Evolve/Booga6.png';
-import BabyImageSeven from '../../../assets/Demo/Evolve/Booga7.png';
+import BabyImageOne from "../../../assets/Demo/Evolve/Booga1.png";
+import BabyImageTwo from "../../../assets/Demo/Evolve/Booga2.png";
+import BabyImageThree from "../../../assets/Demo/Evolve/Booga3.png";
+import BabyImageFour from "../../../assets/Demo/Evolve/Booga4.png";
+import BabyImageFive from "../../../assets/Demo/Evolve/Booga5.png";
+import BabyImageSix from "../../../assets/Demo/Evolve/Booga6.png";
+import BabyImageSeven from "../../../assets/Demo/Evolve/Booga7.png";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
@@ -285,8 +285,15 @@ const Evolve = () => {
             </button>
           </ButtonBox>
           <HelperText>
-            Every Baby Ooga can claim a MekaApe. You are only paying for gas and
-            also keep the Baby Ooga. It won't get burned.
+            Every{" "}
+            <a
+              href="https://opensea.io/collection/oogaverse"
+              target="_blank"
+              rel="noreferrer">
+              Baby Ooga
+            </a>{" "}
+            can claim a MekaApe. You are only paying for gas and also keep the
+            Baby Ooga. It won't get burned.
           </HelperText>
         </MainBox>
       </Content>
