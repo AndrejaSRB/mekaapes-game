@@ -3,55 +3,42 @@ import { useState, createContext, useEffect, useContext } from "react";
 import { UserContext } from "./user-context";
 // ******** Services ********
 import contract from "../services/contract";
+// ******** Hooks ********
+import useMintSale from "../hooks/useMintSale";
+import useTotalAmountMintedTokens from "../hooks/useTotalAmountMintedTokens";
 
 export const MintedContext = createContext({
   totalMintedTokens: 0,
+  isMintSale: true,
   getTotalMinted: () => {},
 });
 
-const INTERVAL_PERIOD = 30000; // 30 seconds
-
-
-//TOOD Get if the mint sale is live
 const MintedContextProvider = ({ children }) => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [totalMintedTokens, setTotalMinted] = useState(0);
-//   const [isMintSale, setIsMintSale] = useState(false);
-//
-//   useEffect(() => {
-//     if (userMetaMaskToken) {
-//       const getMintStatus = async () => {
-//         let status = await contract.getMintSaleStatus();
-//         setIsMintSale(status);
-//       };
-//       getMintStatus();
-//       let interval = setInterval(async () => {
-//         let status = await contract.getMintSaleStatus();
-//         setIsMintSale(status);
-//       }, INTERVAL_PERIOD);
-//       return () => {
-//         clearInterval(interval);
-//       };
-//     }
-//   }, [userMetaMaskToken]);
+  const [isMintSale, setIsMintSale] = useState(true);
+  const { data: status } = useMintSale(userMetaMaskToken);
+  const { data: amount } = useTotalAmountMintedTokens(userMetaMaskToken);
+
+  // Get pre sale mint status
+  useEffect(() => {
+    if (status !== null && status !== undefined) {
+      setIsMintSale(status);
+    }
+  }, [status]);
 
   // Get the total minted number on interval
   useEffect(() => {
-    if (userMetaMaskToken) {
-      let interval = setInterval(async () => {
-        let balance = await contract.getTotalAmountMintedTokens();
-        setTotalMinted(balance);
-      }, INTERVAL_PERIOD);
-      return () => {
-        clearInterval(interval);
-      };
+    if (amount !== null && amount !== undefined) {
+      setTotalMinted(amount);
     }
-  }, [userMetaMaskToken]);
+  }, [amount]);
 
   const getTotalMinted = async () => {
     try {
-      let balance = await contract.getTotalAmountMintedTokens();
-      setTotalMinted(balance);
+      await contract.getTotalAmountMintedTokens().then((balance) => {
+        setTotalMinted(balance.toNumber());
+      });
     } catch (error) {
       console.log(error);
     }
@@ -59,6 +46,7 @@ const MintedContextProvider = ({ children }) => {
 
   const contextValue = {
     totalMintedTokens: totalMintedTokens,
+    isMintSale: isMintSale,
     getTotalMinted: getTotalMinted,
   };
 

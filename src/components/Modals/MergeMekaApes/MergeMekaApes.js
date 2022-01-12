@@ -46,20 +46,12 @@ const MergeMekaApes = ({
   useEffect(() => {
     if (list && list.length > 0) {
       if (oppositeApe) {
-        let apes = list.filter(
-          (ape) =>
-            ape.level === 0 &&
-            ape.status === "staked" &&
-            ape.id !== oppositeApe.id
-        );
+        let apes = list.filter((ape) => ape.id !== oppositeApe.id);
         setListLength(apes.length);
         setData(apes);
       } else {
-        let apes = list.filter(
-          (ape) => ape.level === 0 && ape.status === "staked"
-        );
-        setListLength(apes.length);
-        setData(apes);
+        setListLength(list.length);
+        setData(list);
       }
     } else {
       setListLength(0);

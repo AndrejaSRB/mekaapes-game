@@ -105,17 +105,14 @@ export class Contract {
 
   // total minted tokens
   async getTotalAmountMintedTokens() {
-    let total = await this.mekaApesContract.totalMintedTokens();
-    return total.toNumber();
+    return await this.mekaApesContract.totalMintedTokens();
   }
 
   // get mint sale status (if it's live or done)
   async getMintSaleStatus() {
-    let status = await this.mekaApesContract.mintSale();
-    console.log('status', status);
-    return status;
+    // let status = await this.mekaApesContract.mintSale();
+    return await this.mekaApesContract.mintSale();;
   }
-
 
   // total $DMT minted tokens
   async getTotalDMTMintedTokens() {

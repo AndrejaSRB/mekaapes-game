@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-// ******** Images ********
-import LoadingImage from "../../../assets/loading-animation.gif";
+// ******** Components ********
+import { Skeleton } from "antd";
 // ******** Hooks ********
 import useEvolveMetadata from "../../../hooks/useEvolveMetadata";
 // ******** Styles ********
@@ -25,20 +25,31 @@ const BabyApe = ({ ape, handleClickApe, getIfSelected }) => {
 
   const renderApeImage = () => {
     if (image) {
-      return image;
+      return (
+        <ApeImage
+          selected={!ape.placeholder && getIfSelected(ape.id)}
+          active
+          src={image}
+          alt={ape.id}
+        />
+      );
     } else {
-      return LoadingImage;
+      return <Skeleton.Image />;
     }
   };
 
   return (
     <Ape onClick={handleClickApe(ape, ape.placeholder)}>
-      <ApeImage
-        selected={!ape.placeholder && getIfSelected(ape.id)}
-        active
-        src={ape.placeholder ? ape.img : renderApeImage()}
-        alt={ape.id}
-      />
+      {ape.placeholder ? (
+        <ApeImage
+          selected={!ape.placeholder && getIfSelected(ape.id)}
+          active
+          src={ape.img}
+          alt={ape.id}
+        />
+      ) : (
+        renderApeImage()
+      )}
     </Ape>
   );
 };

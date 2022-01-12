@@ -44,7 +44,6 @@ const MAX_TOKEN_AMOUNT = 20;
 const INTERVAL_PERIOD = 30000;
 const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
-const INITIAL_EHT_MINT = 10000;
 
 // Prices
 // 10,001 - 25,000: 4,000 $OG
@@ -55,7 +54,7 @@ const Crafting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance, oogearBalance, getOogearBalance, getDmtBalance } =
     useContext(BalanceContext);
-  const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);
+  const { totalMintedTokens, getTotalMinted, isMintSale } = useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
   const [OGPrice, setOGPrice] = useState(0);
@@ -140,7 +139,7 @@ const Crafting = () => {
   }, []);
 
   useEffect(() => {
-    if (totalMintedTokens < INITIAL_EHT_MINT) {
+    if (!isMintSale) {
       setIsDisableDMTButton(true);
     } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
       setIsDisableDMTButton(true);
@@ -151,10 +150,10 @@ const Crafting = () => {
     } else {
       setIsDisableDMTButton(false);
     }
-  }, [dmtCounter, totalMintedDMTTokens, totalMintedTokens]);
+  }, [dmtCounter, totalMintedDMTTokens, totalMintedTokens, isMintSale]);
 
   useEffect(() => {
-    if (totalMintedTokens < INITIAL_EHT_MINT) {
+    if (!isMintSale) {
       setIsDisableDMTButton(true);
     } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
       setIsDisableOGButtons(true);
@@ -163,10 +162,10 @@ const Crafting = () => {
     } else {
       setIsDisableOGButtons(false);
     }
-  }, [oogearCounter, totalMintedTokens]);
+  }, [oogearCounter, totalMintedTokens, isMintSale]);
 
   const handleDmtCounter = (type) => () => {
-    if (totalMintedTokens > INITIAL_EHT_MINT) {
+    if (!isMintSale) {
       if (isDMTApproved) {
         if (type === "plus" && dmtCounter < MAX_TOKEN_AMOUNT) {
           setDmtCounter(dmtCounter + 1);
@@ -182,7 +181,7 @@ const Crafting = () => {
   };
 
   const handleOogearCounter = (type) => () => {
-    if (totalMintedTokens > INITIAL_EHT_MINT) {
+    if (!isMintSale) {
       if (type === "plus" && oogearCounter < MAX_TOKEN_AMOUNT) {
         setOogeaerCounter(oogearCounter + 1);
       } else if (type === "minus" && oogearCounter > 0) {
@@ -328,7 +327,7 @@ const Crafting = () => {
               <Counter>
                 <div
                   className={
-                    oogearCounter === 0 || totalMintedTokens < INITIAL_EHT_MINT
+                    oogearCounter === 0 || isMintSale
                       ? "minus disabled"
                       : "minus"
                   }
@@ -341,7 +340,7 @@ const Crafting = () => {
                 <div
                   className={
                     oogearCounter === MAX_TOKEN_AMOUNT ||
-                    totalMintedTokens < INITIAL_EHT_MINT
+                    isMintSale
                       ? "plus disabled"
                       : "plus"
                   }
@@ -370,7 +369,7 @@ const Crafting = () => {
               <Counter>
                 <div
                   className={
-                    dmtCounter === 0 || totalMintedTokens < INITIAL_EHT_MINT
+                    dmtCounter === 0 || isMintSale
                       ? "minus disabled"
                       : "minus"
                   }
@@ -383,7 +382,7 @@ const Crafting = () => {
                 <div
                   className={
                     dmtCounter === MAX_TOKEN_AMOUNT ||
-                    totalMintedTokens < INITIAL_EHT_MINT
+                    isMintSale
                       ? "plus disabled"
                       : "plus"
                   }

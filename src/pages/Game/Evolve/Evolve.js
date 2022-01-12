@@ -41,13 +41,11 @@ import {
   Animation,
 } from "./Evolve.styles";
 
-const PRE_SALE_AMOUNT = 10000;
-
 //TOOD display something after evolve
 
 const Evolve = () => {
   const { width } = useWindowDimenstions();
-  const { totalMintedTokens } = useContext(MintedContext);
+  const { isMintSale } = useContext(MintedContext);
   const { userMetaMaskToken } = useContext(UserContext);
   const [selectAll, setSelectAll] = useState(false);
   const [allBabies, setAllBabies] = useState(null);
@@ -56,8 +54,7 @@ const Evolve = () => {
   const [isActive, setIsActive] = useState(null);
   const [minElementNumber, setMinElementNumber] = useState(16);
   const [loader, setLoader] = useState(false);
-  const [getBabies, { loading, data, refetch }] =
-    useLazyQuery(GET_BABY_OOGAS);
+  const [getBabies, { loading, data, refetch }] = useLazyQuery(GET_BABY_OOGAS);
 
   useEffect(() => {
     let isMounted = true;
@@ -75,10 +72,10 @@ const Evolve = () => {
 
   useEffect(() => {
     if (loading) {
-        setLoader(true);
-      } else {
-        setLoader(false);
-      }
+      setLoader(true);
+    } else {
+      setLoader(false);
+    }
   }, [loading]);
 
   useEffect(() => {
@@ -222,7 +219,7 @@ const Evolve = () => {
   };
 
   const handleClickEvolve = async () => {
-    if (totalMintedTokens > PRE_SALE_AMOUNT) {
+    if (!isMintSale) {
       if (selected && selected.length > 0) {
         setIsActive(true);
         const tokenIds = [];

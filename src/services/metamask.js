@@ -13,7 +13,7 @@ export class Metamask {
   }
 
   async getUserAddress() {
-    await this.provider.send('eth_requestAccounts', []);
+    await this.provider.send("eth_requestAccounts", []);
     const address = await this.signer.getAddress();
 
     localStorage.setItem("mekaape_useraddress", address);

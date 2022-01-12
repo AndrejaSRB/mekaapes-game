@@ -40,6 +40,8 @@ const emptyMintSign = {
   _r: 0,
 };
 
+//TODO check Countdown error
+
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);

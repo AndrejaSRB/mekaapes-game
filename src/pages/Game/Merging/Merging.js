@@ -1,4 +1,5 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useLazyQuery } from "@apollo/client";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -10,14 +11,13 @@ import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
 import Placeholder from "../../../assets/placeholder.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
-// ******** Demo images ********
-import MekaImageOne from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_1.png';
-import MekaImageTwo from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0-2.png';
-import MekaImageThree from '../../../assets/Demo/MekaMerge/Kopie_von_Meka_M0_3.png';
+// ******** Queires ********
+import { GET_MEKA_MERGE_TOKENS } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
 import { MintedContext } from "../../../store/minted-context";
+import { UserContext } from "../../../store/user-context";
 // ******** Text ********
 import { PRE_SALE_IS_ONGOING } from "../../../messages";
 // ******** Styles ********
@@ -33,37 +33,11 @@ import {
   HelperText,
 } from "./Merging.styles";
 
-const EXAMPLE_DATA = [
-  {
-    img: MekaImageOne,
-    name: "Ape #2323",
-    level: 0,
-    status: "staked",
-    id: 1,
-  },
-  {
-    img: MekaImageTwo,
-    name: "Ape #2323",
-    level: 0,
-    status: "staked",
-    id: 2,
-  },
-  {
-    img: MekaImageThree,
-    name: "Ape #2323",
-    level: 0,
-    status: "staked",
-    id: 3,
-  },
-];
-
-const PRE_SALE_AMOUNT = 10000;
-
-//TODO: filter the list of unstake and level 0 meka apes
 //TODO: get the mekaMerge price and check the price before click
-
+//TODO: pull $OG after transaction
 const Merging = () => {
-  const { totalMintedTokens } = useContext(MintedContext);
+  const { isMintSale } = useContext(MintedContext);
+  const { userMetaMaskToken } = useContext(UserContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [keepMeka, setKeepMeka] = useState(null);
   const [burnMeka, setBurnMeka] = useState(null);
@@ -71,7 +45,41 @@ const Merging = () => {
   const [type, setType] = useState(null);
   const [oppositeApe, setOppositeApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loader, setLoading] = useState(false);
+  const [list, setList] = useState(false);
+  const [getMekaApes, { loading, data, refetch }] = useLazyQuery(
+    GET_MEKA_MERGE_TOKENS
+  );
+
+  useEffect(() => {
+    if (data && data.spaceOogas) {
+      setList(data.spaceOogas);
+    } else {
+      setList(null);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (userMetaMaskToken && isMounted) {
+      getMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [userMetaMaskToken, getMekaApes]);
+
+  useEffect(() => {
+    if (loading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [loading]);
 
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
@@ -128,16 +136,19 @@ const Merging = () => {
   };
 
   const handleClickMerge = async () => {
-    if (totalMintedTokens > PRE_SALE_AMOUNT) {
+    if (!isMintSale) {
       if (burnMeka && keepMeka) {
         setIsDisabled(true);
         try {
-          // TODO: pass the proper token id
-          // TODO: first one is saved, second one is burned
-          let tsx = await contract.mergeMekaApes(1231, 1541);
+          // first one is saved, second one is burned
+          let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id);
           setLoading(true);
           tsx.wait().then(() => {
-            // TODO: get the  fresh list of meka apes
+            refetch({
+              variables: {
+                owner: userMetaMaskToken,
+              },
+            });
             setLoading(false);
           });
         } catch (error) {
@@ -201,12 +212,12 @@ const Merging = () => {
           handleCloseModal={handleCloseApeModal}
           selectedApe={selectedApe}
           handleSavePickedApe={handleSavePickedApe}
-          list={EXAMPLE_DATA}
+          list={list}
           oppositeApe={oppositeApe}
           type={type}
         />
       )}
-      <Loading open={loading} />
+      <Loading open={loader} />
     </Wrapper>
   );
 };

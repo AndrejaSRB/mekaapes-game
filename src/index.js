@@ -26,11 +26,11 @@ ReactDOM.render(
       connectors={{
         portis: { dAppId: "mekaape-game" },
       }}>
-      <AppContextProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <AppContextProvider>
           <App />
-        </QueryClientProvider>
-      </AppContextProvider>
+        </AppContextProvider>
+      </QueryClientProvider>
     </UseWalletProvider>
   </ApolloProvider>,
   document.getElementById("root")
