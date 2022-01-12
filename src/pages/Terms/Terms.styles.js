@@ -66,7 +66,7 @@ export const MainBox = styled.div`
     margin: 0 16px;
   }
   @media only screen and (min-width: 1320px) {
-    width: 1300px;
+    width: 1028px;
     margin: 0 auto;
     padding: 54px;
   }

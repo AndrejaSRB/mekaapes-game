@@ -57,3 +57,58 @@ export const Picture = styled.div`
     }
   }
 `;
+
+export const MobileTable = styled.div`
+  display: block;
+  padding: 0 24px;
+  @media only screen and (min-width: 789px) {
+    display: none;
+  }
+`;
+
+export const Box = styled.div`
+  width: 100%;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 3px solid ${theme.color.green};
+  color: ${theme.color.whiteGrey};
+  padding-bottom: 8px;
+  .cell {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px dotted ${theme.color.whiteGrey};
+    padding-top: 8px;
+    padding-bottom: 3px;
+    &:last-child {
+      border: none;
+    }
+    .self-align {
+      align-self: flex-start;
+    }
+    span:first-child {
+      width: 40%;
+      display: block;
+      color: ${theme.color.white};
+    }
+    span:last-child {
+      width: 60%;
+    }
+    span > small {
+      font-weight: 600;
+      font-size: 14px;
+      color: ${theme.color.white};
+    }
+    @media only screen and (min-width: 400px) {
+      font-size: 16px;
+      .cell {
+        span:first-child {
+          width: 35%;
+        }
+        span:last-child {
+          width: 55%;
+        }
+      }
+    }
+  }
+`;

@@ -1,5 +1,6 @@
 import { useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ReactQueryDevtools } from 'react-query/devtools';
 // ******** Components ********
 import ScrollToTop from "./components/ScrollToTop";
 // ******** Pages ********
@@ -19,6 +20,9 @@ import { BalanceContext } from "./store/balance-context";
 import { MintedContext } from "./store/minted-context";
 // ******** Services ********
 import metamask from "./services/metamask";
+
+const DEVTOOLS = process.env.REACT_APP_DEVTOOLS;
+
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
@@ -51,6 +55,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      {DEVTOOLS && <ReactQueryDevtools initialIsOpen={false} />}
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/terms" element={<TermsOfUse />} />

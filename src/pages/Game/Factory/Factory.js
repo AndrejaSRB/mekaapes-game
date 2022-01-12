@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { gql, useQuery } from "@apollo/client";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -62,17 +61,6 @@ const NoItemFound = () => (
   </NotFoundItem>
 );
 
-const TEST_QUERY = gql`
-  query GetOogas {
-    spaceOogas {
-      id
-      oogaType
-      level
-      isStaked
-    }
-  }
-`;
-
 // TODO
 // Disable buttons if the amount is bigger than the balance in that coin
 // Sum total $OG staked tokens to the unclaimed total bellow the unstake button
@@ -91,14 +79,9 @@ const Factory = () => {
 
   const [stakedData, setStakedData] = useState(null);
   const [minStakedElementNo, setMinStakedElementNo] = useState(6);
-  const { loading, error, data } = useQuery(TEST_QUERY);
 
   const [totalClaim, setTotalClaim] = useState(0);
   const [totalSelectedClaim, setTotalSelectedClaim] = useState(0);
-
-  console.log("loading", loading);
-  console.log("error", error);
-  console.log("data", data);
 
   // Sum all token claim amount
   useEffect(() => {

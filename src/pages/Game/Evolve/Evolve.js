@@ -1,10 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useLazyQuery } from "@apollo/client";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
+import Ape from "./Ape";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
@@ -12,20 +14,15 @@ import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import EvolveAnimation from "../../../assets/level_up.gif";
-// ******** Demo Images ********
-import BabyImageOne from "../../../assets/Demo/Evolve/Booga1.png";
-import BabyImageTwo from "../../../assets/Demo/Evolve/Booga2.png";
-import BabyImageThree from "../../../assets/Demo/Evolve/Booga3.png";
-import BabyImageFour from "../../../assets/Demo/Evolve/Booga4.png";
-import BabyImageFive from "../../../assets/Demo/Evolve/Booga5.png";
-import BabyImageSix from "../../../assets/Demo/Evolve/Booga6.png";
-import BabyImageSeven from "../../../assets/Demo/Evolve/Booga7.png";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
 import { MintedContext } from "../../../store/minted-context";
+import { UserContext } from "../../../store/user-context";
 // ******** Text ********
 import { PRE_SALE_IS_ONGOING } from "../../../messages";
+// ******** Queires ********
+import { GET_BABY_OOGAS } from "../../../queries";
 // ******** Styles ********
 import {
   Wrapper,
@@ -36,8 +33,6 @@ import {
   ButtonBox,
   HelperText,
   ApesBox,
-  Ape,
-  ApeImage,
   SubtitleBox,
   CustomCheckbox,
   Box,
@@ -46,90 +41,96 @@ import {
   Animation,
 } from "./Evolve.styles";
 
-const EXAMPLE_DATA = [
-  {
-    img: BabyImageOne,
-    name: "Ape",
-    id: 1,
-  },
-  {
-    img: BabyImageTwo,
-    name: "Ape",
-    id: 2,
-  },
-  {
-    img: BabyImageThree,
-    name: "Ape",
-    id: 3,
-  },
-  {
-    img: BabyImageFour,
-    name: "Ape",
-    id: 4,
-  },
-  {
-    img: BabyImageFive,
-    name: "Ape",
-    id: 5,
-  },
-  {
-    img: BabyImageSix,
-    name: "Ape",
-    id: 6,
-  },
-  {
-    img: BabyImageSeven,
-    name: "Ape",
-    id: 7,
-  },
-];
-
 const PRE_SALE_AMOUNT = 10000;
+
+//TOOD display something after evolve
 
 const Evolve = () => {
   const { width } = useWindowDimenstions();
   const { totalMintedTokens } = useContext(MintedContext);
+  const { userMetaMaskToken } = useContext(UserContext);
   const [selectAll, setSelectAll] = useState(false);
-  const [data, setData] = useState(null);
+  const [allBabies, setAllBabies] = useState(null);
+  const [allNotEvolved, setAllNotEvolved] = useState(null);
   const [selected, setSelected] = useState([]);
   const [isActive, setIsActive] = useState(null);
   const [minElementNumber, setMinElementNumber] = useState(16);
   const [loader, setLoader] = useState(false);
+  const [getBabies, { loading, data, refetch }] =
+    useLazyQuery(GET_BABY_OOGAS);
 
   useEffect(() => {
-    let length = EXAMPLE_DATA.length;
-    let babies = [...EXAMPLE_DATA];
-    if (length < minElementNumber) {
-      let placeholderArray = Array.from(
-        { length: minElementNumber - length },
-        () => ({
-          img: PlaceholderApe,
-          name: "ape",
-          placeholder: true,
-          id: uuidv4(),
-        })
-      );
-      babies = [...EXAMPLE_DATA, ...placeholderArray];
+    let isMounted = true;
+    if (userMetaMaskToken && isMounted) {
+      getBabies({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
     }
-    setData(babies);
-  }, [minElementNumber]);
+    return () => {
+      isMounted = false;
+    };
+  }, [userMetaMaskToken, getBabies]);
+
+  useEffect(() => {
+    if (loading) {
+        setLoader(true);
+      } else {
+        setLoader(false);
+      }
+  }, [loading]);
+
+  useEffect(() => {
+    if (data?.babyOogas && data?.babyOogas.length > 0) {
+      const { babyOogas } = data;
+      let notEvolvedBabies = babyOogas.filter(
+        (baby) => baby.evolvedTo === null
+      );
+      setAllNotEvolved(notEvolvedBabies);
+    } else {
+      setAllNotEvolved([]);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (allNotEvolved) {
+      let length = allNotEvolved.length;
+      let babies = [...allNotEvolved];
+      if (length < minElementNumber) {
+        let placeholderArray = Array.from(
+          { length: minElementNumber - length },
+          () => ({
+            img: PlaceholderApe,
+            name: "ape",
+            placeholder: true,
+            id: uuidv4(),
+          })
+        );
+        babies = [...allNotEvolved, ...placeholderArray];
+      }
+      setAllBabies(babies);
+    }
+  }, [minElementNumber, allNotEvolved]);
 
   useEffect(() => {
     if (width < 388) {
       setMinElementNumber(8);
     } else if (width < 1200) {
       setMinElementNumber(12);
-    } else {
+    } else if (width > 1300) {
       setMinElementNumber(12);
+    } else {
+      setMinElementNumber(16);
     }
   }, [width]);
 
   const hadnleChangeCheckbox = (e) => {
-    if (EXAMPLE_DATA && EXAMPLE_DATA.length > 0) {
+    if (allNotEvolved?.length > 0) {
       if (!e.target.checked) {
         setSelected([]);
       } else {
-        setSelected([...data]);
+        setSelected([...allNotEvolved]);
       }
       setSelectAll(e.target.checked);
     }
@@ -175,23 +176,21 @@ const Evolve = () => {
   };
 
   const handleRenderBabyOogas = () => {
-    if (data && data.length > 0) {
-      return data.map((ape) => (
-        <Ape key={ape.id} onClick={handleClickApe(ape, ape.placeholder)}>
-          <ApeImage
-            selected={!ape.placeholder && getIfSelected(ape.id)}
-            active
-            src={ape.img}
-            alt={ape.name}
-          />
-        </Ape>
+    if (allBabies && allBabies.length > 0) {
+      return allBabies.map((ape) => (
+        <Ape
+          key={ape.id}
+          ape={ape}
+          handleClickApe={handleClickApe}
+          getIfSelected={getIfSelected}
+        />
       ));
     }
   };
 
   const getLength = () => {
-    if (data) {
-      let length = data.length;
+    if (allBabies) {
+      let length = allBabies.length;
       if (length === 0) {
         return minElementNumber;
       } else if (length > minElementNumber) {
@@ -205,7 +204,7 @@ const Evolve = () => {
   };
 
   const getIfDisabled = () => {
-    if (data && data.length > 0) {
+    if (allBabies && allBabies.length > 0) {
       if (isActive) {
         return true;
       } else if (selectAll) {
@@ -226,18 +225,19 @@ const Evolve = () => {
     if (totalMintedTokens > PRE_SALE_AMOUNT) {
       if (selected && selected.length > 0) {
         setIsActive(true);
-        // TODO: get the list of clicked apes - probably token_id
         const tokenIds = [];
         selected.forEach((token) => tokenIds.push(token.id));
-
         try {
-          // TODO: fix the hardcoded number add tokenIds
-          let tsx = await contract.evolveBabyOogas([2221]);
+          let tsx = await contract.evolveBabyOogas(tokenIds);
           setLoader(true);
           tsx.wait().then(() => {
             setLoader(false);
           });
-          // TODO: get the  fresh list of baby oogas, or kick the selected one
+          refetch({
+            variables: {
+              owner: userMetaMaskToken,
+            },
+          });
         } catch (error) {
           console.log(error);
         }
