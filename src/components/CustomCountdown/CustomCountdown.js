@@ -14,7 +14,7 @@ import {
 
 const END_PRE_SALE_DATE = "2022-01-22T22:00:00.000Z"; // 22.1.2022 23:00:00
 
-const CustomCountdown = ({ getCurrentAmount, setIsPreSaleCompleted }) => {
+const CustomCountdown = ({ getCurrentAmount }) => {
   const renderNumber = (number) => {
     if (number < 10) {
       return `0${number}`;
@@ -25,7 +25,6 @@ const CustomCountdown = ({ getCurrentAmount, setIsPreSaleCompleted }) => {
 
   // Renderer callback with condition
   const renderer = ({ days, hours, minutes, seconds, completed }) => {
-    setIsPreSaleCompleted(completed);
     if (completed) {
       // Render a completed state
       return (
@@ -78,5 +77,4 @@ export default CustomCountdown;
 
 CustomCountdown.propTypes = {
   getCurrentAmount: PropTypes.func.isRequired,
-  setIsPreSaleCompleted: PropTypes.func.isRequired,
 };

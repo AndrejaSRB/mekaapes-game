@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 // ******** Config ********
 import whitelistJSON from "../../config/whitelistMintSignatures.json";
 // ******** Components ********
@@ -13,12 +13,15 @@ import withConnect from "../../hoc/withConnect";
 // ******** stores ********
 import { UserContext } from "../../store/user-context";
 import { MintedContext } from "../../store/minted-context";
+// ******** Hooks ********
+import usePrices from "../../hooks/usePrices";
+import useETHBalance from "../../hooks/useETHBalance";
+import useMaxTokenAmount from "../../hooks/useMaxTokenAmount";
+import useTotalAmountMintedTokens from "../../hooks/useTotalAmountMintedTokens";
 // ******** Icons ********
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Services ********
-import metamask from "../../services/metamask";
 import contract from "../../services/contract";
-import prices from "../../services/prices";
 // ******** Text ********
 import { DONT_ENOUGH_ETH } from "../../messages";
 // ******** Styles ********
@@ -40,21 +43,70 @@ const emptyMintSign = {
   _r: 0,
 };
 
-//TODO check Countdown error
-
 const Minting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const { totalMintedTokens, getTotalMinted } = useContext(MintedContext);
-  const [currentETHBalance, setCurrentETHBalance] = useState(0);
+  const { isMintSale } = useContext(MintedContext);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [maxTokenAmount, setMaxTokenAmount] = useState(3);
-  const [priceMint, setPriceMint] = useState(0);
-  const [priceMintAndStake, setPriceMintAndStake] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mintSign, setMintSign] = useState(emptyMintSign);
-  const [isChecked, setIsChecked] = useState(false);
-  const [isPreSaleCompleted, setIsPreSaleCompleted] = useState(false);
+  // Total Amount
+  const {
+    data: amount,
+    isLoading: totalAmountLoading,
+    refetch: getTotalMinted,
+  } = useTotalAmountMintedTokens(userMetaMaskToken);
+  // Max Token
+  const {
+    data: maxTokenAmount,
+    isLoading: maxTokenAmountLoading,
+    refetch: getMaxTokenAmount,
+  } = useMaxTokenAmount(userMetaMaskToken);
+  // ETH Balance
+  const [currentETHBalance, setCurrentETHBalance] = useState(0);
+  const {
+    data: ethBalance,
+    isLoading: ethBalanceLoading,
+    refetch: getEthBalance,
+  } = useETHBalance(userMetaMaskToken);
+  // Prices
+  const { data: prices, isLoading: priceLoading } =
+    usePrices(userMetaMaskToken);
+  const [priceMint, setPriceMint] = useState(BigNumber.from(0));
+  const [priceMintAndStake, setPriceMintAndStake] = useState(BigNumber.from(0));
+
+  useEffect(() => {
+    if (
+      priceLoading ||
+      ethBalanceLoading ||
+      maxTokenAmountLoading ||
+      totalAmountLoading
+    ) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [
+    priceLoading,
+    ethBalanceLoading,
+    maxTokenAmountLoading,
+    totalAmountLoading,
+  ]);
+
+  useEffect(() => {
+    if (ethBalance) {
+      setCurrentETHBalance(ethBalance);
+    } else {
+      setCurrentETHBalance(0);
+    }
+  }, [ethBalance]);
+
+  useEffect(() => {
+    if (userMetaMaskToken && prices && !priceLoading) {
+      setPriceMint(prices?.["mintPrice"]);
+      setPriceMintAndStake(prices?.["mintStakePrice"]);
+    }
+  }, [prices, userMetaMaskToken, priceLoading]);
 
   useEffect(() => {
     if (userMetaMaskToken) {
@@ -62,68 +114,15 @@ const Minting = () => {
         let isWhitelisted = whitelistJSON.find(
           (users) => users.address === userMetaMaskToken
         );
-        setIsChecked(true);
         if (isWhitelisted) {
           const { mintSign } = isWhitelisted;
-          setMaxTokenAmount(mintSign.mintAllowance);
           setMintSign(mintSign);
         } else {
-          setMaxTokenAmount(0);
           setMintSign(emptyMintSign);
         }
       }
     }
   }, [userMetaMaskToken]);
-
-  //   Get the maxTokenAmount
-  useEffect(() => {
-    if (userMetaMaskToken && isChecked) {
-      const getMaxTokenAmount = async () => {
-        try {
-          await contract
-            .allowedToMint(userMetaMaskToken, maxTokenAmount)
-            .then((res) => {
-              setMaxTokenAmount(+res.toString());
-            });
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getMaxTokenAmount();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userMetaMaskToken, isChecked]);
-
-  // Get the ETH Balance
-  useEffect(() => {
-    if (userMetaMaskToken) {
-      const getETHBalance = async () => {
-        let balance = await metamask.getBalance(userMetaMaskToken);
-        setCurrentETHBalance(balance);
-      };
-      getETHBalance();
-    } else {
-      setCurrentETHBalance(0);
-    }
-  }, [userMetaMaskToken]);
-
-  // Get the Mint ETH Price
-  useEffect(() => {
-    const getPriceMint = async () => {
-      let price = await prices.getMintPrice();
-      setPriceMint(price);
-    };
-    getPriceMint();
-  }, []);
-
-  // Get the Mint&Stake ETH Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      let price = await prices.getMintStakePrice();
-      setPriceMintAndStake(price);
-    };
-    getPriceMintAndStake();
-  }, []);
 
   useEffect(() => {
     if (counter > 0) {
@@ -138,23 +137,6 @@ const Minting = () => {
       setCounter(counter + 1);
     } else if (type === "minus" && counter > 0) {
       setCounter(counter - 1);
-    }
-  };
-
-  const checkCurrentETHBalance = async () => {
-    let balance = await metamask.getBalance(userMetaMaskToken);
-    setCurrentETHBalance(balance);
-  };
-
-  const getMaxTokenAmount = async () => {
-    try {
-      await contract
-        .allowedToMint(userMetaMaskToken, maxTokenAmount)
-        .then((res) => {
-          setMaxTokenAmount(+res.toString());
-        });
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -174,8 +156,9 @@ const Minting = () => {
         setLoading(true);
         tsx.wait().then(async () => {
           getTotalMinted();
-          await getMaxTokenAmount();
-          await checkCurrentETHBalance();
+          getMaxTokenAmount();
+
+          getEthBalance();
           setLoading(false);
         });
       } catch (error) {
@@ -201,8 +184,8 @@ const Minting = () => {
         setLoading(true);
         tsx.wait().then(async () => {
           getTotalMinted();
-          await getMaxTokenAmount();
-          await checkCurrentETHBalance();
+          getMaxTokenAmount();
+          getEthBalance();
           setLoading(false);
         });
       } catch (error) {
@@ -224,8 +207,8 @@ const Minting = () => {
   };
 
   const getCurrentAmount = () => {
-    if (totalMintedTokens > 0) {
-      let number = totalMintedTokens;
+    if (amount > 0) {
+      let number = amount;
       if (number < 10000) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       } else {
@@ -244,12 +227,12 @@ const Minting = () => {
           You're currently able to mint: <span>{maxTokenAmount}</span>
         </Title>
         <MainBox>
-          {isPreSaleCompleted ? (
+          {!isMintSale ? (
             <h4>MekaApes Game Public Sale</h4>
           ) : (
             <h4>MekaApes Game Whitelist Sale</h4>
           )}
-          {isPreSaleCompleted ? (
+          {!isMintSale ? (
             <IntroText>
               Public mint is live! The game starts immediately after the public
               sale!{" "}
@@ -301,10 +284,7 @@ const Minting = () => {
           <Price className="noselect" margin>
             <span>Price {getSmallETHPrice(priceMint)} ETH</span>
           </Price>
-          <CustomCountdown
-            getCurrentAmount={getCurrentAmount}
-            setIsPreSaleCompleted={setIsPreSaleCompleted}
-          />
+          <CustomCountdown getCurrentAmount={getCurrentAmount} />
         </MainBox>
       </Content>
       <Footer page="minting" />

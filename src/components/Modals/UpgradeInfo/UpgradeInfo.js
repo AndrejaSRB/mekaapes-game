@@ -10,7 +10,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
       visible={open}
       centered
       width={1024}
-      maskClosable={false}
+      maskClosable
       onCancel={handleClose}>
       <div className="content">
         <Table />

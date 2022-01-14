@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 // ******** Services ********
 import contract from "../services/contract";
 
-const INTERVAL_PERIOD = 60000;
+const INTERVAL_PERIOD = 300000; // 5min
 
 const getTotalAmount = async () => {
   let amount = await contract.getTotalAmountMintedTokens();

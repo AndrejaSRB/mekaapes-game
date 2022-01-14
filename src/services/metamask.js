@@ -21,9 +21,13 @@ export class Metamask {
     return address;
   }
 
+//   async getBalance(address) {
+//     const balance = await this.provider.getBalance(address);
+//     return balance;
+//   }
+
   async getBalance(address) {
-    const balance = await this.provider.getBalance(address);
-    return balance;
+    return await this.provider.getBalance(address);;
   }
 
   checkMetamaskConnection() {

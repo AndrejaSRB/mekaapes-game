@@ -17,8 +17,6 @@ import {
   NotFoundItem,
 } from "./LevelRoboOogas.styles";
 
-// TODO: filter out all level 3 RoboOgas from the list and present other
-
 const NoItemFound = () => (
   <NotFoundItem>
     <img src={PlaceholderApe} alt="placeholder" />
@@ -45,7 +43,7 @@ const LevelRoboOogas = ({
 
   useEffect(() => {
     if (list && list.length > 0) {
-      let apes = list.filter((ape) => ape.level < 3);
+      let apes = list.filter((ape) => ape.level < 4);
       setData(apes);
       setListLength(apes.length);
     }

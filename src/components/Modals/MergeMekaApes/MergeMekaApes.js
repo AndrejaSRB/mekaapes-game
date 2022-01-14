@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+// ******** Components ********
+import Ape from "./Ape";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Styles ********
@@ -12,8 +14,6 @@ import {
   Button,
   CancelBtn,
   ButtonWrapper,
-  Ape,
-  ApeImage,
   NotFoundItem,
 } from "./MergeMekaApes.styles";
 
@@ -86,14 +86,12 @@ const MergeMekaApes = ({
   const handleRenderElements = () => {
     if (data && data.length > 0) {
       return data.map((ape) => (
-        <Ape key={ape.id} onClick={handleClickApe(ape)}>
-          <ApeImage
-            active={getIfActive(ape.id)}
-            currentLvl={ape.level}
-            src={ape.img}
-            alt={ape.name}
-          />
-        </Ape>
+        <Ape
+          key={ape.id}
+          ape={ape}
+          getIfActive={getIfActive}
+          handleClickApe={handleClickApe}
+        />
       ));
     } else {
       return <NoItemFound />;

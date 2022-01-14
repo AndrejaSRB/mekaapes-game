@@ -110,8 +110,7 @@ export class Contract {
 
   // get mint sale status (if it's live or done)
   async getMintSaleStatus() {
-    // let status = await this.mekaApesContract.mintSale();
-    return await this.mekaApesContract.mintSale();;
+    return await this.mekaApesContract.mintSale();
   }
 
   // total $DMT minted tokens
@@ -123,8 +122,7 @@ export class Contract {
   // DMT_ERC20 Contract functions:
 
   async getDMTBalance(address) {
-    const balance = await this.dmtERC20Contract.balanceOf(address);
-    return ethers.utils.formatUnits(balance);
+    return await this.dmtERC20Contract.balanceOf(address);
   }
 
   async approveDMTtransaction() {
@@ -139,14 +137,13 @@ export class Contract {
       address,
       DMT_ERC20_CONTRACT_ADDRESS
     );
-    return +isApproved.toString() > +price;
+    return isApproved.gt(price);
   }
 
   // OG_ERC20 Contract functions:
 
   async getOGBalance(address) {
-    const balance = await this.ogERC20Contract.balanceOf(address);
-    return ethers.utils.formatUnits(balance);
+    return await this.ogERC20Contract.balanceOf(address);
   }
 
   // Test functions

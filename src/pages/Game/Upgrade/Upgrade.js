@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
-import { ethers } from "ethers";
+import { useLazyQuery } from "@apollo/client";
+import { BigNumber } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -13,24 +14,24 @@ import withConnect from "../../../hoc/withConnect";
 import { InfoOutlined } from "@ant-design/icons";
 // ******** Images ********
 import Placeholder from "../../../assets/placeholder.png";
-// ******** Demo Images ********
-import RoboImageOne from '../../../assets/Demo/RoboUpgrade/Level_1/Kopie_von_Robo_1_1.png'
-import RoboImageTwo from '../../../assets/Demo/RoboUpgrade/Level_1/Kopie_von_Robo_1_2.png'
-import RoboImageThree from '../../../assets/Demo/RoboUpgrade/Level_1/Kopie_von_Robo_1_3.png'
-import RoboImageFour from '../../../assets/Demo/RoboUpgrade/Level_2/Kopie_von_Robo_2_1.png'
-import RoboImageFive from '../../../assets/Demo/RoboUpgrade/Level_2/Kopie_von_Robo_2_2.png'
-import RoboImageSix from '../../../assets/Demo/RoboUpgrade/Level_3/Kopie_von_Robo_3_1.png';
-import RoboImageSeven from '../../../assets/Demo/RoboUpgrade/Level_3/Kopie_von_Robo_3_2.png';
 // ******** Functions ********
-import { getLevelText } from "./helpers";
+import { getLevelText, convertBigNumberToPrice } from "./helpers";
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
+import { MintedContext } from "../../../store/minted-context";
+// ******** Hooks ********
+import usePrices from "../../../hooks/usePrices";
+// ******** Queires ********
+import { GET_ROBO_OOGAS_UPGRADE_TOKENS } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
-import prices from "../../../services/prices";
 // ******** Text ********
-import { APPROVE_DMT_TRANSACTION, DONT_ENOUGH_DMT } from '../../../messages';
+import {
+  APPROVE_DMT_TRANSACTION,
+  DONT_ENOUGH_DMT,
+  PRE_SALE_IS_ONGOING,
+} from "../../../messages";
 // ******** Styles ********
 import {
   Wrapper,
@@ -52,71 +53,77 @@ import {
   LevelBoxContainer,
 } from "./Upgrade.styles";
 
-const EXAMPLE_DATA = [
-  {
-    img: RoboImageOne,
-    name: "Robo Ooga #2323",
-    level: 0,
-    id: 1,
-  },
-  {
-    img: RoboImageTwo,
-    name: "Robo Ooga #1121",
-    level: 0,
-    id: 2,
-  },
-  {
-    img: RoboImageThree,
-    name: "Robo Ooga #122",
-    level: 0,
-    id: 3,
-  },
-  {
-    img: RoboImageFour,
-    name: "Robo Ooga #31231",
-    level: 1,
-    id: 4,
-  },
-  {
-    img: RoboImageFive,
-    name: "Robo Ooga #9393",
-    level: 1,
-    id: 5,
-  },
-  {
-    img: RoboImageSix,
-    name: "Robo Ooga #1123",
-    level: 2,
-    id: 6,
-  },
-  {
-    img: RoboImageSeven,
-    name: "Robo Ooga #8828",
-    level: 2,
-    id: 7,
-  },
-];
-
 const LevelBox = ({ level }) => (
   <LevelBoxContainer>
     <LevelBoxWrapper currentLvl={`${level}`}>
       <span>lvl</span>
-      <p>{+level + 1}</p>
+      <p>{+level}</p>
     </LevelBoxWrapper>
   </LevelBoxContainer>
 );
 
 const Upgrade = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const { dmtBalance, getDmtBalance } = useContext(BalanceContext);
+  const { isMintSale } = useContext(MintedContext);
+  const { getDmtBalance, DMTBalanceBigNumber } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [price, setPrice] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loader, setLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
   const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
+  const [list, setList] = useState(null);
+  const [getRoboOogas, { loading, data, refetch }] = useLazyQuery(
+    GET_ROBO_OOGAS_UPGRADE_TOKENS
+  );
+  // Prices
+  const { data: prices, isLoading: priceLoading } = usePrices(userMetaMaskToken);
+  const [price, setPrice] = useState(BigNumber.from(0));
+
+  useEffect(() => {
+    if (priceLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [priceLoading]);
+
+  useEffect(() => {
+    if (userMetaMaskToken && prices && !priceLoading) {
+      setPrice(prices?.["roboLevelupPrice"]?.[0]);
+    }
+  }, [prices, userMetaMaskToken, priceLoading]);
+
+  useEffect(() => {
+    if (data && data.spaceOogas) {
+      setList(data.spaceOogas);
+    } else {
+      setList(null);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (userMetaMaskToken && isMounted && isApeModalOpen) {
+      getRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [userMetaMaskToken, getRoboOogas, isApeModalOpen]);
+
+  useEffect(() => {
+    if (loading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [loading]);
 
   // Check if $DMT transaction is approved
   useEffect(() => {
@@ -131,15 +138,6 @@ const Upgrade = () => {
       checkIfApprovedDMTTransaction();
     }
   }, [userMetaMaskToken, price]);
-
-  // Get the LevelUp $DMT Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      let price = await prices.getMintStakePrice();
-      setPrice(ethers.utils.formatEther(price));
-    };
-    getPriceMintAndStake();
-  }, []);
 
   useEffect(() => {
     if (selectedApe) {
@@ -188,7 +186,7 @@ const Upgrade = () => {
           <Ape currentLvl={selectedApe.level} onClick={handleOpenApeModal}>
             <img src={selectedApe.img} alt={selectedApe.name} />
           </Ape>
-          <Name>{selectedApe.name}</Name>
+          <Name>Robo Ooga #{selectedApe.id}</Name>
         </ApeBox>
       );
     } else {
@@ -238,25 +236,33 @@ const Upgrade = () => {
   };
 
   const handleClickButton = async () => {
-    if (dmtBalance > price) {
-      if (selectedApe) {
-        setIsDisabled(true);
-        try {
-          //TODO: fix the hardcoded number with selectedApe.token_id
-          let tsx = await contract.levelUpRoboOooga(1219);
-          setLoading(true);
-          tsx.wait().then(async () => {
-            //TODO: get the fresh list of robo oogas
-            getDmtBalance();
-            setLoading(false);
-          });
-        } catch (error) {
-          console.log(error);
+    if (!isMintSale) {
+      if (DMTBalanceBigNumber.gt(price)) {
+        if (selectedApe) {
+          setIsDisabled(true);
+          try {
+            let tsx = await contract.levelUpRoboOooga(selectedApe.id);
+            setLoading(true);
+            tsx.wait().then(async () => {
+              refetch({
+                variables: {
+                  owner: userMetaMaskToken,
+                },
+              });
+              getDmtBalance();
+              setLoading(false);
+              setSelectedApe(null);
+            });
+          } catch (error) {
+            console.log(error);
+          }
+          setIsDisabled(false);
         }
-        setIsDisabled(false);
+      } else {
+        message.error(DONT_ENOUGH_DMT);
       }
     } else {
-      message.error(DONT_ENOUGH_DMT);
+      message.info(PRE_SALE_IS_ONGOING);
     }
   };
 
@@ -268,9 +274,9 @@ const Upgrade = () => {
           Robo Ooga <span>Upgrade</span>
         </Title>
         <MainBox>
-            <InfoIcon onClick={() => setIsOpenUpgradeInfoModal(true)}>
-              <InfoOutlined />
-            </InfoIcon>
+          <InfoIcon onClick={() => setIsOpenUpgradeInfoModal(true)}>
+            <InfoOutlined />
+          </InfoIcon>
           <TitleBox>
             <h4>Infuse Robo Oogas with $DMT</h4>
             <h6>
@@ -307,8 +313,8 @@ const Upgrade = () => {
               )}
             </ButtonBox>
             <HelperText>
-              Each Level-Up costs {price} $DMT. You can convert $OG to $DMT
-              here:
+              Each Level-Up costs {convertBigNumberToPrice(price)} $DMT. You can
+              convert $OG to $DMT here:
               <a
                 href="https://opensea.io/collection/oogaverse"
                 target="_blank"
@@ -333,16 +339,18 @@ const Upgrade = () => {
         <LevelRoboOogas
           open={isApeModalOpen}
           handleCloseModal={handleCloseApeModal}
-          list={EXAMPLE_DATA}
+          list={list}
           handleSaveApe={handleSaveApe}
           selectedApe={selectedApe}
         />
       )}
-      <Loading open={loading} />
-      <UpgradeInfo
-        open={isOpenUpgradeInfoModal}
-        handleClose={() => setIsOpenUpgradeInfoModal(false)}
-      />
+      {loader && <Loading open={loader} />}
+      {isOpenUpgradeInfoModal && (
+        <UpgradeInfo
+          open={isOpenUpgradeInfoModal}
+          handleClose={() => setIsOpenUpgradeInfoModal(false)}
+        />
+      )}
     </Wrapper>
   );
 };

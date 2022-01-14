@@ -14,10 +14,10 @@ export const color = {
   silver: `#B8B7BF`,
   bronze: `#CD7F32`,
   level: {
-    '0': `#3A4662`,
-    '1': `#CD7F32`,
-    '2': `#D3D3D9`,
-    '3': `#FAD824`,
+    '1': `#3A4662`,
+    '2': `#CD7F32`,
+    '3': `#D3D3D9`,
+    '4': `#FAD824`,
   },
 };
 export const transition = `all 0.4s`;

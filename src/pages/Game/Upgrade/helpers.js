@@ -1,13 +1,15 @@
+import { ethers, BigNumber } from "ethers";
+
 export const getLevelText = (level) => {
   switch (level) {
-    case 0:
+    case 1:
       return (
         <>
           <li>Position: Scrap Scout</li>
           <li>Produce 1,000 $OG per day</li>
         </>
       );
-    case 1:
+    case 2:
       return (
         <>
           <li>Position: Garbage Compactor</li>
@@ -15,7 +17,7 @@ export const getLevelText = (level) => {
           <li>Decrease the risk of $OG getting stolen to 25% when unstaking</li>
         </>
       );
-    case 2:
+    case 3:
       return (
         <>
           <li>Position: Factory Worker</li>
@@ -23,7 +25,7 @@ export const getLevelText = (level) => {
           <li>Decrease the unstaking time by 25%</li>
         </>
       );
-    case 3:
+    case 4:
       return (
         <>
           <li>Position: Executive Bot</li>
@@ -32,5 +34,17 @@ export const getLevelText = (level) => {
       );
     default:
       break;
+  }
+};
+
+export const convertBigNumberToPrice = (price) => {
+  if (price) {
+    if (BigNumber.isBigNumber(price)) {
+      return ethers.utils.formatUnits(price);
+    } else {
+      return price;
+    }
+  } else {
+    return price;
   }
 };

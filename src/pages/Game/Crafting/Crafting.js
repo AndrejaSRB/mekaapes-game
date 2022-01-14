@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { ethers } from "ethers";
+import { BigNumber } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -18,9 +18,19 @@ import { UserContext } from "../../../store/user-context";
 import { MintedContext } from "../../../store/minted-context";
 // ******** Services ********
 import contract from "../../../services/contract";
-import prices from "../../../services/prices";
+// ******** Hooks ********
+import usePrices from "../../../hooks/usePrices";
+import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
+import useTotalAmountMintedTokens from '../../../hooks/useTotalAmountMintedTokens';
 // ******** Text ********
-import { APPROVE_DMT_TRANSACTION, PRE_SALE_IS_ONGOING, DONT_ENOUGH_OG, DONT_ENOUGH_DMT } from '../../../messages';
+import {
+  APPROVE_DMT_TRANSACTION,
+  PRE_SALE_IS_ONGOING,
+  DONT_ENOUGH_OG,
+  DONT_ENOUGH_DMT,
+} from "../../../messages";
+// ******** Functions ********
+import { convertBigNumberToPrice } from "../Upgrade/helpers";
 // ******** Styles ********
 import {
   Wrapper,
@@ -41,54 +51,75 @@ import {
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 20;
-const INTERVAL_PERIOD = 30000;
 const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
 
-// Prices
-// 10,001 - 25,000: 4,000 $OG
-// 25,001 - 40,000: 8,000 $OG
-// 40,001 - 55,000: 12,000 $OG
-
 const Crafting = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const { dmtBalance, oogearBalance, getOogearBalance, getDmtBalance } =
-    useContext(BalanceContext);
-  const { totalMintedTokens, getTotalMinted, isMintSale } = useContext(MintedContext);
+  const {
+    getOogearBalance,
+    getDmtBalance,
+    DMTBalanceBigNumber,
+    OGBalanceBigNumber,
+  } = useContext(BalanceContext);
+  const { isMintSale } =
+    useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
-  const [OGPrice, setOGPrice] = useState(0);
-  const [OGStakePrice, setOGStakePrice] = useState(0);
-  const [dmtPrice, setDMTPrice] = useState(0);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
   const [isDisableDMTButton, setIsDisableDMTButton] = useState(true);
   const [isDMTApproved, setIsDMTApproved] = useState(true);
   const [disabledApproveBtn, setDisableApproveBtn] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [totalMintedDMTTokens, setTotalMintedDMTTokens] = useState(0);
+  const [loader, setLoading] = useState(false);
+  // Total Amount
+  const {
+    data: totalMintedTokens,
+    isLoading: totalAmountLoading,
+    refetch: getTotalMinted,
+  } = useTotalAmountMintedTokens(userMetaMaskToken);
+  const {
+    data: totalMintedDMTTokens,
+    isLoading: totalMintedDMTLoading,
+    refetch: getTotalMintedDMTAmount,
+  } = useTotalMintedDMTTokens();
+  // Prices
+  const { data: prices, isLoading: priceLoading } =
+    usePrices(userMetaMaskToken);
+  const [mintAndStakeOGPrice, setMintAndStakeOGPrice] = useState(
+    BigNumber.from(0)
+  );
+  const [mintOGPrice, setMintOGPrice] = useState(BigNumber.from(0));
+  const [mintDMTPrice, setMintDMTPrice] = useState(BigNumber.from(0));
 
-  // Get amount of total minted DMT tokens
   useEffect(() => {
-    const getTotalMintedDMTTokens = async () => {
-      let totalMinted = await contract.getTotalDMTMintedTokens();
-      setTotalMintedDMTTokens(totalMinted);
-    };
-    getTotalMintedDMTTokens();
-  }, []);
+    if (priceLoading || totalMintedDMTLoading || totalAmountLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [priceLoading, totalMintedDMTLoading, totalAmountLoading]);
+
+  useEffect(() => {
+    if (userMetaMaskToken && prices && !priceLoading) {
+      setMintDMTPrice(prices?.["mintDMTstakePrice"]);
+      setMintOGPrice(prices?.["mintOGprice"]);
+      setMintAndStakeOGPrice(prices?.["mintOGstakePrice"]);
+    }
+  }, [prices, userMetaMaskToken, priceLoading]);
 
   // Check if $DMT transaction is approved
   useEffect(() => {
-    if (userMetaMaskToken && dmtPrice > 0) {
+    if (userMetaMaskToken && BigNumber.isBigNumber(mintDMTPrice)) {
       const checkIfApprovedDMTTransaction = async () => {
         let isApproved = await contract.isDMTtransactionApproved(
           userMetaMaskToken,
-          dmtPrice
+          mintDMTPrice
         );
         setIsDMTApproved(isApproved);
       };
       checkIfApprovedDMTTransaction();
     }
-  }, [userMetaMaskToken, dmtPrice]);
+  }, [userMetaMaskToken, mintDMTPrice]);
 
   useEffect(() => {
     if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
@@ -96,47 +127,6 @@ const Crafting = () => {
       setIsDisableDMTButton(true);
     }
   }, [totalMintedTokens]);
-
-  // Get the Mint $DMT Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      let price = await prices.getMintDMTPrice();
-      setDMTPrice(ethers.utils.formatUnits(price));
-    };
-    getPriceMintAndStake();
-  }, []);
-
-  // Get the Mint $OG Price
-  useEffect(() => {
-    const getPriceMintOG = async () => {
-      let price = await prices.getMintOGprice();
-      setOGPrice(ethers.utils.formatUnits(price));
-    };
-    getPriceMintOG();
-    let interval = setInterval(async () => {
-      let price = await prices.getMintOGprice();
-      setOGPrice(ethers.utils.formatUnits(price, 18));
-    }, INTERVAL_PERIOD);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  // Get the Mint&Stake $OG Price
-  useEffect(() => {
-    const getPriceMintAndStake = async () => {
-      let price = await prices.getMintOGStakePrice();
-      setOGStakePrice(ethers.utils.formatUnits(price));
-    };
-    getPriceMintAndStake();
-    let interval = setInterval(async () => {
-      let price = await prices.getMintOGStakePrice();
-      setOGStakePrice(ethers.utils.formatUnits(price, 18));
-    }, INTERVAL_PERIOD);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   useEffect(() => {
     if (!isMintSale) {
@@ -216,6 +206,11 @@ const Crafting = () => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  const checkBalance = (counter, price, balance) => {
+    let totalPrice = price.mul(+counter);
+    return balance.gt(totalPrice);
+  };
+
   const handleClickApproveDMT = async () => {
     setDisableApproveBtn(true);
     try {
@@ -224,20 +219,22 @@ const Crafting = () => {
       tsx.wait().then(async () => {
         let isApproved = await contract.isDMTtransactionApproved(
           userMetaMaskToken,
-          dmtPrice
+          mintDMTPrice
         );
         setIsDMTApproved(isApproved);
         setLoading(false);
       });
     } catch (error) {
       console.log(error);
+      getDmtBalance();
+      getOogearBalance();
     }
     setDisableApproveBtn(false);
   };
 
   const handleClickMintWithOG = async () => {
     if (oogearCounter > 0) {
-      if (+oogearCounter * +OGPrice < +oogearBalance) {
+      if (checkBalance(oogearCounter, mintOGPrice, OGBalanceBigNumber)) {
         setIsDisableOGButtons(true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, false);
@@ -245,7 +242,6 @@ const Crafting = () => {
           tsx.wait().then(async () => {
             getOogearBalance();
             getTotalMinted();
-            //TODO: Get the fresh token list ? think about this
             setLoading(false);
           });
         } catch (error) {
@@ -261,7 +257,9 @@ const Crafting = () => {
 
   const handleClickMintWithOGAndStake = async () => {
     if (oogearCounter > 0) {
-      if (+oogearCounter * +OGStakePrice < +oogearBalance) {
+      if (
+        checkBalance(oogearCounter, mintAndStakeOGPrice, OGBalanceBigNumber)
+      ) {
         setIsDisableOGButtons(true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true);
@@ -269,7 +267,6 @@ const Crafting = () => {
           tsx.wait().then(async () => {
             getOogearBalance();
             getTotalMinted();
-            //TODO: Get the fresh token list ? think about this
             setLoading(false);
           });
         } catch (error) {
@@ -285,7 +282,7 @@ const Crafting = () => {
 
   const handleClickMintWithDMT = async () => {
     if (dmtCounter > 0) {
-      if (+dmtCounter * +dmtPrice < +dmtBalance) {
+      if (checkBalance(dmtCounter, mintDMTPrice, DMTBalanceBigNumber)) {
         setIsDisableDMTButton(true);
         try {
           let tsx = await contract.mintWithDMT(dmtCounter);
@@ -293,11 +290,9 @@ const Crafting = () => {
           tsx.wait().then(async () => {
             getDmtBalance();
             getTotalMinted();
-            let totalDMTMinted = await contract.getTotalDMTMintedTokens();
-            setTotalMintedDMTTokens(totalDMTMinted);
+            getTotalMintedDMTAmount();
             setLoading(false);
           });
-          //TODO: Get the fresh token list ? think about this
         } catch (error) {
           console.log(error);
         }
@@ -339,8 +334,7 @@ const Crafting = () => {
                 </div>
                 <div
                   className={
-                    oogearCounter === MAX_TOKEN_AMOUNT ||
-                    isMintSale
+                    oogearCounter === MAX_TOKEN_AMOUNT || isMintSale
                       ? "plus disabled"
                       : "plus"
                   }
@@ -361,17 +355,18 @@ const Crafting = () => {
                 </button>
               </ButtonBox>
               <HelperOGText>
-                Mint Price: {OGPrice} $OG{" "}
-                <span>Mint & Stake Price: {OGStakePrice} $OG</span>
+                Mint Price: {convertBigNumberToPrice(mintOGPrice)} $OG{" "}
+                <span>
+                  Mint & Stake Price:{" "}
+                  {convertBigNumberToPrice(mintAndStakeOGPrice)} $OG
+                </span>
               </HelperOGText>
             </OogearBox>
             <DmtBox>
               <Counter>
                 <div
                   className={
-                    dmtCounter === 0 || isMintSale
-                      ? "minus disabled"
-                      : "minus"
+                    dmtCounter === 0 || isMintSale ? "minus disabled" : "minus"
                   }
                   onClick={handleDmtCounter("minus")}>
                   <MinusOutlined />
@@ -381,8 +376,7 @@ const Crafting = () => {
                 </div>
                 <div
                   className={
-                    dmtCounter === MAX_TOKEN_AMOUNT ||
-                    isMintSale
+                    dmtCounter === MAX_TOKEN_AMOUNT || isMintSale
                       ? "plus disabled"
                       : "plus"
                   }
@@ -405,7 +399,7 @@ const Crafting = () => {
                 </Button>
               )}
               <HelperText>
-                Price {dmtPrice} $DMT{" "}
+                Price {convertBigNumberToPrice(mintDMTPrice)} $DMT{" "}
                 <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
               </HelperText>
             </DmtBox>
@@ -420,7 +414,7 @@ const Crafting = () => {
         </MainBox>
       </Content>
       <Footer page="game" />
-      <Loading open={loading} />
+      {loader && <Loading open={loader} />}
     </Wrapper>
   );
 };

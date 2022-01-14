@@ -294,7 +294,7 @@ const Evolve = () => {
         </MainBox>
       </Content>
       <Footer page="game" />
-      <Loading open={loader} />
+      {loader && <Loading open={loader} />}
     </Wrapper>
   );
 };

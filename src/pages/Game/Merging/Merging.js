@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
+import { BigNumber } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -17,9 +18,14 @@ import { GET_MEKA_MERGE_TOKENS } from "../../../queries";
 import contract from "../../../services/contract";
 // ******** Store ********
 import { MintedContext } from "../../../store/minted-context";
+import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
+// ******** Hooks ********
+import usePrices from "../../../hooks/usePrices";
 // ******** Text ********
-import { PRE_SALE_IS_ONGOING } from "../../../messages";
+import { PRE_SALE_IS_ONGOING, DONT_ENOUGH_OG } from "../../../messages";
+// ******** Functions ********
+import { convertBigNumberToPrice } from "../Upgrade/helpers";
 // ******** Styles ********
 import {
   Wrapper,
@@ -31,13 +37,13 @@ import {
   Box,
   ButtonBox,
   HelperText,
+  PlaceholderImage,
 } from "./Merging.styles";
 
-//TODO: get the mekaMerge price and check the price before click
-//TODO: pull $OG after transaction
 const Merging = () => {
   const { isMintSale } = useContext(MintedContext);
   const { userMetaMaskToken } = useContext(UserContext);
+  const { getOogearBalance, OGBalanceBigNumber } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [keepMeka, setKeepMeka] = useState(null);
   const [burnMeka, setBurnMeka] = useState(null);
@@ -50,6 +56,25 @@ const Merging = () => {
   const [getMekaApes, { loading, data, refetch }] = useLazyQuery(
     GET_MEKA_MERGE_TOKENS
   );
+  // Prices
+  const { data: prices, isLoading: priceLoading } =
+    usePrices(userMetaMaskToken);
+  const [mergePrice, setMergePrice] = useState(BigNumber.from(0));
+
+  useEffect(() => {
+      console.log('MERGE priceLoading', priceLoading);
+    if (priceLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [priceLoading]);
+
+  useEffect(() => {
+    if (userMetaMaskToken && prices && !priceLoading) {
+      setMergePrice(prices?.["mekaMergePrice"]);
+    }
+  }, [prices, userMetaMaskToken, priceLoading]);
 
   useEffect(() => {
     if (data && data.spaceOogas) {
@@ -61,7 +86,7 @@ const Merging = () => {
 
   useEffect(() => {
     let isMounted = true;
-    if (userMetaMaskToken && isMounted) {
+    if (userMetaMaskToken && isMounted && isApeModalOpen) {
       getMekaApes({
         variables: {
           owner: userMetaMaskToken,
@@ -71,7 +96,7 @@ const Merging = () => {
     return () => {
       isMounted = false;
     };
-  }, [userMetaMaskToken, getMekaApes]);
+  }, [userMetaMaskToken, getMekaApes, isApeModalOpen]);
 
   useEffect(() => {
     if (loading) {
@@ -100,18 +125,26 @@ const Merging = () => {
     setOppositeApe(null);
   };
 
-  const handleSavePickedApe = (ape) => {
+  const handleSavePickedApe = (ape, image) => {
+    let clickedApe = {
+      ...ape,
+      image: image,
+    };
     if (type === "keep") {
-      setKeepMeka(ape);
+      setKeepMeka(clickedApe);
     } else {
-      setBurnMeka(ape);
+      setBurnMeka(clickedApe);
     }
     setType(null);
   };
 
   const renderKeepApe = () => {
     if (keepMeka) {
-      return <img src={keepMeka.img} alt={keepMeka.name} />;
+      if (keepMeka?.image) {
+        return <img src={keepMeka.img} alt={keepMeka.name} />;
+      } else {
+        return <PlaceholderImage />;
+      }
     } else {
       return (
         <>
@@ -124,7 +157,11 @@ const Merging = () => {
 
   const renderBurnApe = () => {
     if (burnMeka) {
-      return <img src={burnMeka.img} alt={burnMeka.name} />;
+      if (burnMeka?.image) {
+        return <img src={burnMeka.img} alt={burnMeka.name} />;
+      } else {
+        return <PlaceholderImage />;
+      }
     } else {
       return (
         <>
@@ -137,24 +174,31 @@ const Merging = () => {
 
   const handleClickMerge = async () => {
     if (!isMintSale) {
-      if (burnMeka && keepMeka) {
-        setIsDisabled(true);
-        try {
-          // first one is saved, second one is burned
-          let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id);
-          setLoading(true);
-          tsx.wait().then(() => {
-            refetch({
-              variables: {
-                owner: userMetaMaskToken,
-              },
+      if (OGBalanceBigNumber > mergePrice) {
+        if (burnMeka && keepMeka) {
+          setIsDisabled(true);
+          try {
+            // first one is saved, second one is burned
+            let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id);
+            setLoading(true);
+            tsx.wait().then(() => {
+              getOogearBalance();
+              refetch({
+                variables: {
+                  owner: userMetaMaskToken,
+                },
+              });
+              setLoading(false);
+              setKeepMeka(null);
+              setBurnMeka(null);
             });
-            setLoading(false);
-          });
-        } catch (error) {
-          console.log(error);
+          } catch (error) {
+            console.log(error);
+          }
+          setIsDisabled(false);
         }
-        setIsDisabled(false);
+      } else {
+        message.error(DONT_ENOUGH_OG);
       }
     } else {
       message.info(PRE_SALE_IS_ONGOING);
@@ -172,11 +216,13 @@ const Merging = () => {
           <TitleBox>
             <h4>Receive a random Mega Level!</h4>
             <h6>
-              Select two MekaApes you want to merge. The MekaApe on the left
+              {`Select two MekaApes you want to merge. The MekaApe on the left
               will receive a random Mega Level (M1, M2 or M3). The MekaApe on
               the right will get burned. With the Mega Level, MekaApes get a
               bigger share of the $OG tax and also gain the ability to be gifted
-              new mints. Merging costs 2,000 $OG.
+              new mints. Merging costs ${convertBigNumberToPrice(
+                mergePrice
+              )} $OG.`}
             </h6>
           </TitleBox>
           <MergingBox>
@@ -217,7 +263,7 @@ const Merging = () => {
           type={type}
         />
       )}
-      <Loading open={loader} />
+      {loader && <Loading open={loader} />}
     </Wrapper>
   );
 };

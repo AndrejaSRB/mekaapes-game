@@ -139,10 +139,12 @@ export const Ape = styled.div`
 export const ApeImage = styled.img`
   width: 100px;
   height: 100px;
-  border: ${({ selected }) =>
-    selected ? `5px solid ${theme.color.green}` : `5px solid transparent`};
   border-radius: 15px;
   opacity: ${({ active }) => (active ? 1 : 0.3)};
+`;
+
+export const PlaceholderImage = styled.div`
+  opacity: ${({ active }) => (active ? 1 : 0.3)};;
 `;
 
 export const Text = styled.span`

@@ -4,6 +4,9 @@ import * as theme from "../../../theme";
 // ******** Image ********
 import BackgroundImage from "../../../assets/background.png";
 // ******** Components ********
+import { Skeleton } from "antd";
+
+const { Image } = Skeleton;
 
 export const Wrapper = styled.div`
   background-image: url(${BackgroundImage});
@@ -219,5 +222,14 @@ export const HelperText = styled.p`
     line-height: 1.5;
     width: 550px;
     margin: 24px auto 0 auto;
+  }
+`;
+
+export const PlaceholderImage = styled(Image)`
+  width: 80px !important; // override library styles
+  height: 80px !important; // override library styles
+  @media only screen and (min-width: 789px) {
+    width: 200px !important; // override library styles
+    height: 200px !important; // override library styles
   }
 `;

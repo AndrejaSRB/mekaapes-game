@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { ReactQueryDevtools } from "react-query/devtools";
 // ******** Components ********
 import ScrollToTop from "./components/ScrollToTop";
 // ******** Pages ********
@@ -17,17 +17,16 @@ import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
 import { BalanceContext } from "./store/balance-context";
-import { MintedContext } from "./store/minted-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
 const DEVTOOLS = process.env.REACT_APP_DEVTOOLS;
 
+//TODO PRICE FETCHING ??????
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
   const { getDmtBalance, getOogearBalance } = useContext(BalanceContext);
-  const { getTotalMinted } = useContext(MintedContext);
 
   useEffect(() => {
     document.addEventListener("touchstart", function () {}, false);
@@ -37,13 +36,18 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    metamask.checkMetamaskConnection();
+    if (userMetaMaskToken) {
+      metamask.checkMetamaskConnection();
+    }
+  }, [userMetaMaskToken]);
+
+  //TODO Think about this one? Maybe just for proper pages?
+  useEffect(() => {
     if (userMetaMaskToken) {
       getDmtBalance();
       getOogearBalance();
-      getTotalMinted();
     }
-  }, [userMetaMaskToken, getDmtBalance, getOogearBalance, getTotalMinted]);
+  }, [userMetaMaskToken, getDmtBalance, getOogearBalance]);
 
   useEffect(() => {
     let userAddress = localStorage.getItem("mekaape_useraddress");
