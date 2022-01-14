@@ -1,10 +1,21 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Styles ********
 import { Wrapper, Box, Color } from "./StatusBar.styles";
 
 const StatusBar = ({ totalNumber }) => {
+  const [status, setStatus] = useState(0);
+
+  useEffect(() => {
+    if (totalNumber) {
+      setStatus(totalNumber);
+    } else {
+      setStatus(0);
+    }
+  }, [totalNumber]);
+
   const percentage = () => {
-    return (100 * totalNumber) / 55000;
+    return (100 * status) / 55000;
   };
 
   return (
@@ -33,5 +44,5 @@ const StatusBar = ({ totalNumber }) => {
 export default StatusBar;
 
 StatusBar.propTypes = {
-  totalNumber: PropTypes.number.isRequired,
+  totalNumber: PropTypes.number,
 };

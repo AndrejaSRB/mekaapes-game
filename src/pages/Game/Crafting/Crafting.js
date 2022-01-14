@@ -21,7 +21,7 @@ import contract from "../../../services/contract";
 // ******** Hooks ********
 import usePrices from "../../../hooks/usePrices";
 import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
-import useTotalAmountMintedTokens from '../../../hooks/useTotalAmountMintedTokens';
+import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
 // ******** Text ********
 import {
   APPROVE_DMT_TRANSACTION,
@@ -31,6 +31,8 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
+// ******** Config ********
+import priceOrder from '../../../config/pricesOrder';
 // ******** Styles ********
 import {
   Wrapper,
@@ -62,8 +64,7 @@ const Crafting = () => {
     DMTBalanceBigNumber,
     OGBalanceBigNumber,
   } = useContext(BalanceContext);
-  const { isMintSale } =
-    useContext(MintedContext);
+  const { isMintSale } = useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
@@ -101,13 +102,22 @@ const Crafting = () => {
 
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
-      setMintDMTPrice(prices?.["mintDMTstakePrice"]);
-      setMintOGPrice(prices?.["mintOGprice"]);
-      setMintAndStakeOGPrice(prices?.["mintOGstakePrice"]);
+      let mint_dmt_price = prices?.["mintDMTstakePrice"]
+        ? prices?.["mintDMTstakePrice"]
+        : prices?.[priceOrder['mintDMTstakePrice']];
+      let mint_og_price = prices?.["mintOGprice"]
+        ? prices?.["mintOGprice"]
+        : prices?.[priceOrder['mintOGprice']];
+      let mint_and_stake_og_price = prices?.["mintOGstakePrice"]
+        ? prices?.["mintOGstakePrice"]
+        : prices?.[priceOrder['mintOGstakePrice']];
+      setMintDMTPrice(mint_dmt_price);
+      setMintOGPrice(mint_og_price);
+      setMintAndStakeOGPrice(mint_and_stake_og_price);
     }
   }, [prices, userMetaMaskToken, priceLoading]);
 
-  // Check if $DMT transaction is approved
+  //   Check if $DMT transaction is approved
   useEffect(() => {
     if (userMetaMaskToken && BigNumber.isBigNumber(mintDMTPrice)) {
       const checkIfApprovedDMTTransaction = async () => {
@@ -303,6 +313,8 @@ const Crafting = () => {
       }
     }
   };
+
+  console.log("RENDERED CRAFTING");
 
   return (
     <Wrapper>

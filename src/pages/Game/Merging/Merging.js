@@ -26,6 +26,8 @@ import usePrices from "../../../hooks/usePrices";
 import { PRE_SALE_IS_ONGOING, DONT_ENOUGH_OG } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
+// ******** Config ********
+import priceOrder from "../../../config/pricesOrder";
 // ******** Styles ********
 import {
   Wrapper,
@@ -62,7 +64,7 @@ const Merging = () => {
   const [mergePrice, setMergePrice] = useState(BigNumber.from(0));
 
   useEffect(() => {
-      console.log('MERGE priceLoading', priceLoading);
+    console.log("MERGE priceLoading", priceLoading);
     if (priceLoading) {
       setLoading(true);
     } else {
@@ -70,9 +72,13 @@ const Merging = () => {
     }
   }, [priceLoading]);
 
+  // Set Price
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
-      setMergePrice(prices?.["mekaMergePrice"]);
+      const merge_price = prices?.["mekaMergePrice"]
+        ? prices?.["mekaMergePrice"]
+        : prices?.[priceOrder["mekaMergePrice"]];
+      setMergePrice(merge_price);
     }
   }, [prices, userMetaMaskToken, priceLoading]);
 

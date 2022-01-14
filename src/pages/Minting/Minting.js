@@ -22,6 +22,8 @@ import useTotalAmountMintedTokens from "../../hooks/useTotalAmountMintedTokens";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Services ********
 import contract from "../../services/contract";
+// ******** Config ********
+import pricesOrder from "../../config/pricesOrder";
 // ******** Text ********
 import { DONT_ENOUGH_ETH } from "../../messages";
 // ******** Styles ********
@@ -101,10 +103,17 @@ const Minting = () => {
     }
   }, [ethBalance]);
 
+  // set prices
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
-      setPriceMint(prices?.["mintPrice"]);
-      setPriceMintAndStake(prices?.["mintStakePrice"]);
+      const ethMintPrice = prices?.["mintPrice"]
+        ? prices?.["mintPrice"]
+        : prices?.[pricesOrder["mintPrice"]];
+      const ethMintAndStakePrice = prices?.["mintStakePrice"]
+        ? prices?.["mintStakePrice"]
+        : prices?.[pricesOrder["mintStakePrice"]];
+      setPriceMint(ethMintPrice);
+      setPriceMintAndStake(ethMintAndStakePrice);
     }
   }, [prices, userMetaMaskToken, priceLoading]);
 

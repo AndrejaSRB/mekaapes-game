@@ -26,6 +26,8 @@ import usePrices from "../../../hooks/usePrices";
 import { GET_ROBO_OOGAS_UPGRADE_TOKENS } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
+// ******** Config ********
+import priceOrder from "../../../config/pricesOrder";
 // ******** Text ********
 import {
   APPROVE_DMT_TRANSACTION,
@@ -78,7 +80,8 @@ const Upgrade = () => {
     GET_ROBO_OOGAS_UPGRADE_TOKENS
   );
   // Prices
-  const { data: prices, isLoading: priceLoading } = usePrices(userMetaMaskToken);
+  const { data: prices, isLoading: priceLoading } =
+    usePrices(userMetaMaskToken);
   const [price, setPrice] = useState(BigNumber.from(0));
 
   useEffect(() => {
@@ -89,9 +92,13 @@ const Upgrade = () => {
     }
   }, [priceLoading]);
 
+  // Set Price
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
-      setPrice(prices?.["roboLevelupPrice"]?.[0]);
+      const levelUpPrice = prices?.["roboLevelupPrice"]?.[0]
+        ? prices?.["roboLevelupPrice"]?.[0]
+        : prices?.[priceOrder["roboLevelupPrice"]]?.[0];
+      setPrice(levelUpPrice);
     }
   }, [prices, userMetaMaskToken, priceLoading]);
 

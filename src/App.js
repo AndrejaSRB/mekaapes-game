@@ -22,8 +22,6 @@ import metamask from "./services/metamask";
 
 const DEVTOOLS = process.env.REACT_APP_DEVTOOLS;
 
-//TODO PRICE FETCHING ??????
-
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
   const { getDmtBalance, getOogearBalance } = useContext(BalanceContext);
@@ -41,13 +39,13 @@ const App = () => {
     }
   }, [userMetaMaskToken]);
 
-  //TODO Think about this one? Maybe just for proper pages?
   useEffect(() => {
     if (userMetaMaskToken) {
       getDmtBalance();
       getOogearBalance();
     }
-  }, [userMetaMaskToken, getDmtBalance, getOogearBalance]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userMetaMaskToken]);
 
   useEffect(() => {
     let userAddress = localStorage.getItem("mekaape_useraddress");
