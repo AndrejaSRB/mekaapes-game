@@ -227,14 +227,20 @@ const Evolve = () => {
         try {
           let tsx = await contract.evolveBabyOogas(tokenIds);
           setLoader(true);
-          tsx.wait().then(() => {
-            setLoader(false);
-          });
-          refetch({
-            variables: {
-              owner: userMetaMaskToken,
-            },
-          });
+          tsx
+            .wait()
+            .then(() => {
+              refetch({
+                variables: {
+                  owner: userMetaMaskToken,
+                },
+              });
+              setLoader(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoader(false);
+            });
         } catch (error) {
           console.log(error);
         }

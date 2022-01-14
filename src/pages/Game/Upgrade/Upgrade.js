@@ -22,6 +22,7 @@ import { UserContext } from "../../../store/user-context";
 import { MintedContext } from "../../../store/minted-context";
 // ******** Hooks ********
 import usePrices from "../../../hooks/usePrices";
+import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
 // ******** Queires ********
 import { GET_ROBO_OOGAS_UPGRADE_TOKENS } from "../../../queries";
 // ******** Services ********
@@ -83,14 +84,20 @@ const Upgrade = () => {
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
   const [price, setPrice] = useState(BigNumber.from(0));
+  // $DMT Transaction approve
+  const {
+    data: isDMTApprovedStatus,
+    isLoading: isDMTpprovedLoading,
+    refetch: getIfDMTIsApproved,
+  } = useIsDMTTransactionApproved(userMetaMaskToken, price);
 
   useEffect(() => {
-    if (priceLoading) {
+    if (priceLoading || isDMTpprovedLoading || loading) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [priceLoading]);
+  }, [priceLoading, isDMTpprovedLoading, loading]);
 
   // Set Price
   useEffect(() => {
@@ -124,27 +131,12 @@ const Upgrade = () => {
     };
   }, [userMetaMaskToken, getRoboOogas, isApeModalOpen]);
 
-  useEffect(() => {
-    if (loading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [loading]);
-
   // Check if $DMT transaction is approved
   useEffect(() => {
-    if (userMetaMaskToken && price > 0) {
-      const checkIfApprovedDMTTransaction = async () => {
-        let isApproved = await contract.isDMTtransactionApproved(
-          userMetaMaskToken,
-          price
-        );
-        setIsApproved(isApproved);
-      };
-      checkIfApprovedDMTTransaction();
+    if (isDMTApprovedStatus !== null && isDMTApprovedStatus !== undefined) {
+      setIsApproved(isDMTApprovedStatus);
     }
-  }, [userMetaMaskToken, price]);
+  }, [isDMTApprovedStatus]);
 
   useEffect(() => {
     if (selectedApe) {
@@ -228,14 +220,15 @@ const Upgrade = () => {
     try {
       let tsx = await contract.approveDMTtransaction();
       setLoading(true);
-      tsx.wait().then(async () => {
-        let isApproved = await contract.isDMTtransactionApproved(
-          userMetaMaskToken,
-          price
-        );
-        setIsApproved(isApproved);
-        setLoading(false);
-      });
+      tsx
+        .wait()
+        .then(async () => {
+          getIfDMTIsApproved();
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } catch (error) {
       console.log(error);
     }
@@ -250,16 +243,22 @@ const Upgrade = () => {
           try {
             let tsx = await contract.levelUpRoboOooga(selectedApe.id);
             setLoading(true);
-            tsx.wait().then(async () => {
-              refetch({
-                variables: {
-                  owner: userMetaMaskToken,
-                },
+            tsx
+              .wait()
+              .then(async () => {
+                refetch({
+                  variables: {
+                    owner: userMetaMaskToken,
+                  },
+                });
+                getDmtBalance();
+                setLoading(false);
+                setSelectedApe(null);
+              })
+              .catch((error) => {
+                console.log(error);
+                setLoading(false);
               });
-              getDmtBalance();
-              setLoading(false);
-              setSelectedApe(null);
-            });
           } catch (error) {
             console.log(error);
           }

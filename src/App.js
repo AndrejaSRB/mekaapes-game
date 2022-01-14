@@ -16,7 +16,6 @@ import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
-import { BalanceContext } from "./store/balance-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
@@ -24,7 +23,6 @@ const DEVTOOLS = process.env.REACT_APP_DEVTOOLS;
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
-  const { getDmtBalance, getOogearBalance } = useContext(BalanceContext);
 
   useEffect(() => {
     document.addEventListener("touchstart", function () {}, false);
@@ -37,14 +35,6 @@ const App = () => {
     if (userMetaMaskToken) {
       metamask.checkMetamaskConnection();
     }
-  }, [userMetaMaskToken]);
-
-  useEffect(() => {
-    if (userMetaMaskToken) {
-      getDmtBalance();
-      getOogearBalance();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userMetaMaskToken]);
 
   useEffect(() => {

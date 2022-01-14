@@ -64,7 +64,6 @@ const Merging = () => {
   const [mergePrice, setMergePrice] = useState(BigNumber.from(0));
 
   useEffect(() => {
-    console.log("MERGE priceLoading", priceLoading);
     if (priceLoading) {
       setLoading(true);
     } else {
@@ -187,17 +186,23 @@ const Merging = () => {
             // first one is saved, second one is burned
             let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id);
             setLoading(true);
-            tsx.wait().then(() => {
-              getOogearBalance();
-              refetch({
-                variables: {
-                  owner: userMetaMaskToken,
-                },
+            tsx
+              .wait()
+              .then(() => {
+                getOogearBalance();
+                refetch({
+                  variables: {
+                    owner: userMetaMaskToken,
+                  },
+                });
+                setLoading(false);
+                setKeepMeka(null);
+                setBurnMeka(null);
+              })
+              .catch((error) => {
+                console.log(error);
+                setLoading(false);
               });
-              setLoading(false);
-              setKeepMeka(null);
-              setBurnMeka(null);
-            });
           } catch (error) {
             console.log(error);
           }

@@ -163,13 +163,19 @@ const Minting = () => {
           mintSign
         );
         setLoading(true);
-        tsx.wait().then(async () => {
-          getTotalMinted();
-          getMaxTokenAmount();
+        tsx
+          .wait()
+          .then(async () => {
+            getTotalMinted();
+            getMaxTokenAmount();
 
-          getEthBalance();
-          setLoading(false);
-        });
+            getEthBalance();
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
       } catch (error) {
         console.log(error);
       }
@@ -191,12 +197,18 @@ const Minting = () => {
           mintSign
         );
         setLoading(true);
-        tsx.wait().then(async () => {
-          getTotalMinted();
-          getMaxTokenAmount();
-          getEthBalance();
-          setLoading(false);
-        });
+        tsx
+          .wait()
+          .then(async () => {
+            getTotalMinted();
+            getMaxTokenAmount();
+            getEthBalance();
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
       } catch (error) {
         console.log(error);
       }

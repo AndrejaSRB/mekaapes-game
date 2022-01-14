@@ -1,9 +1,10 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 // ******** Stores ********
 import { UserContext } from "./user-context";
-// ******** Services ********
-import contract from "../services/contract";
+// ******** Hooks ********
+import useDMTBalance from "../hooks/useDMTBalance";
+import useOGBalance from "../hooks/useOGBalance";
 
 export const BalanceContext = createContext({
   dmtBalance: null,
@@ -20,36 +21,32 @@ const BalanceContextProvider = ({ children }) => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [dmtBalance, setDmtBalance] = useState(0);
   const [oogearBalance, setoogearBalance] = useState(0);
-  const [DMTBalanceBigNumber, setDMTBalanceBigNumber] = useState(BigNumber.from(0));
-  const [OGBalanceBigNumber, setOGBalanceBigNumber] = useState(BigNumber.from(0));
+  const [DMTBalanceBigNumber, setDMTBalanceBigNumber] = useState(
+    BigNumber.from(0)
+  );
+  const [OGBalanceBigNumber, setOGBalanceBigNumber] = useState(
+    BigNumber.from(0)
+  );
+  const { data: dmtBalanceStatus, refetch: getDMTBalance } =
+    useDMTBalance(userMetaMaskToken);
+  const { data: ogBalanceStatus, refetch: getOGBalance } =
+    useOGBalance(userMetaMaskToken);
 
-  const getDmtBalance = async () => {
-    if (userMetaMaskToken) {
-      try {
-        await contract.getDMTBalance(userMetaMaskToken).then((response) => {
-          let balance = ethers.utils.formatUnits(response);
-          setDmtBalance(balance);
-          setDMTBalanceBigNumber(response);
-        });
-      } catch (error) {
-        console.log(error);
-      }
+  // Set $DMT balance
+  useEffect(() => {
+    if (dmtBalanceStatus !== null && dmtBalanceStatus !== undefined) {
+      setDmtBalance(ethers.utils.formatUnits(dmtBalanceStatus));
+      setDMTBalanceBigNumber(dmtBalanceStatus);
     }
-  };
+  }, [dmtBalanceStatus]);
 
-  const getOogearBalance = async () => {
-    if (userMetaMaskToken) {
-      try {
-        await contract.getOGBalance(userMetaMaskToken).then((response) => {
-          let balance = ethers.utils.formatUnits(response);
-          setoogearBalance(balance);
-          setOGBalanceBigNumber(response);
-        });
-      } catch (error) {
-        console.log(error);
-      }
+  // Set $OG balance
+  useEffect(() => {
+    if (ogBalanceStatus !== null && ogBalanceStatus !== undefined) {
+      setoogearBalance(ethers.utils.formatUnits(ogBalanceStatus));
+      setOGBalanceBigNumber(ogBalanceStatus);
     }
-  };
+  }, [ogBalanceStatus]);
 
   const clearDmtBalance = () => {
     setDmtBalance(0);
@@ -66,8 +63,8 @@ const BalanceContextProvider = ({ children }) => {
     oogearBalance: oogearBalance,
     clearDmtBalance: clearDmtBalance,
     clearOogearBalance: clearOogearBalance,
-    getDmtBalance: getDmtBalance,
-    getOogearBalance: getOogearBalance,
+    getDmtBalance: getDMTBalance,
+    getOogearBalance: getOGBalance,
     DMTBalanceBigNumber: DMTBalanceBigNumber,
     OGBalanceBigNumber: OGBalanceBigNumber,
   };

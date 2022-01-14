@@ -22,6 +22,7 @@ import contract from "../../../services/contract";
 import usePrices from "../../../hooks/usePrices";
 import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
 import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
+import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
 // ******** Text ********
 import {
   APPROVE_DMT_TRANSACTION,
@@ -32,7 +33,7 @@ import {
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
 // ******** Config ********
-import priceOrder from '../../../config/pricesOrder';
+import priceOrder from "../../../config/pricesOrder";
 // ******** Styles ********
 import {
   Wrapper,
@@ -91,45 +92,55 @@ const Crafting = () => {
   );
   const [mintOGPrice, setMintOGPrice] = useState(BigNumber.from(0));
   const [mintDMTPrice, setMintDMTPrice] = useState(BigNumber.from(0));
+  // $DMT Transaction approve
+  const {
+    data: isDMTApprovedStatus,
+    isLoading: isDMTpprovedLoading,
+    refetch: getIfDMTIsApproved,
+  } = useIsDMTTransactionApproved(userMetaMaskToken, mintDMTPrice);
 
+  // Loading state
   useEffect(() => {
-    if (priceLoading || totalMintedDMTLoading || totalAmountLoading) {
+    if (
+      priceLoading ||
+      totalMintedDMTLoading ||
+      totalAmountLoading ||
+      isDMTpprovedLoading
+    ) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [priceLoading, totalMintedDMTLoading, totalAmountLoading]);
+  }, [
+    priceLoading,
+    totalMintedDMTLoading,
+    totalAmountLoading,
+    isDMTpprovedLoading,
+  ]);
 
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
       let mint_dmt_price = prices?.["mintDMTstakePrice"]
         ? prices?.["mintDMTstakePrice"]
-        : prices?.[priceOrder['mintDMTstakePrice']];
+        : prices?.[priceOrder["mintDMTstakePrice"]];
       let mint_og_price = prices?.["mintOGprice"]
         ? prices?.["mintOGprice"]
-        : prices?.[priceOrder['mintOGprice']];
+        : prices?.[priceOrder["mintOGprice"]];
       let mint_and_stake_og_price = prices?.["mintOGstakePrice"]
         ? prices?.["mintOGstakePrice"]
-        : prices?.[priceOrder['mintOGstakePrice']];
+        : prices?.[priceOrder["mintOGstakePrice"]];
       setMintDMTPrice(mint_dmt_price);
       setMintOGPrice(mint_og_price);
       setMintAndStakeOGPrice(mint_and_stake_og_price);
     }
   }, [prices, userMetaMaskToken, priceLoading]);
 
-  //   Check if $DMT transaction is approved
+  // Check if $DMT transaction is approved
   useEffect(() => {
-    if (userMetaMaskToken && BigNumber.isBigNumber(mintDMTPrice)) {
-      const checkIfApprovedDMTTransaction = async () => {
-        let isApproved = await contract.isDMTtransactionApproved(
-          userMetaMaskToken,
-          mintDMTPrice
-        );
-        setIsDMTApproved(isApproved);
-      };
-      checkIfApprovedDMTTransaction();
+    if (isDMTApprovedStatus !== null && isDMTApprovedStatus !== undefined) {
+      setIsDMTApproved(isDMTApprovedStatus);
     }
-  }, [userMetaMaskToken, mintDMTPrice]);
+  }, [isDMTApprovedStatus]);
 
   useEffect(() => {
     if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
@@ -226,14 +237,16 @@ const Crafting = () => {
     try {
       let tsx = await contract.approveDMTtransaction();
       setLoading(true);
-      tsx.wait().then(async () => {
-        let isApproved = await contract.isDMTtransactionApproved(
-          userMetaMaskToken,
-          mintDMTPrice
-        );
-        setIsDMTApproved(isApproved);
-        setLoading(false);
-      });
+      tsx
+        .wait()
+        .then(async () => {
+          getIfDMTIsApproved();
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+        });
     } catch (error) {
       console.log(error);
       getDmtBalance();
@@ -249,11 +262,17 @@ const Crafting = () => {
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, false);
           setLoading(true);
-          tsx.wait().then(async () => {
-            getOogearBalance();
-            getTotalMinted();
-            setLoading(false);
-          });
+          tsx
+            .wait()
+            .then(async () => {
+              getOogearBalance();
+              getTotalMinted();
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
         } catch (error) {
           console.log(error);
         }
@@ -274,11 +293,17 @@ const Crafting = () => {
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true);
           setLoading(true);
-          tsx.wait().then(async () => {
-            getOogearBalance();
-            getTotalMinted();
-            setLoading(false);
-          });
+          tsx
+            .wait()
+            .then(async () => {
+              getOogearBalance();
+              getTotalMinted();
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
         } catch (error) {
           console.log(error);
         }
@@ -297,12 +322,18 @@ const Crafting = () => {
         try {
           let tsx = await contract.mintWithDMT(dmtCounter);
           setLoading(true);
-          tsx.wait().then(async () => {
-            getDmtBalance();
-            getTotalMinted();
-            getTotalMintedDMTAmount();
-            setLoading(false);
-          });
+          tsx
+            .wait()
+            .then(async () => {
+              getDmtBalance();
+              getTotalMinted();
+              getTotalMintedDMTAmount();
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
         } catch (error) {
           console.log(error);
         }
@@ -313,8 +344,6 @@ const Crafting = () => {
       }
     }
   };
-
-  console.log("RENDERED CRAFTING");
 
   return (
     <Wrapper>
