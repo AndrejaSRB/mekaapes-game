@@ -102,9 +102,6 @@ const Factory = () => {
   const [unstakedRoboList, setUnstakedRoboList] = useState(null);
   const [unstakedMekaList, setUnstakedMekaList] = useState(null);
   const [stakedList, setStakedList] = useState(null);
-  // Get Total CLaim Reward
-  const { data: claimAvaliableRewardList } =
-    useListClaimAvaliableReward(stakedList);
 
   const [getStakedApe, { loading: stakeLoading, data: stakedApesData }] =
     useLazyQuery(GET_STAKED_APE);
@@ -117,6 +114,12 @@ const Factory = () => {
     getUnstakeMekaApes,
     { loading: unstakedMekaAPeLoading, data: unstakedMekaApeData },
   ] = useLazyQuery(GET_UNSTAKE_MEKA_APES);
+
+  // Get Total CLaim Reward
+  const { data: claimAvaliableRewardList } = useListClaimAvaliableReward(
+    stakedList,
+    stakedApesData?.spaceOogas
+  );
 
   // Get all data
   useEffect(() => {
@@ -147,6 +150,14 @@ const Factory = () => {
     getUnstakedRoboOogas,
     getUnstakeMekaApes,
   ]);
+
+  useEffect(() => {
+    if (stakedApesData && stakedApesData.spaceOogas) {
+      setStakedList(stakedApesData.spaceOogas);
+    } else {
+      setStakedList(null);
+    }
+  }, [stakedApesData]);
 
   // Set placeholder in the staked list
   useEffect(() => {
@@ -205,45 +216,23 @@ const Factory = () => {
     }
   }, [unstakedMekaApeData]);
 
-  useEffect(() => {
-    if (stakedApesData && stakedApesData.spaceOogas) {
-      setStakedList(stakedApesData.spaceOogas);
-    } else {
-      setStakedList(null);
-    }
-  }, [stakedApesData]);
-
-//   // Updated reward of clicked apes
-//   useEffect(() => {
-//     if (selectedStaked?.length > 0) {
-//       if (stakedData?.length > 0) {
-//         let allSelectedApes = [...selectedStaked];
-//         allSelectedApes.forEach((selected) => {
-//           let ape = stakedData.find((item) => item.id === selected.id);
-//           if (ape) {
-//             selected.reward = ape.reward;
-//           }
-//         });
-//         setSelectedStaked(allSelectedApes);
-//       }
-//     }
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [stakedData]);
-
   // Sum selected token claim amount
   useEffect(() => {
-    if (selectedStaked && selectedStaked.length > 0) {
+    if (selectedStaked?.length > 0 && claimAvaliableRewardList?.length > 0) {
       let total = 0;
       selectedStaked.forEach((nft) => {
-        if (+nft.reward > 0) {
-          total = +nft.reward + +total;
+        let ape = claimAvaliableRewardList.find((token) => token.id === nft.id);
+        if (ape) {
+          if (+ape.reward > 0) {
+            total = +ape.reward + +total;
+          }
         }
       });
       setTotalSelectedClaim(total);
     } else {
       setTotalSelectedClaim(0);
     }
-  }, [selectedStaked]);
+  }, [selectedStaked, claimAvaliableRewardList]);
 
   useEffect(() => {
     if (stakeLoading || unstakedRoboLoading || unstakedMekaAPeLoading) {

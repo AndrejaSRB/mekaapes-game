@@ -48,6 +48,19 @@ export const handleClickApe =
     }
   };
 
+const checkIfIsSelected = (selected, ape) => {
+  if (selected?.length > 0) {
+    let token = selected.find((item) => item.id === ape.id);
+    if (token) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
+
 export const handleClickStakedApe =
   (ape, isPlaceholder, selectAll, setSelectAll, selected, setSelected) =>
   () => {
@@ -57,7 +70,7 @@ export const handleClickStakedApe =
         setSelected([ape]);
       } else {
         if (selected && selected.length > 0) {
-          if (selected.indexOf(ape) === -1) {
+          if (!checkIfIsSelected(selected, ape)) {
             setSelected([...selected, ape]);
           } else {
             let array = [...selected];
@@ -92,7 +105,7 @@ export const generateMobilePlacholders = (list) => {
   return array;
 };
 
-export const  shareApeList = (list, array) => {
+export const shareApeList = (list, array) => {
   let apes = [...list];
   let totalLength = apes.length;
   if (totalLength > 6) {
