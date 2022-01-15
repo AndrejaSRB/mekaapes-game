@@ -9,7 +9,10 @@ import StakedApe from "./StakedApe";
 import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
 // ******** Messages ********
-import { SELECT_SOME_UNSTAKED_APE } from "../../../messages";
+import {
+  SELECT_SOME_UNSTAKED_APE,
+  SELECT_SOME_STAKED_APE,
+} from "../../../messages";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
@@ -17,7 +20,7 @@ import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 import useListClaimAvaliableReward from "../../../hooks/useListClaimAvaliableReward";
 // ******** Functions ********
 import {
-  getListLenght,
+  getListLength,
   getIfSelected,
   handleClickApe,
   handleClickStakedApe,
@@ -80,7 +83,8 @@ const NoItemFound = () => (
 
 const Factory = () => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const { dmtBalance, oogearBalance } = useContext(BalanceContext);
+  const { dmtBalance, oogearBalance, getOogearBalance } =
+    useContext(BalanceContext);
   const { width } = useWindowDimenstions();
   const [selectAllStaked, setSelectAllStaked] = useState(false);
   const [selectAllUnstakedMeka, setSelectAllUnstakedMeka] = useState(false);
@@ -441,6 +445,74 @@ const Factory = () => {
     }
   };
 
+  const handleClickClaim = async () => {
+    let tokenIds = [];
+    if (selectedStaked?.length > 0) {
+      selectedStaked.forEach((token) => {
+        tokenIds.push(token.id);
+      });
+      if (tokenIds?.length > 0) {
+        try {
+          let tsx = await contract.claimReward(tokenIds);
+          setLoading(true);
+          tsx
+            .wait()
+            .then(() => {
+              getStakedApe({
+                variables: {
+                  owner: userMetaMaskToken,
+                },
+              });
+              getOogearBalance();
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
+          setTotalClaim(0);
+          setSelectedStaked([]);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } else {
+      message.error(SELECT_SOME_STAKED_APE);
+    }
+  };
+
+  const handleClickUnstake = async () => {
+    let tokenIds = [];
+    if (selectedStaked?.length > 0) {
+      selectedStaked.forEach((token) => {
+        tokenIds.push(token.id);
+      });
+      if (tokenIds?.length > 0) {
+        try {
+          let tsx = await contract.unstake(tokenIds);
+          setLoading(true);
+          tsx
+            .wait()
+            .then(() => {
+              getFreshData();
+              getOogearBalance();
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              setLoading(false);
+            });
+          setTotalClaim(0);
+          setSelectedStaked([]);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } else {
+      message.error(SELECT_SOME_STAKED_APE);
+    }
+  };
+
   return (
     <Wrapper>
       <Header page="game" />
@@ -473,7 +545,7 @@ const Factory = () => {
                   Select All:
                 </CustomUnstakeCheckbox>
               </Subtitle>
-              <NftList lenght={getListLenght(unstakedRoboList)}>
+              <NftList length={getListLength(unstakedRoboList)}>
                 {renderUnstakedRobo()}
               </NftList>
               <Subtitle>
@@ -484,7 +556,7 @@ const Factory = () => {
                   Select All:
                 </CustomUnstakeCheckbox>
               </Subtitle>
-              <NftList meka lenght={getListLenght(unstakedMekaList)}>
+              <NftList meka length={getListLength(unstakedMekaList)}>
                 {renderUnstakedMeka()}
               </NftList>
               <Button
@@ -516,10 +588,14 @@ const Factory = () => {
               </div>
               <ApeList>{renderMobileStakedApes()}</ApeList>
               <ApeListDesktop>{renderDesktopStakedApes()}</ApeListDesktop>
-              <ButtonClaim disabled={getIfItsClaimDisabled()}>
+              <ButtonClaim
+                disabled={getIfItsClaimDisabled()}
+                onClick={handleClickClaim}>
                 Claim {totalSelectedClaim} $OG
               </ButtonClaim>
-              <ClaimAndUnstakeButton disabled={getIfItsClaimDisabled()}>
+              <ClaimAndUnstakeButton
+                disabled={getIfItsClaimDisabled()}
+                onClick={handleClickUnstake}>
                 Claim $OG and Unstake
               </ClaimAndUnstakeButton>
               <StakedText>

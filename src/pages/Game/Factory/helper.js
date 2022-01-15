@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 
-export const getListLenght = (list) => {
+export const getListLength = (list) => {
   if (list && list.length > 0) {
     return list.length;
   } else {

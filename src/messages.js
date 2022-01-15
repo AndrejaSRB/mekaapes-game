@@ -7,3 +7,4 @@ export const DONT_ENOUGH_OG = "Sorry, you don't have enough $OG.";
 export const DONT_ENOUGH_DMT = "Sorry, you don't have enough $DMT.";
 export const DONT_ENOUGH_ETH = "Sorry, you don't have enough ETH.";
 export const SELECT_SOME_UNSTAKED_APE = "You have to select some unstaked ape.";
+export const SELECT_SOME_STAKED_APE = "You have to select some staked ape.";

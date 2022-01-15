@@ -151,7 +151,7 @@ export const Unstaked = styled.div`
 
 export const NftList = styled.div`
   display: flex;
-  justify-content: ${({ lenght }) => (lenght > 2 ? "flex-start" : "center")};
+  justify-content: ${({ length }) => (length > 2 ? "flex-start" : "center")};
   align-items: center;
   overflow-x: scroll;
   max-width: 332px;
