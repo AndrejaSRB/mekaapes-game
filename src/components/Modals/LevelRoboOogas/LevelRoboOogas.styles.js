@@ -152,6 +152,10 @@ export const ApeImage = styled.img`
   opacity: ${({ active }) => (active ? 1 : 0.3)};
 `;
 
+export const PlaceholderImage = styled.div`
+  opacity: ${({ active }) => (active ? 1 : 0.3)};;
+`;
+
 export const Text = styled.span`
   color: ${theme.color.grey};
   margin: 24px 0 32px 0;

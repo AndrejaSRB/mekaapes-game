@@ -297,6 +297,10 @@ export const Ape = styled.div`
   }
 `;
 
+export const PlaceholderImage = styled.div`
+  opacity: ${({ active }) => (active ? 1 : 0.3)};;
+`;
+
 export const Name = styled.div`
   font-weight: 600;
   color: ${theme.color.white};

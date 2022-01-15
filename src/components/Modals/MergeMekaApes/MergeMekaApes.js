@@ -67,8 +67,11 @@ const MergeMekaApes = ({
     }
   };
 
-  const handleClickApe = (ape) => () => {
-    setClickedApe(ape);
+  const handleClickApe = (ape, image) => () => {
+    let mekaApe = { ...ape };
+    mekaApe.image = image;
+    mekaApe.img = image;
+    setClickedApe(mekaApe);
   };
 
   const getIfActive = (id) => {

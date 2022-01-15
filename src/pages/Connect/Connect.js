@@ -34,24 +34,6 @@ const Connect = ({ page }) => {
   };
 
   return (
-    // <Wrapper>
-    //   <Header page="landing" />
-    //   {!token ? (
-    //     <Content>
-    //       <Title>{/* Let's <span>Connect</span> */}</Title>
-    //       <Subtitle>You need to connect your wallet.</Subtitle>
-    //       <Button onClick={handleClickMetamask}>Connect Wallet</Button>
-    //     </Content>
-    //   ) : (
-    //     <Content>
-    //       <Title>
-    //         Welcome, you are <span>conected!</span>
-    //       </Title>
-    //       <Subtitle>You can switch the page.</Subtitle>
-    //     </Content>
-    //   )}
-    //   <Footer page="connect" />
-    // </Wrapper>
     <Wrapper>
       <Header page="landing" />
       {!token ? (

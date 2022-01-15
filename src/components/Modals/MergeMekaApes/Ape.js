@@ -1,15 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Components ********
 import { Skeleton } from "antd";
+// ******** Hooks ********
+import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Styles ********
 import { Ape, ApeImage, PlaceholderImage } from "./MergeMekaApes.styles";
 
 const MergeMekaApe = ({ ape, handleClickApe, getIfActive }) => {
-  const [image] = useState(null);
+  const { data, isLoading } = useApeMetadata(ape);
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      if (data) {
+        setImage(data.image);
+      }
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [data]);
 
   const renderApeImage = () => {
-    if (image) {
+    if (image && !isLoading) {
       return (
         <ApeImage
           active={getIfActive(ape.id)}

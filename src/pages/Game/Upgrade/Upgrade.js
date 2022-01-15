@@ -24,7 +24,10 @@ import { MintedContext } from "../../../store/minted-context";
 import usePrices from "../../../hooks/usePrices";
 import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
 // ******** Queires ********
-import { GET_ROBO_OOGAS_UPGRADE_TOKENS } from "../../../queries";
+import {
+  GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS,
+  GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS,
+} from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Config ********
@@ -54,6 +57,7 @@ import {
   Name,
   InfoIcon,
   LevelBoxContainer,
+  PlaceholderImage,
 } from "./Upgrade.styles";
 
 const LevelBox = ({ level }) => (
@@ -77,9 +81,14 @@ const Upgrade = () => {
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
   const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
   const [list, setList] = useState(null);
-  const [getRoboOogas, { loading, data, refetch }] = useLazyQuery(
-    GET_ROBO_OOGAS_UPGRADE_TOKENS
-  );
+  const [
+    getUnstakedRoboOogas,
+    { loading: unstakedRoboLoading, data: unstakedRoboData },
+  ] = useLazyQuery(GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS);
+  const [
+    getStakedRoboOogas,
+    { loading: stakedRoboLoading, data: stakedRoboData },
+  ] = useLazyQuery(GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS);
   // Prices
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
@@ -92,12 +101,22 @@ const Upgrade = () => {
   } = useIsDMTTransactionApproved(userMetaMaskToken, price);
 
   useEffect(() => {
-    if (priceLoading || isDMTpprovedLoading || loading) {
+    if (
+      priceLoading ||
+      isDMTpprovedLoading ||
+      stakedRoboLoading ||
+      unstakedRoboLoading
+    ) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [priceLoading, isDMTpprovedLoading, loading]);
+  }, [
+    priceLoading,
+    isDMTpprovedLoading,
+    unstakedRoboLoading,
+    stakedRoboLoading,
+  ]);
 
   // Set Price
   useEffect(() => {
@@ -110,17 +129,27 @@ const Upgrade = () => {
   }, [prices, userMetaMaskToken, priceLoading]);
 
   useEffect(() => {
-    if (data && data.spaceOogas) {
-      setList(data.spaceOogas);
+    if (
+      unstakedRoboData &&
+      unstakedRoboData.spaceOogas &&
+      stakedRoboData &&
+      stakedRoboData.spaceOogas
+    ) {
+      setList([...unstakedRoboData.spaceOogas, ...stakedRoboData.spaceOogas]);
     } else {
       setList(null);
     }
-  }, [data]);
+  }, [unstakedRoboData, stakedRoboData]);
 
   useEffect(() => {
     let isMounted = true;
     if (userMetaMaskToken && isMounted && isApeModalOpen) {
-      getRoboOogas({
+      getUnstakedRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getStakedRoboOogas({
         variables: {
           owner: userMetaMaskToken,
         },
@@ -129,7 +158,12 @@ const Upgrade = () => {
     return () => {
       isMounted = false;
     };
-  }, [userMetaMaskToken, getRoboOogas, isApeModalOpen]);
+  }, [
+    userMetaMaskToken,
+    getUnstakedRoboOogas,
+    isApeModalOpen,
+    getStakedRoboOogas,
+  ]);
 
   // Check if $DMT transaction is approved
   useEffect(() => {
@@ -178,12 +212,20 @@ const Upgrade = () => {
     }
   };
 
+  const renderRoboOogaImage = (ape) => {
+    if (ape?.image) {
+      return <img src={ape.img} alt={ape.id} />;
+    } else {
+      return <PlaceholderImage />;
+    }
+  };
+
   const renderRoboOoga = () => {
     if (selectedApe) {
       return (
         <ApeBox>
           <Ape currentLvl={selectedApe.level} onClick={handleOpenApeModal}>
-            <img src={selectedApe.img} alt={selectedApe.name} />
+            {renderRoboOogaImage(selectedApe)}
           </Ape>
           <Name>Robo Ooga #{selectedApe.id}</Name>
         </ApeBox>
@@ -246,7 +288,12 @@ const Upgrade = () => {
             tsx
               .wait()
               .then(async () => {
-                refetch({
+                getUnstakedRoboOogas({
+                  variables: {
+                    owner: userMetaMaskToken,
+                  },
+                });
+                getStakedRoboOogas({
                   variables: {
                     owner: userMetaMaskToken,
                   },

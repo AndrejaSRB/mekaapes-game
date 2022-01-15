@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Components ********
 import { Skeleton } from "antd";
 // ******** Hooks ********
-import useEvolveMetadata from "../../../hooks/useEvolveMetadata";
+import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Styles ********
-import { Ape, ApeImage } from "./Evolve.styles";
+import { Ape, ApeImage, PlaceholderImage } from "./LevelRoboOogas.styles";
 
-const BabyApe = ({ ape, handleClickApe, getIfSelected }) => {
+const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
+  const { data, isLoading } = useApeMetadata(ape);
   const [image, setImage] = useState(null);
-  const { data, isLoading } = useEvolveMetadata(ape);
 
   useEffect(() => {
     let isMounted = true;
@@ -27,23 +27,27 @@ const BabyApe = ({ ape, handleClickApe, getIfSelected }) => {
     if (image && !isLoading) {
       return (
         <ApeImage
-          selected={!ape.placeholder && getIfSelected(ape.id)}
-          active
+          active={getIfActive(ape.id)}
+          currentLvl={ape.level}
           src={image}
           alt={ape.id}
         />
       );
     } else {
-      return <Skeleton.Image />;
+      return (
+        <PlaceholderImage active={getIfActive(ape.id)} currentLvl={ape.level}>
+          <Skeleton.Image />
+        </PlaceholderImage>
+      );
     }
   };
 
   return (
-    <Ape onClick={handleClickApe(ape, ape.placeholder)}>
+    <Ape key={ape.id} onClick={handleClickApe(ape, image)}>
       {ape.placeholder ? (
         <ApeImage
-          selected={!ape.placeholder && getIfSelected(ape.id)}
-          active
+          active={getIfActive(ape.id)}
+          currentLvl={ape.level}
           src={ape.img}
           alt={ape.id}
         />
@@ -54,10 +58,10 @@ const BabyApe = ({ ape, handleClickApe, getIfSelected }) => {
   );
 };
 
-export default BabyApe;
+export default LevelRoboOogaApe;
 
-BabyApe.propTypes = {
+LevelRoboOogaApe.propTypes = {
   ape: PropTypes.object.isRequired,
   handleClickApe: PropTypes.func.isRequired,
-  getIfSelected: PropTypes.func.isRequired,
+  getIfActive: PropTypes.func.isRequired,
 };

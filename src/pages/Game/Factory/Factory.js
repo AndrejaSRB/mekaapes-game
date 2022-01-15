@@ -62,7 +62,9 @@ const NoItemFound = () => (
 );
 
 // TODO
-// Disable buttons if the amount is bigger than the balance in that coin
+// Pull tokens
+// Pull current amount
+// Pull total amount
 // Sum total $OG staked tokens to the unclaimed total bellow the unstake button
 // Add clicked total sum to the Claim button
 

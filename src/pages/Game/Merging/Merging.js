@@ -13,7 +13,10 @@ import withConnect from "../../../hoc/withConnect";
 import Placeholder from "../../../assets/placeholder.png";
 import MergingArrow from "../../../assets/merging_arrow.svg";
 // ******** Queires ********
-import { GET_MEKA_MERGE_TOKENS } from "../../../queries";
+import {
+  GET_MEKA_MERGE_TOKENS_UNSTAKE,
+  GET_MEKA_MERGE_TOKENS_STAKED,
+} from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
@@ -55,9 +58,14 @@ const Merging = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
   const [list, setList] = useState(false);
-  const [getMekaApes, { loading, data, refetch }] = useLazyQuery(
-    GET_MEKA_MERGE_TOKENS
-  );
+  const [
+    getUnstakeMekaApes,
+    { loading: unstakeLoading, data: unstakedMekaData },
+  ] = useLazyQuery(GET_MEKA_MERGE_TOKENS_UNSTAKE);
+
+  const [getStakedMekaApes, { loading: stakeLoading, data: stakedMekaData }] =
+    useLazyQuery(GET_MEKA_MERGE_TOKENS_STAKED);
+
   // Prices
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
@@ -82,17 +90,27 @@ const Merging = () => {
   }, [prices, userMetaMaskToken, priceLoading]);
 
   useEffect(() => {
-    if (data && data.spaceOogas) {
-      setList(data.spaceOogas);
+    if (
+      unstakedMekaData &&
+      unstakedMekaData.spaceOogas &&
+      stakedMekaData &&
+      stakedMekaData.spaceOogas
+    ) {
+      setList([...unstakedMekaData.spaceOogas, ...stakedMekaData.spaceOogas]);
     } else {
       setList(null);
     }
-  }, [data]);
+  }, [unstakedMekaData, stakedMekaData]);
 
   useEffect(() => {
     let isMounted = true;
     if (userMetaMaskToken && isMounted && isApeModalOpen) {
-      getMekaApes({
+      getUnstakeMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getStakedMekaApes({
         variables: {
           owner: userMetaMaskToken,
         },
@@ -101,15 +119,20 @@ const Merging = () => {
     return () => {
       isMounted = false;
     };
-  }, [userMetaMaskToken, getMekaApes, isApeModalOpen]);
+  }, [
+    userMetaMaskToken,
+    getUnstakeMekaApes,
+    isApeModalOpen,
+    getStakedMekaApes,
+  ]);
 
   useEffect(() => {
-    if (loading) {
+    if (unstakeLoading || stakeLoading) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [loading]);
+  }, [unstakeLoading, stakeLoading]);
 
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
@@ -130,15 +153,11 @@ const Merging = () => {
     setOppositeApe(null);
   };
 
-  const handleSavePickedApe = (ape, image) => {
-    let clickedApe = {
-      ...ape,
-      image: image,
-    };
+  const handleSavePickedApe = (ape) => {
     if (type === "keep") {
-      setKeepMeka(clickedApe);
+      setKeepMeka(ape);
     } else {
-      setBurnMeka(clickedApe);
+      setBurnMeka(ape);
     }
     setType(null);
   };
@@ -146,7 +165,7 @@ const Merging = () => {
   const renderKeepApe = () => {
     if (keepMeka) {
       if (keepMeka?.image) {
-        return <img src={keepMeka.img} alt={keepMeka.name} />;
+        return <img src={keepMeka.img} alt={keepMeka.id} />;
       } else {
         return <PlaceholderImage />;
       }
@@ -163,7 +182,7 @@ const Merging = () => {
   const renderBurnApe = () => {
     if (burnMeka) {
       if (burnMeka?.image) {
-        return <img src={burnMeka.img} alt={burnMeka.name} />;
+        return <img src={burnMeka.img} alt={burnMeka.id} />;
       } else {
         return <PlaceholderImage />;
       }
@@ -190,7 +209,12 @@ const Merging = () => {
               .wait()
               .then(() => {
                 getOogearBalance();
-                refetch({
+                getUnstakeMekaApes({
+                  variables: {
+                    owner: userMetaMaskToken,
+                  },
+                });
+                getStakedMekaApes({
                   variables: {
                     owner: userMetaMaskToken,
                   },
