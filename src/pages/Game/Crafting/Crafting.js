@@ -150,7 +150,7 @@ const Crafting = () => {
   }, [totalMintedTokens]);
 
   useEffect(() => {
-    if (!isMintSale) {
+    if (isMintSale) {
       setIsDisableDMTButton(true);
     } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
       setIsDisableDMTButton(true);
@@ -164,7 +164,7 @@ const Crafting = () => {
   }, [dmtCounter, totalMintedDMTTokens, totalMintedTokens, isMintSale]);
 
   useEffect(() => {
-    if (!isMintSale) {
+    if (isMintSale) {
       setIsDisableDMTButton(true);
     } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
       setIsDisableOGButtons(true);

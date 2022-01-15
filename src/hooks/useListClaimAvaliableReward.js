@@ -3,8 +3,7 @@ import { BigNumber, ethers } from "ethers";
 // ******** Services ********
 import contract from "../services/contract";
 
-// const INTERVAL_PERIOD = 60000; // 1min
-const INTERVAL_PERIOD = 30000; // 30 sec
+const INTERVAL_PERIOD = 60000; // 1min
 
 const getAmount = async (tokenList, listWithoutPlaceholders) => {
   let tokenIds = [];

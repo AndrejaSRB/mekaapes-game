@@ -127,7 +127,7 @@ export class Contract {
 
   async approveDMTtransaction() {
     return await this.dmtERC20Contract.approve(
-      DMT_ERC20_CONTRACT_ADDRESS,
+      MEKAAPES_GAME_CONTRACT_ADDRESS,
       APPROVE_AMOUNT
     );
   }
@@ -135,7 +135,7 @@ export class Contract {
   async isDMTtransactionApproved(address, price) {
     let isApproved = await this.dmtERC20Contract.allowance(
       address,
-      DMT_ERC20_CONTRACT_ADDRESS
+      MEKAAPES_GAME_CONTRACT_ADDRESS
     );
     return isApproved.gt(price);
   }

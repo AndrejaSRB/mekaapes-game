@@ -35,7 +35,9 @@ const BalanceContextProvider = ({ children }) => {
   // Set $DMT balance
   useEffect(() => {
     if (dmtBalanceStatus !== null && dmtBalanceStatus !== undefined) {
-      setDmtBalance(ethers.utils.formatUnits(dmtBalanceStatus));
+      if (BigNumber.isBigNumber(dmtBalanceStatus)) {
+        setDmtBalance(ethers.utils.formatUnits(dmtBalanceStatus));
+      }
       setDMTBalanceBigNumber(dmtBalanceStatus);
     }
   }, [dmtBalanceStatus]);
@@ -43,7 +45,9 @@ const BalanceContextProvider = ({ children }) => {
   // Set $OG balance
   useEffect(() => {
     if (ogBalanceStatus !== null && ogBalanceStatus !== undefined) {
-      setoogearBalance(ethers.utils.formatUnits(ogBalanceStatus));
+      if (BigNumber.isBigNumber(ogBalanceStatus)) {
+        setoogearBalance(ethers.utils.formatUnits(ogBalanceStatus));
+      }
       setOGBalanceBigNumber(ogBalanceStatus);
     }
   }, [ogBalanceStatus]);

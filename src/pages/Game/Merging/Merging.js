@@ -198,7 +198,7 @@ const Merging = () => {
 
   const handleClickMerge = async () => {
     if (!isMintSale) {
-      if (OGBalanceBigNumber > mergePrice) {
+      if (OGBalanceBigNumber.gt(mergePrice)) {
         if (burnMeka && keepMeka) {
           setIsDisabled(true);
           try {

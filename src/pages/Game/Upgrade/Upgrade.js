@@ -121,12 +121,16 @@ const Upgrade = () => {
   // Set Price
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
-      const levelUpPrice = prices?.["roboLevelupPrice"]?.[0]
-        ? prices?.["roboLevelupPrice"]?.[0]
-        : prices?.[priceOrder["roboLevelupPrice"]]?.[0];
+      let level = 1;
+      if (selectedApe) {
+        level = selectedApe.level;
+      }
+      const levelUpPrice = prices?.["roboLevelupPrice"]?.[level]
+        ? prices?.["roboLevelupPrice"]?.[level]
+        : prices?.[priceOrder["roboLevelupPrice"]]?.[level];
       setPrice(levelUpPrice);
     }
-  }, [prices, userMetaMaskToken, priceLoading]);
+  }, [prices, userMetaMaskToken, priceLoading, selectedApe]);
 
   useEffect(() => {
     if (
