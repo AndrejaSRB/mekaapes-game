@@ -12,7 +12,7 @@ const fetchItem = async (ape) => {
 
 const useApeMetadata = (ape) => {
   return useQuery(["ape-metadata", ape], () => fetchItem(ape), {
-    enabled: ape ? true : false,
+    enabled: ape && (ape.reward !== null || ape.reward !== undefined) ? true : false,
   });
 };
 

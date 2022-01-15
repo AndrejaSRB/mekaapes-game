@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-// ******** Components ********
-import { Skeleton } from "antd";
+// ******** Images ********
+import PlaceholderImage from "../../../assets/no-image.png";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Styles ********
-import { Ape, ApeImage, PlaceholderImage } from "./LevelRoboOogas.styles";
+import { Ape, ApeImage } from "./LevelRoboOogas.styles";
 
 const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
   const { data, isLoading } = useApeMetadata(ape);
@@ -35,9 +35,12 @@ const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
       );
     } else {
       return (
-        <PlaceholderImage active={getIfActive(ape.id)} currentLvl={ape.level}>
-          <Skeleton.Image />
-        </PlaceholderImage>
+        <ApeImage
+          active={getIfActive(ape.id)}
+          currentLvl={ape.level}
+          src={PlaceholderImage}
+          alt={ape.id}
+        />
       );
     }
   };

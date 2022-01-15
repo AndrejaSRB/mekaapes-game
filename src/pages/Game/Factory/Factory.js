@@ -1,12 +1,20 @@
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useLazyQuery } from "@apollo/client";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+import Loading from "../../../components/Modals/Loading/Loading";
+import StakedApe from "./StakedApe";
+import UnstakeRoboApe from "./UnstakeRoboApe";
+import UnstakeMekaApe from "./UnstakeMekaApe";
+// ******** Messages ********
+import { SELECT_SOME_UNSTAKED_APE } from "../../../messages";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
 import useWindowDimenstions from "../../../hooks/useWindowDimensions";
+import useListClaimAvaliableReward from "../../../hooks/useListClaimAvaliableReward";
 // ******** Functions ********
 import {
   getListLenght,
@@ -15,7 +23,16 @@ import {
   handleClickStakedApe,
   arrangeStakedMobileList,
 } from "./helper";
+// ******** Queires ********
+import {
+  GET_STAKED_APE,
+  GET_UNSTAKE_MEKA_APES,
+  GET_UNSTAKE_ROBO_OOGAS,
+} from "../../../queries";
+// ******** Services ********
+import contract from "../../../services/contract";
 // ******** Store ********
+import { UserContext } from "../../../store/user-context";
 import { BalanceContext } from "../../../store/balance-context";
 // ******** Images ********
 import HeroImage from "../../../assets/factory_animation.gif";
@@ -29,14 +46,12 @@ import {
   MobileBoxHeader,
   Unstaked,
   NftList,
-  Nft,
   Button,
   NotFoundItem,
   HelperText,
   Staked,
   CustomCheckbox,
   ApeList,
-  ApeNft,
   NftBox,
   ClaimAndUnstakeButton,
   MiddleBox,
@@ -48,12 +63,7 @@ import {
   Subtitle,
   ButtonClaim,
 } from "./Factory.styles";
-// ******** Fake Data ********
-import {
-  exampleRoboOogasUnstaked,
-  exampleMekaOogasUnstaked,
-  exampleStaked,
-} from "./data";
+import { message } from "antd";
 
 const NoItemFound = () => (
   <NotFoundItem>
@@ -69,6 +79,7 @@ const NoItemFound = () => (
 // Add clicked total sum to the Claim button
 
 const Factory = () => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance, oogearBalance } = useContext(BalanceContext);
   const { width } = useWindowDimenstions();
   const [selectAllStaked, setSelectAllStaked] = useState(false);
@@ -85,31 +96,162 @@ const Factory = () => {
   const [totalClaim, setTotalClaim] = useState(0);
   const [totalSelectedClaim, setTotalSelectedClaim] = useState(0);
 
-  // Sum all token claim amount
+  const [loading, setLoading] = useState(false);
+
+  // data
+  const [unstakedRoboList, setUnstakedRoboList] = useState(null);
+  const [unstakedMekaList, setUnstakedMekaList] = useState(null);
+  const [stakedList, setStakedList] = useState(null);
+  // Get Total CLaim Reward
+  const { data: claimAvaliableRewardList } =
+    useListClaimAvaliableReward(stakedList);
+
+  const [getStakedApe, { loading: stakeLoading, data: stakedApesData }] =
+    useLazyQuery(GET_STAKED_APE);
+  const [
+    getUnstakedRoboOogas,
+    { loading: unstakedRoboLoading, data: unstakedRoboData },
+  ] = useLazyQuery(GET_UNSTAKE_ROBO_OOGAS);
+
+  const [
+    getUnstakeMekaApes,
+    { loading: unstakedMekaAPeLoading, data: unstakedMekaApeData },
+  ] = useLazyQuery(GET_UNSTAKE_MEKA_APES);
+
+  // Get all data
   useEffect(() => {
-    if (exampleStaked && exampleStaked.length > 0) {
-      let total = 0;
-      exampleStaked.forEach((nft) => {
-        total = nft.number + total;
+    let isMounted = true;
+    if (userMetaMaskToken && isMounted) {
+      getStakedApe({
+        variables: {
+          owner: userMetaMaskToken,
+        },
       });
-      setTotalClaim(total.toFixed(2));
+      getUnstakedRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getUnstakeMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    userMetaMaskToken,
+    getStakedApe,
+    getUnstakedRoboOogas,
+    getUnstakeMekaApes,
+  ]);
+
+  // Set placeholder in the staked list
+  useEffect(() => {
+    if (stakedApesData && stakedApesData.spaceOogas) {
+      let stakedOogas = stakedApesData.spaceOogas;
+      let length = stakedOogas.length;
+      let array = [...stakedOogas];
+      if (length < minStakedElementNo) {
+        let placeholderArray = Array.from(
+          { length: minStakedElementNo - length },
+          () => ({
+            img: PlaceholderApe,
+            name: "ape",
+            placeholder: true,
+            id: uuidv4(),
+          })
+        );
+        array = [...stakedOogas, ...placeholderArray];
+      }
+      setStakedList(array);
     } else {
+      setStakedList(null);
+    }
+  }, [minStakedElementNo, stakedApesData]);
+
+  // Sum Total Claim Reward
+  useEffect(() => {
+    if (claimAvaliableRewardList?.length > 0) {
+      setStakedData(claimAvaliableRewardList);
+      let total = 0;
+      claimAvaliableRewardList.forEach((ape) => {
+        if (+ape.reward > 0) {
+          total = +total + +ape.reward;
+        }
+      });
+      setTotalClaim(total);
+    } else {
+      setStakedData(null);
       setTotalClaim(0);
     }
-  }, []);
+  }, [claimAvaliableRewardList]);
+
+  useEffect(() => {
+    if (unstakedRoboData && unstakedRoboData.spaceOogas) {
+      setUnstakedRoboList(unstakedRoboData.spaceOogas);
+    } else {
+      setUnstakedRoboList(null);
+    }
+  }, [unstakedRoboData]);
+
+  useEffect(() => {
+    if (unstakedMekaApeData && unstakedMekaApeData.spaceOogas) {
+      setUnstakedMekaList(unstakedMekaApeData.spaceOogas);
+    } else {
+      setUnstakedMekaList(null);
+    }
+  }, [unstakedMekaApeData]);
+
+  useEffect(() => {
+    if (stakedApesData && stakedApesData.spaceOogas) {
+      setStakedList(stakedApesData.spaceOogas);
+    } else {
+      setStakedList(null);
+    }
+  }, [stakedApesData]);
+
+//   // Updated reward of clicked apes
+//   useEffect(() => {
+//     if (selectedStaked?.length > 0) {
+//       if (stakedData?.length > 0) {
+//         let allSelectedApes = [...selectedStaked];
+//         allSelectedApes.forEach((selected) => {
+//           let ape = stakedData.find((item) => item.id === selected.id);
+//           if (ape) {
+//             selected.reward = ape.reward;
+//           }
+//         });
+//         setSelectedStaked(allSelectedApes);
+//       }
+//     }
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [stakedData]);
 
   // Sum selected token claim amount
   useEffect(() => {
     if (selectedStaked && selectedStaked.length > 0) {
       let total = 0;
       selectedStaked.forEach((nft) => {
-        total = nft.number + total;
+        if (+nft.reward > 0) {
+          total = +nft.reward + +total;
+        }
       });
-      setTotalSelectedClaim(total.toFixed(2));
+      setTotalSelectedClaim(total);
     } else {
       setTotalSelectedClaim(0);
     }
   }, [selectedStaked]);
+
+  useEffect(() => {
+    if (stakeLoading || unstakedRoboLoading || unstakedMekaAPeLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [stakeLoading, unstakedRoboLoading, unstakedMekaAPeLoading]);
 
   useEffect(() => {
     if (width < 388) {
@@ -120,24 +262,6 @@ const Factory = () => {
       setMinStakedElementNo(6);
     }
   }, [width]);
-
-  useEffect(() => {
-    let length = exampleStaked.length;
-    let array = [...exampleStaked];
-    if (length < minStakedElementNo) {
-      let placeholderArray = Array.from(
-        { length: minStakedElementNo - length },
-        () => ({
-          img: PlaceholderApe,
-          name: "ape",
-          placeholder: true,
-          id: uuidv4(),
-        })
-      );
-      array = [...exampleStaked, ...placeholderArray];
-    }
-    setStakedData(array);
-  }, [minStakedElementNo]);
 
   const hadnleChangeStakedCheckbox = (e) => {
     if (stakedData && stakedData.length > 0) {
@@ -151,46 +275,40 @@ const Factory = () => {
   };
 
   const hadnleChangeUnstakedMekaCheckbox = (e) => {
-    if (exampleMekaOogasUnstaked && exampleMekaOogasUnstaked.length > 0) {
+    if (unstakedMekaList && unstakedMekaList.length > 0) {
       if (!e.target.checked) {
         setSelectedUnstakedMeka([]);
       } else {
-        setSelectedUnstakedMeka([...exampleMekaOogasUnstaked]);
+        setSelectedUnstakedMeka([...unstakedMekaList]);
       }
       setSelectAllUnstakedMeka(e.target.checked);
     }
   };
 
   const hadnleChangeUnstakedRoboCheckbox = (e) => {
-    if (exampleRoboOogasUnstaked && exampleRoboOogasUnstaked.length > 0) {
+    if (unstakedRoboList && unstakedRoboList.length > 0) {
       if (!e.target.checked) {
         setSelectedUnstakedRobo([]);
       } else {
-        setSelectedUnstakedRobo([...exampleRoboOogasUnstaked]);
+        setSelectedUnstakedRobo([...unstakedRoboList]);
       }
       setSelectAllUnstakedRobo(e.target.checked);
     }
   };
 
   const renderUnstakedRobo = () => {
-    if (exampleRoboOogasUnstaked && exampleRoboOogasUnstaked.length > 0) {
-      return exampleRoboOogasUnstaked.map((robo) => (
-        <Nft
-          selected={getIfSelected(
-            selectAllUnstakedRobo,
-            selectedUnstakedRobo,
-            robo.id
-          )}
-          onClick={handleClickApe(
-            robo,
-            setSelectAllUnstakedRobo,
-            selectAllUnstakedRobo,
-            setSelectedUnstakedRobo,
-            selectedUnstakedRobo
-          )}
-          key={robo.id}>
-          <img src={robo.img} alt={robo.name} />
-        </Nft>
+    if (unstakedRoboList && unstakedRoboList.length > 0) {
+      return unstakedRoboList.map((robo) => (
+        <UnstakeRoboApe
+          key={robo.id}
+          robo={robo}
+          selectAllUnstakedRobo={selectAllUnstakedRobo}
+          setSelectAllUnstakedRobo={setSelectAllUnstakedRobo}
+          selectedUnstakedRobo={selectedUnstakedRobo}
+          setSelectedUnstakedRobo={setSelectedUnstakedRobo}
+          handleClickApe={handleClickApe}
+          getIfSelected={getIfSelected}
+        />
       ));
     } else {
       return <NoItemFound />;
@@ -198,24 +316,18 @@ const Factory = () => {
   };
 
   const renderUnstakedMeka = () => {
-    if (exampleMekaOogasUnstaked && exampleMekaOogasUnstaked.length > 0) {
-      return exampleMekaOogasUnstaked.map((meka) => (
-        <Nft
-          selected={getIfSelected(
-            selectAllUnstakedMeka,
-            selectedUnstakedMeka,
-            meka.id
-          )}
-          onClick={handleClickApe(
-            meka,
-            setSelectAllUnstakedMeka,
-            selectAllUnstakedMeka,
-            setSelectedUnstakedMeka,
-            selectedUnstakedMeka
-          )}
-          key={meka.id}>
-          <img src={meka.img} alt={meka.name} />
-        </Nft>
+    if (unstakedMekaList && unstakedMekaList.length > 0) {
+      return unstakedMekaList.map((meka) => (
+        <UnstakeMekaApe
+          key={meka.id}
+          meka={meka}
+          selectAllUnstakedMeka={selectAllUnstakedMeka}
+          setSelectAllUnstakedMeka={setSelectAllUnstakedMeka}
+          selectedUnstakedMeka={selectedUnstakedMeka}
+          setSelectedUnstakedMeka={setSelectedUnstakedMeka}
+          handleClickApe={handleClickApe}
+          getIfSelected={getIfSelected}
+        />
       ));
     } else {
       return <NoItemFound />;
@@ -225,27 +337,16 @@ const Factory = () => {
   const renderDesktopStakedApes = () => {
     if (stakedData && stakedData.length > 0) {
       return stakedData.map((ape) => (
-        <ApeNft
+        <StakedApe
           key={ape.id}
-          selected={
-            !ape.placeholder &&
-            getIfSelected(selectAllStaked, selectedStaked, ape.id)
-          }
-          onClick={handleClickStakedApe(
-            ape,
-            ape.placeholder,
-            selectAllStaked,
-            setSelectAllStaked,
-            selectedStaked,
-            setSelectedStaked
-          )}>
-          <img src={ape.img} alt={ape.name} />
-          {!ape.placeholder && (
-            <div>
-              <span>{ape.number}</span>
-            </div>
-          )}
-        </ApeNft>
+          ape={ape}
+          selectAllStaked={selectAllStaked}
+          setSelectAllStaked={setSelectAllStaked}
+          selectedStaked={selectedStaked}
+          setSelectedStaked={setSelectedStaked}
+          handleClickStakedApe={handleClickStakedApe}
+          getIfSelected={getIfSelected}
+        />
       ));
     }
   };
@@ -259,27 +360,16 @@ const Factory = () => {
             {apeList &&
               apeList.length > 0 &&
               apeList.map((ape) => (
-                <ApeNft
+                <StakedApe
                   key={ape.id}
-                  selected={
-                    !ape.placeholder &&
-                    getIfSelected(selectAllStaked, selectedStaked, ape.id)
-                  }
-                  onClick={handleClickStakedApe(
-                    ape,
-                    ape.placeholder,
-                    selectAllStaked,
-                    setSelectAllStaked,
-                    selectedStaked,
-                    setSelectedStaked
-                  )}>
-                  <img src={ape.img} alt={ape.name} />
-                  {!ape.placeholder && (
-                    <div>
-                      <span>{ape.number}</span>
-                    </div>
-                  )}
-                </ApeNft>
+                  ape={ape}
+                  selectAllStaked={selectAllStaked}
+                  setSelectAllStaked={setSelectAllStaked}
+                  selectedStaked={selectedStaked}
+                  setSelectedStaked={setSelectedStaked}
+                  handleClickStakedApe={handleClickStakedApe}
+                  getIfSelected={getIfSelected}
+                />
               ))}
           </NftBox>
         ));
@@ -303,6 +393,62 @@ const Factory = () => {
       return false;
     } else {
       return true;
+    }
+  };
+
+  const getFreshData = () => {
+    getStakedApe({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    getUnstakedRoboOogas({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    getUnstakeMekaApes({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+  };
+
+  const handleClickStake = async () => {
+    let tokenIds = [];
+    if (selectedUnstakedRobo?.length > 0) {
+      selectedUnstakedRobo.forEach((robo) => {
+        tokenIds.push(robo.id);
+      });
+    }
+    if (selectedUnstakedMeka?.length > 0) {
+      selectedUnstakedMeka.forEach((meka) => {
+        tokenIds.push(meka.id);
+      });
+    }
+    if (tokenIds?.length > 0) {
+      try {
+        let tsx = await contract.stake(tokenIds);
+        setLoading(true);
+        tsx
+          .wait()
+          .then(() => {
+            getFreshData();
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+      setSelectAllUnstakedMeka(false);
+      setSelectAllUnstakedMeka(false);
+      setSelectedUnstakedMeka(null);
+      setSelectedUnstakedRobo(null);
+    } else {
+      message.error(SELECT_SOME_UNSTAKED_APE);
     }
   };
 
@@ -338,7 +484,7 @@ const Factory = () => {
                   Select All:
                 </CustomUnstakeCheckbox>
               </Subtitle>
-              <NftList lenght={getListLenght(exampleRoboOogasUnstaked)}>
+              <NftList lenght={getListLenght(unstakedRoboList)}>
                 {renderUnstakedRobo()}
               </NftList>
               <Subtitle>
@@ -349,10 +495,13 @@ const Factory = () => {
                   Select All:
                 </CustomUnstakeCheckbox>
               </Subtitle>
-              <NftList meka lenght={getListLenght(exampleMekaOogasUnstaked)}>
+              <NftList meka lenght={getListLenght(unstakedMekaList)}>
                 {renderUnstakedMeka()}
               </NftList>
-              <Button type="stake" disabled={getIfItsStakeDisabled()}>
+              <Button
+                type="stake"
+                disabled={getIfItsStakeDisabled()}
+                onClick={handleClickStake}>
                 Stake in Factory!
               </Button>
               <HelperText>Select the NFTs you want to stake</HelperText>
@@ -398,6 +547,7 @@ const Factory = () => {
         </MainBox>
       </Content>
       <Footer page="game" />
+      {loading && <Loading open={loading} />}
     </Wrapper>
   );
 };

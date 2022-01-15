@@ -113,7 +113,7 @@ export const MobileBoxHeader = styled.div`
       width: 100%;
       border-radius: 30px;
       -webkit-filter: drop-shadow(0px 0px 40px #11051b);
-    filter: drop-shadow(0px 0px 40px #11051b);
+      filter: drop-shadow(0px 0px 40px #11051b);
     }
   }
   p {
@@ -189,6 +189,11 @@ export const Nft = styled.div`
         ${({ selected }) => (selected ? theme.color.green : "transparent")};
     }
   }
+`;
+
+export const PlaceholderImage = styled.div`
+  border: 3px solid
+    ${({ selected }) => (selected ? theme.color.green : "transparent")};
 `;
 
 export const Button = styled.button`
@@ -528,7 +533,7 @@ export const MiddleBox = styled.div`
       margin: 0 auto 25px auto;
       border-radius: 30px;
       -webkit-filter: drop-shadow(0px 0px 40px #11051b);
-    filter: drop-shadow(0px 0px 40px #11051b);
+      filter: drop-shadow(0px 0px 40px #11051b);
     }
     p {
       color: ${theme.color.white};

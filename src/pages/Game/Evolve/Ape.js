@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-// ******** Components ********
-import { Skeleton } from "antd";
+// ******** Images ********
+import PlaceholderImage from "../../../assets/no-image.png";
 // ******** Hooks ********
 import useEvolveMetadata from "../../../hooks/useEvolveMetadata";
 // ******** Styles ********
@@ -34,7 +34,14 @@ const BabyApe = ({ ape, handleClickApe, getIfSelected }) => {
         />
       );
     } else {
-      return <Skeleton.Image />;
+      return (
+        <ApeImage
+          selected={!ape.placeholder && getIfSelected(ape.id)}
+          active
+          src={PlaceholderImage}
+          alt={ape.id}
+        />
+      );
     }
   };
 
