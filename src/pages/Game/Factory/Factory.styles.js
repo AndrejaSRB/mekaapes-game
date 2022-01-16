@@ -399,7 +399,13 @@ export const ApeListDesktop = styled.div`
     height: 228px;
     overflow-y: scroll;
     overflow-x: hidden;
-    justify-content: flex-start;
+    justify-content: ${({length}) => {
+        if(length && length > 0){
+            return 'flex-start';
+        }else {
+            return 'center';
+        }
+    }}
   }
   @media only screen and (min-width: 1200px) {
     max-width: 388px;

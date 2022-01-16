@@ -121,7 +121,7 @@ const Factory = () => {
 
   const [
     getUnstakeMekaApes,
-    { loading: unstakedMekaAPeLoading, data: unstakedMekaApeData },
+    { loading: unstakedMekaApeLoading, data: unstakedMekaApeData },
   ] = useLazyQuery(GET_UNSTAKE_MEKA_APES);
 
   // Get Total CLaim Reward
@@ -242,12 +242,12 @@ const Factory = () => {
   }, [selectedStaked, claimAvaliableRewardList]);
 
   useEffect(() => {
-    if (stakeLoading || unstakedRoboLoading || unstakedMekaAPeLoading) {
+    if (stakeLoading || unstakedRoboLoading || unstakedMekaApeLoading) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [stakeLoading, unstakedRoboLoading, unstakedMekaAPeLoading]);
+  }, [stakeLoading, unstakedRoboLoading, unstakedMekaApeLoading]);
 
   useEffect(() => {
     if (width < 388) {
@@ -344,6 +344,8 @@ const Factory = () => {
           getIfSelected={getIfSelected}
         />
       ));
+    } else {
+      return <NoItemFound />;
     }
   };
 
@@ -370,6 +372,12 @@ const Factory = () => {
           </NftBox>
         ));
       }
+    } else {
+      return (
+        <NftBox lenght={6}>
+          <NoItemFound />
+        </NftBox>
+      );
     }
   };
 
@@ -615,7 +623,9 @@ const Factory = () => {
                 </CustomCheckbox>
               </div>
               <ApeList>{renderMobileStakedApes()}</ApeList>
-              <ApeListDesktop>{renderDesktopStakedApes()}</ApeListDesktop>
+              <ApeListDesktop length={stakedData?.length}>
+                {renderDesktopStakedApes()}
+              </ApeListDesktop>
               <ButtonClaim
                 disabled={getIfItsClaimDisabled()}
                 onClick={handleClickClaim}>
