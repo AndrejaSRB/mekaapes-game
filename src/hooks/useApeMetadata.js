@@ -10,6 +10,7 @@ const fetchItem = async (ape) => {
       method: "GET",
       headers: {
         Origin: ORIGIN,
+        'Access-Control-Allow-Origin': "*",
       },
     });
     return response.json();
