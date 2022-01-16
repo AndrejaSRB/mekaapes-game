@@ -5,6 +5,7 @@ import { useLazyQuery } from "@apollo/client";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
+import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 import StakedApe from "./StakedApe";
 import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
@@ -12,6 +13,7 @@ import UnstakeMekaApe from "./UnstakeMekaApe";
 import {
   SELECT_SOME_UNSTAKED_APE,
   SELECT_SOME_STAKED_APE,
+  SOMETHING_WENT_WRONG,
 } from "../../../messages";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -99,8 +101,11 @@ const Factory = () => {
 
   const [totalClaim, setTotalClaim] = useState(0);
   const [totalSelectedClaim, setTotalSelectedClaim] = useState(0);
-
   const [loading, setLoading] = useState(false);
+
+  // Success Modal data
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [text, setText] = useState("");
 
   // data
   const [unstakedRoboList, setUnstakedRoboList] = useState(null);
@@ -120,10 +125,8 @@ const Factory = () => {
   ] = useLazyQuery(GET_UNSTAKE_MEKA_APES);
 
   // Get Total CLaim Reward
-  const { data: claimAvaliableRewardList } = useListClaimAvaliableReward(
-    stakedList,
-    stakedApesData?.spaceOogas
-  );
+  const { data: claimAvaliableRewardList, refetch: getAvaliableRewards } =
+    useListClaimAvaliableReward(stakedList, stakedApesData?.spaceOogas);
 
   // Get all data
   useEffect(() => {
@@ -405,6 +408,13 @@ const Factory = () => {
         owner: userMetaMaskToken,
       },
     });
+    getAvaliableRewards();
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setText("");
+    getFreshData();
   };
 
   const handleClickStake = async () => {
@@ -427,14 +437,20 @@ const Factory = () => {
           .wait()
           .then(() => {
             getFreshData();
+            setText(
+              "You successfully stake your Oogas in the Factory! In a couple of minutes, they will arrive."
+            );
             setLoading(false);
+            setIsSuccessModalOpen(true);
           })
           .catch((error) => {
             console.log(error);
+            message.error(SOMETHING_WENT_WRONG);
             setLoading(false);
           });
       } catch (error) {
         console.log(error);
+        message.error(SOMETHING_WENT_WRONG);
       }
       setSelectAllUnstakedMeka(false);
       setSelectAllUnstakedMeka(false);
@@ -464,16 +480,22 @@ const Factory = () => {
                 },
               });
               getOogearBalance();
+              setText(
+                "You successfully claim your $OG! In a couple of minutes, they will be on your balance."
+              );
               setLoading(false);
+              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
+              message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
           setTotalClaim(0);
           setSelectedStaked([]);
         } catch (error) {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
         }
       }
     } else {
@@ -496,16 +518,22 @@ const Factory = () => {
             .then(() => {
               getFreshData();
               getOogearBalance();
+              setText(
+                "You successfully claim your $OG and unstake your Oogas! In a couple of minutes, you can check if they are successfully avoided attacks of Space Droid Federation and if they are safely unstaked from the factory."
+              );
               setLoading(false);
+              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
+              message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
           setTotalClaim(0);
           setSelectedStaked([]);
         } catch (error) {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
         }
       }
     } else {
@@ -613,6 +641,14 @@ const Factory = () => {
       </Content>
       <Footer page="game" />
       {loading && <Loading open={loading} />}
+      {isSuccessModalOpen && text && (
+        <SuccessModal
+          open={isSuccessModalOpen}
+          handleClose={handleCloseSuccessModal}
+          title="Congratulation!"
+          text={text}
+        />
+      )}
     </Wrapper>
   );
 };

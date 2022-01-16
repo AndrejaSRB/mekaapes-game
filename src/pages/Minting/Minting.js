@@ -8,6 +8,7 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Loading from "../../components/Modals/Loading/Loading";
 import CustomCountdown from "../../components/CustomCountdown/CustomCountdown";
+import SuccessModal from "../../components/Modals/SuccessModal/SuccessModal";
 // ******** HOC ********
 import withConnect from "../../hoc/withConnect";
 // ******** stores ********
@@ -25,7 +26,7 @@ import contract from "../../services/contract";
 // ******** Config ********
 import pricesOrder from "../../config/pricesOrder";
 // ******** Text ********
-import { DONT_ENOUGH_ETH } from "../../messages";
+import { DONT_ENOUGH_ETH, SOMETHING_WENT_WRONG } from "../../messages";
 // ******** Styles ********
 import {
   Wrapper,
@@ -51,6 +52,7 @@ const Minting = () => {
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [mintSign, setMintSign] = useState(emptyMintSign);
   // Total Amount
   const {
@@ -77,6 +79,7 @@ const Minting = () => {
   const [priceMint, setPriceMint] = useState(BigNumber.from(0));
   const [priceMintAndStake, setPriceMintAndStake] = useState(BigNumber.from(0));
 
+  // loading state
   useEffect(() => {
     if (
       priceLoading ||
@@ -95,6 +98,7 @@ const Minting = () => {
     totalAmountLoading,
   ]);
 
+  // set eth balance
   useEffect(() => {
     if (ethBalance) {
       setCurrentETHBalance(ethBalance);
@@ -117,6 +121,7 @@ const Minting = () => {
     }
   }, [prices, userMetaMaskToken, priceLoading]);
 
+  // check if the user is whitelisted
   useEffect(() => {
     if (userMetaMaskToken) {
       if (whitelistJSON && whitelistJSON.length > 0) {
@@ -149,6 +154,38 @@ const Minting = () => {
     }
   };
 
+  const getSmallETHPrice = (price) => {
+    if (price) {
+      return ethers.utils.formatUnits(price);
+    } else {
+      return price;
+    }
+  };
+
+  const getCurrentAmount = () => {
+    if (amount > 0) {
+      let number = amount;
+      if (number < 10000) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      } else {
+        return "10,000";
+      }
+    } else {
+      return 0;
+    }
+  };
+
+  const getFreshData = () => {
+    getTotalMinted();
+    getMaxTokenAmount();
+    getEthBalance();
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    getFreshData();
+  };
+
   const handleClickMintAndStake = async () => {
     if (
       currentETHBalance.toString() >
@@ -166,18 +203,18 @@ const Minting = () => {
         tsx
           .wait()
           .then(async () => {
-            getTotalMinted();
-            getMaxTokenAmount();
-
-            getEthBalance();
+            getFreshData();
             setLoading(false);
+            setIsSuccessModalOpen(true);
           })
           .catch((error) => {
             console.log(error);
             setLoading(false);
+            message.error(SOMETHING_WENT_WRONG);
           });
       } catch (error) {
         console.log(error);
+        message.error(SOMETHING_WENT_WRONG);
       }
       setCounter(0);
       setIsDisabled(false);
@@ -200,43 +237,23 @@ const Minting = () => {
         tsx
           .wait()
           .then(async () => {
-            getTotalMinted();
-            getMaxTokenAmount();
-            getEthBalance();
+            getFreshData();
             setLoading(false);
+            setIsSuccessModalOpen(true);
           })
           .catch((error) => {
             console.log(error);
             setLoading(false);
+            message.error(SOMETHING_WENT_WRONG);
           });
       } catch (error) {
         console.log(error);
+        message.error(SOMETHING_WENT_WRONG);
       }
       setCounter(0);
       setIsDisabled(false);
     } else {
       message.error(DONT_ENOUGH_ETH);
-    }
-  };
-
-  const getSmallETHPrice = (price) => {
-    if (price) {
-      return ethers.utils.formatUnits(price);
-    } else {
-      return price;
-    }
-  };
-
-  const getCurrentAmount = () => {
-    if (amount > 0) {
-      let number = amount;
-      if (number < 10000) {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      } else {
-        return "10,000";
-      }
-    } else {
-      return 0;
     }
   };
 
@@ -309,7 +326,15 @@ const Minting = () => {
         </MainBox>
       </Content>
       <Footer page="minting" />
-      <Loading open={loading} />
+      {loading && <Loading open={loading} />}
+      {isSuccessModalOpen && (
+        <SuccessModal
+          open={isSuccessModalOpen}
+          handleClose={handleCloseSuccessModal}
+          title="Congratulation!"
+          text="You successfully minted your new Oogas! In the next couple of minutes, you can find out what you get."
+        />
+      )}
     </Wrapper>
   );
 };

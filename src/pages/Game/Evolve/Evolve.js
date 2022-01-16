@@ -6,6 +6,7 @@ import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
+import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 import Ape from "./Ape";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -20,7 +21,7 @@ import contract from "../../../services/contract";
 import { MintedContext } from "../../../store/minted-context";
 import { UserContext } from "../../../store/user-context";
 // ******** Text ********
-import { PRE_SALE_IS_ONGOING } from "../../../messages";
+import { PRE_SALE_IS_ONGOING, SOMETHING_WENT_WRONG } from "../../../messages";
 // ******** Queires ********
 import { GET_BABY_OOGAS } from "../../../queries";
 // ******** Styles ********
@@ -53,8 +54,9 @@ const Evolve = () => {
   const [selected, setSelected] = useState([]);
   const [isActive, setIsActive] = useState(null);
   const [minElementNumber, setMinElementNumber] = useState(16);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [getBabies, { loading, data, refetch }] = useLazyQuery(GET_BABY_OOGAS);
+  const [getBabies, { loading, data }] = useLazyQuery(GET_BABY_OOGAS);
 
   useEffect(() => {
     let isMounted = true;
@@ -218,6 +220,15 @@ const Evolve = () => {
     }
   };
 
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    getBabies({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+  };
+
   const handleClickEvolve = async () => {
     if (!isMintSale) {
       if (selected && selected.length > 0) {
@@ -230,19 +241,22 @@ const Evolve = () => {
           tsx
             .wait()
             .then(() => {
-              refetch({
+              getBabies({
                 variables: {
                   owner: userMetaMaskToken,
                 },
               });
               setLoader(false);
+              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
+              message.error(SOMETHING_WENT_WRONG);
               setLoader(false);
             });
         } catch (error) {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
         }
         setSelected([]);
         setIsActive(false);
@@ -301,6 +315,15 @@ const Evolve = () => {
       </Content>
       <Footer page="game" />
       {loader && <Loading open={loader} />}
+
+      {isSuccessModalOpen && (
+        <SuccessModal
+          open={isSuccessModalOpen}
+          handleClose={handleCloseSuccessModal}
+          title="Congratulation!"
+          text="You successfully evolved your Baby Ooga! Your Meka Ape is on its way. In the next couple of minutes, he will arrive."
+        />
+      )}
     </Wrapper>
   );
 };

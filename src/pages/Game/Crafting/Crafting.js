@@ -6,6 +6,7 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import StatusBar from "../../../components/StatusBar/StatusBar";
 import Loading from "../../../components/Modals/Loading/Loading";
+import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 // ******** Images ********
 import Animation from "../../../assets/crafting_animation.gif";
 // ******** HOC ********
@@ -29,6 +30,7 @@ import {
   PRE_SALE_IS_ONGOING,
   DONT_ENOUGH_OG,
   DONT_ENOUGH_DMT,
+  SOMETHING_WENT_WRONG,
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
@@ -68,6 +70,7 @@ const Crafting = () => {
   const { isMintSale } = useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
   const [dmtCounter, setDmtCounter] = useState(0);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isDisableOGButtons, setIsDisableOGButtons] = useState(true);
   const [isDisableDMTButton, setIsDisableDMTButton] = useState(true);
   const [isDMTApproved, setIsDMTApproved] = useState(true);
@@ -232,6 +235,12 @@ const Crafting = () => {
     return balance.gt(totalPrice);
   };
 
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    getTotalMinted();
+    getTotalMintedDMTAmount();
+  };
+
   const handleClickApproveDMT = async () => {
     setDisableApproveBtn(true);
     try {
@@ -245,10 +254,12 @@ const Crafting = () => {
         })
         .catch((error) => {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
           setLoading(false);
         });
     } catch (error) {
       console.log(error);
+      message.error(SOMETHING_WENT_WRONG);
       getDmtBalance();
       getOogearBalance();
     }
@@ -268,13 +279,16 @@ const Crafting = () => {
               getOogearBalance();
               getTotalMinted();
               setLoading(false);
+              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
+              message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
         } catch (error) {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
         }
         setOogeaerCounter(0);
         setIsDisableOGButtons(false);
@@ -299,13 +313,16 @@ const Crafting = () => {
               getOogearBalance();
               getTotalMinted();
               setLoading(false);
+              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
+              message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
         } catch (error) {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
         }
         setOogeaerCounter(0);
         setIsDisableOGButtons(false);
@@ -329,13 +346,16 @@ const Crafting = () => {
               getTotalMinted();
               getTotalMintedDMTAmount();
               setLoading(false);
+              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
+              message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
         } catch (error) {
           console.log(error);
+          message.error(SOMETHING_WENT_WRONG);
         }
         setDmtCounter(0);
         setIsDisableDMTButton(false);
@@ -456,6 +476,14 @@ const Crafting = () => {
       </Content>
       <Footer page="game" />
       {loader && <Loading open={loader} />}
+      {isSuccessModalOpen && (
+        <SuccessModal
+          open={isSuccessModalOpen}
+          handleClose={handleCloseSuccessModal}
+          title="Congratulation!"
+          text="You successfully minted your new Oogas! In the next couple of minutes, you can find out what you get."
+        />
+      )}
     </Wrapper>
   );
 };

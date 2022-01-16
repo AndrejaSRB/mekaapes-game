@@ -1,8 +1,14 @@
 import PropTypes from "prop-types";
-// ******** Image ********
-import LoadingImage from "../../../assets/landing-image.png";
+// // ******** Images ********
+// import Image from "../../../assets/factory_animation.gif";
 // ******** Styles ********
-import { ModalWrapper, Text, Animation, Title } from "./SuccessModal.styles";
+import {
+  ModalWrapper,
+  Text,
+  Title,
+  ButtonWrapper,
+//   Animation,
+} from "./SuccessModal.styles";
 
 const SuccessModal = ({ open, title, text, handleClose }) => {
   return (
@@ -14,10 +20,13 @@ const SuccessModal = ({ open, title, text, handleClose }) => {
       onCancel={handleClose}>
       <div className="content">
         <Title>{title}</Title>
-        <Animation>
-          <img src={LoadingImage} alt="animation" />
-        </Animation>
+        {/* <Animation>
+          <img src={Image} alt="test" />
+        </Animation> */}
         <Text>{text}</Text>
+        <ButtonWrapper>
+          <button onClick={handleClose}>Close</button>
+        </ButtonWrapper>
       </div>
     </ModalWrapper>
   );

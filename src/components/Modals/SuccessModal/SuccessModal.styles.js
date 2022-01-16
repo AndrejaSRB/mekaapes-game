@@ -30,9 +30,8 @@ export const ModalWrapper = styled(Modal)`
       }
     }
     & > button > .ant-modal-close-x > span > svg {
-      color: ${theme.color.white};
+      color: ${theme.color.white} !important;
       font-size: 19px;
-      color: ${theme.color.grey};
     }
     & > .ant-modal-footer {
       display: none;
@@ -63,16 +62,31 @@ export const Title = styled.div`
   margin-bottom: 32;
   @media only screen and (min-width: 789px) {
     font-size: 38px;
-    margin-bottom: 45px;
+    margin-bottom: 24px;
   }
 `;
 
 export const Text = styled.div`
   font-size: 16px;
-  color: ${theme.color.white};
+  color: ${theme.color.whiteGrey};
   margin-top: 25px;
+  width: 90%;
+  margin: 25px auto 0 auto;
+  text-align: center;
   @media only screen and (min-width: 789px) {
     font-size: 21px;
+  }
+`;
+
+export const ButtonWrapper = styled.div`
+  text-align: center;
+  margin-top: 32px;
+  button {
+    color: ${theme.color.white};
+    background: transparent;
+    border: none;
+    font-size: 21px;
+    cursor: pointer;
   }
 `;
 

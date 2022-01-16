@@ -8,6 +8,7 @@ import Footer from "../../../components/Footer/Footer";
 import LevelRoboOogas from "../../../components/Modals/LevelRoboOogas/LevelRoboOogas";
 import UpgradeInfo from "../../../components/Modals/UpgradeInfo/UpgradeInfo";
 import Loading from "../../../components/Modals/Loading/Loading";
+import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
@@ -37,6 +38,7 @@ import {
   APPROVE_DMT_TRANSACTION,
   DONT_ENOUGH_DMT,
   PRE_SALE_IS_ONGOING,
+  SOMETHING_WENT_WRONG,
 } from "../../../messages";
 // ******** Styles ********
 import {
@@ -80,6 +82,7 @@ const Upgrade = () => {
   const [isApproved, setIsApproved] = useState(true);
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
   const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [list, setList] = useState(null);
   const [
     getUnstakedRoboOogas,
@@ -249,6 +252,19 @@ const Upgrade = () => {
     }
   };
 
+  const getFreshData = () => {
+    getUnstakedRoboOogas({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    getStakedRoboOogas({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+  };
+
   const getIfItsDisabled = () => {
     let disabled = true;
     if (isDisabled) {
@@ -259,6 +275,11 @@ const Upgrade = () => {
       disabled = true;
     }
     return disabled;
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    getFreshData();
   };
 
   const handleClickApproveDMT = async () => {
@@ -272,11 +293,14 @@ const Upgrade = () => {
           getIfDMTIsApproved();
           setLoading(false);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
           setLoading(false);
+          message.error(SOMETHING_WENT_WRONG);
         });
     } catch (error) {
       console.log(error);
+      message.error(SOMETHING_WENT_WRONG);
     }
     setIsApprovedBtnDisabled(false);
   };
@@ -292,26 +316,20 @@ const Upgrade = () => {
             tsx
               .wait()
               .then(async () => {
-                getUnstakedRoboOogas({
-                  variables: {
-                    owner: userMetaMaskToken,
-                  },
-                });
-                getStakedRoboOogas({
-                  variables: {
-                    owner: userMetaMaskToken,
-                  },
-                });
+                getFreshData();
                 getDmtBalance();
                 setLoading(false);
                 setSelectedApe(null);
+                setIsSuccessModalOpen(true);
               })
               .catch((error) => {
                 console.log(error);
+                message.error(SOMETHING_WENT_WRONG);
                 setLoading(false);
               });
           } catch (error) {
             console.log(error);
+            message.error(SOMETHING_WENT_WRONG);
           }
           setIsDisabled(false);
         }
@@ -406,6 +424,14 @@ const Upgrade = () => {
         <UpgradeInfo
           open={isOpenUpgradeInfoModal}
           handleClose={() => setIsOpenUpgradeInfoModal(false)}
+        />
+      )}
+      {isSuccessModalOpen && (
+        <SuccessModal
+          open={isSuccessModalOpen}
+          handleClose={handleCloseSuccessModal}
+          title="Congratulation!"
+          text="You successfully upgraded your Robo Ooga! Your stronger Robo Ooga is on its way. In the next couple of minutes, he will arrive."
         />
       )}
     </Wrapper>

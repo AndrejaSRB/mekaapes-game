@@ -7,6 +7,7 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import MergeMekaApesModal from "../../../components/Modals/MergeMekaApes/MergeMekaApes";
 import Loading from "../../../components/Modals/Loading/Loading";
+import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
@@ -26,7 +27,11 @@ import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
 import usePrices from "../../../hooks/usePrices";
 // ******** Text ********
-import { PRE_SALE_IS_ONGOING, DONT_ENOUGH_OG } from "../../../messages";
+import {
+  PRE_SALE_IS_ONGOING,
+  DONT_ENOUGH_OG,
+  SOMETHING_WENT_WRONG,
+} from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
 // ******** Config ********
@@ -54,6 +59,7 @@ const Merging = () => {
   const [burnMeka, setBurnMeka] = useState(null);
   const [selectedApe, setSelectedApe] = useState(null);
   const [type, setType] = useState(null);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [oppositeApe, setOppositeApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
@@ -196,6 +202,24 @@ const Merging = () => {
     }
   };
 
+  const getFreshData = () => {
+    getUnstakeMekaApes({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    getStakedMekaApes({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    getFreshData();
+  };
+
   const handleClickMerge = async () => {
     if (!isMintSale) {
       if (OGBalanceBigNumber.gt(mergePrice)) {
@@ -209,26 +233,20 @@ const Merging = () => {
               .wait()
               .then(() => {
                 getOogearBalance();
-                getUnstakeMekaApes({
-                  variables: {
-                    owner: userMetaMaskToken,
-                  },
-                });
-                getStakedMekaApes({
-                  variables: {
-                    owner: userMetaMaskToken,
-                  },
-                });
+                getFreshData();
                 setLoading(false);
                 setKeepMeka(null);
                 setBurnMeka(null);
+                setIsSuccessModalOpen(true);
               })
               .catch((error) => {
                 console.log(error);
+                message.error(SOMETHING_WENT_WRONG);
                 setLoading(false);
               });
           } catch (error) {
             console.log(error);
+            message.error(SOMETHING_WENT_WRONG);
           }
           setIsDisabled(false);
         }
@@ -299,6 +317,14 @@ const Merging = () => {
         />
       )}
       {loader && <Loading open={loader} />}
+      {isSuccessModalOpen && (
+        <SuccessModal
+          open={isSuccessModalOpen}
+          handleClose={handleCloseSuccessModal}
+          title="Congratulation!"
+          text="You successfully merged your Meka Apes! Your Mega Meka is on its way. In the next couple of minutes, he will arrive."
+        />
+      )}
     </Wrapper>
   );
 };
