@@ -71,7 +71,3 @@ ResultModal.propTypes = {
   title: PropTypes.string.isRequired,
   tokens: PropTypes.array.isRequired,
 };
-
-/* <li>Robo Ooga #43 left the factory and you received 744.43 $OG.</li> */
-
-// Robo Ooga #12771 left the factory, but all its $OG was stolen!

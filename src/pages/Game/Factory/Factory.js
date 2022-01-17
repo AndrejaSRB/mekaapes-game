@@ -440,11 +440,6 @@ const Factory = () => {
     unstakeTokensAmount.current = null;
     getFreshData();
   };
-  //
-  //   type: "unstake",
-  //   name: "Robo Ooga",
-  //   id: i + startTokenId,
-  //   stolen: null,
 
   const onRandomsReceived = async (requestId, entropy, event) => {
     let txReceipt = await event.getTransactionReceipt();
