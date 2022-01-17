@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLazyQuery } from "@apollo/client";
 import { ethers } from "ethers";
@@ -47,7 +47,12 @@ import { BalanceContext } from "../../../store/balance-context";
 import HeroImage from "../../../assets/factory_animation.gif";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Events ********
-import { CLAIM_REWARD, getAllEvents } from "../../../eventsListeners";
+import {
+  CLAIM_REWARD,
+  getAllEvents,
+  ATTACK_REWARD,
+  makeRandomSubscription,
+} from "../../../eventsListeners";
 // ******** Styles ********
 import {
   Wrapper,
@@ -127,6 +132,8 @@ const Factory = () => {
   // Get Total CLaim Reward
   const { data: claimAvaliableRewardList, refetch: getAvaliableRewards } =
     useListClaimAvaliableReward(stakedList, stakedApesData?.spaceOogas);
+  // Transaction Events
+  const unstakeTokensAmount = useRef(null);
 
   // Get all data
   useEffect(() => {
@@ -430,7 +437,88 @@ const Factory = () => {
     setIsResultsModalOpen(false);
     setText("");
     setTokens(null);
+    unstakeTokensAmount.current = null;
     getFreshData();
+  };
+  //
+  //   type: "unstake",
+  //   name: "Robo Ooga",
+  //   id: i + startTokenId,
+  //   stolen: null,
+
+  const onRandomsReceived = async (requestId, entropy, event) => {
+    let txReceipt = await event.getTransactionReceipt();
+    let { mekaApesContract } = contract;
+    let unstakeTokens = [];
+    if (unstakeTokensAmount.current?.length > 0) {
+      unstakeTokens = [...unstakeTokensAmount.current];
+    }
+    let claimEvent = getAllEvents(txReceipt, mekaApesContract, CLAIM_REWARD);
+    let attackedEvent = getAllEvents(
+      txReceipt,
+      mekaApesContract,
+      ATTACK_REWARD
+    );
+    if (claimEvent?.length > 0) {
+      claimEvent.forEach((event) => {
+        let ape = stakedData.find(
+          (item) => +item.id === +event.args.tokenId.toNumber()
+        );
+        if (ape) {
+          let name = getApeName(ape);
+          unstakeTokens.push({
+            type: "claim",
+            name: `${name} #${event.args.tokenId.toNumber()}`,
+            id: event.args.tokenId.toNumber(),
+            amount: ethers.utils.formatUnits(event.args.amount),
+            stolen: false,
+            stolenAmount: 0,
+          });
+        }
+      });
+    }
+    if (attackedEvent?.length > 0) {
+      let allTokens = [...unstakeTokens];
+      attackedEvent.forEach((event) => {
+        allTokens.forEach((token) => {
+          if (+token.id === +event.args.tokenId) {
+            token.stolen = true;
+            token.stolenAmount = ethers.utils.formatUnits(event.args.amount);
+          }
+        });
+      });
+      unstakeTokens = [...allTokens];
+    }
+    setTokens(unstakeTokens);
+    setLoading(false);
+    setIsResultsModalOpen(true);
+  };
+
+  const getClaimEventAndWaitSecondTx = (receipt) => {
+    let { mekaApesContract } = contract;
+    let firstClaimEvent = getAllEvents(receipt, mekaApesContract, CLAIM_REWARD);
+    let mekaTokens = [];
+    // Only meka tokens can be here
+    // Robo Oogas are in the seconds tsx
+    if (firstClaimEvent?.length > 0) {
+      firstClaimEvent.forEach((event) => {
+        let ape = stakedData.find(
+          (item) => +item.id === +event.args.tokenId.toNumber()
+        );
+        if (ape) {
+          let name = getApeName(ape);
+
+          mekaTokens.push({
+            type: "unstake",
+            name: `${name} #${event.args.tokenId.toNumber()}`,
+            id: event.args.tokenId.toNumber(),
+            amount: ethers.utils.formatUnits(event.args.amount),
+          });
+        }
+      });
+    }
+    unstakeTokensAmount.current = mekaTokens;
+    makeRandomSubscription(receipt, contract, onRandomsReceived);
   };
 
   const getClaimEvent = (receipt) => {
@@ -449,6 +537,8 @@ const Factory = () => {
             name: `${name} #${event.args.tokenId.toNumber()}`,
             id: event.args.tokenId.toNumber(),
             amount: ethers.utils.formatUnits(event.args.amount),
+            stolen: false,
+            stolenAmount: 0,
           });
         }
       });
@@ -552,14 +642,12 @@ const Factory = () => {
           setLoading(true);
           tsx
             .wait()
-            .then(() => {
-              getFreshData();
+            .then((receipt) => {
+              getClaimEventAndWaitSecondTx(receipt);
               getOogearBalance();
-              setText(
-                "You successfully claim your $OG and unstake your Oogas! In a couple of minutes, you can check if they are successfully avoided attacks of Space Droid Federation and if they are safely unstaked from the factory."
-              );
-              setLoading(false);
-              setIsSuccessModalOpen(true);
+              //   setText(
+              //     "You successfully claim your $OG and unstake your Oogas! In a couple of minutes, you can check if they are successfully avoided attacks of Space Droid Federation and if they are safely unstaked from the factory."
+              //   );
             })
             .catch((error) => {
               console.log(error);
@@ -693,7 +781,6 @@ const Factory = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
-          type="claim"
           title="And here’s what heppend..."
         />
       )}

@@ -20,6 +20,19 @@ const ResultModal = ({ open, handleClose, tokens, title }) => {
       return `Meka Ape #${token.id}`;
     } else if (token?.type === "merge") {
       return `Mega Meka #${token.id}`;
+    } else if (token?.type === "unstake") {
+      // Robo Ooga #12771 left the factory, but all its $OG was stolen!
+      let text = `${token.name} left the factory`;
+      if (token.stolen) {
+        if (token.stolenAmount === token.amount) {
+          text = `${token.name} left the factory, but all its $OG was stolen!`;
+        } else {
+          text = `${token.name} left the factory and you received ${token.amount} $OG.`;
+        }
+      } else {
+        text = `${token.name} left the factory and you received ${token.amount} $OG.`;
+      }
+      return text;
     } else {
       return "";
     }
