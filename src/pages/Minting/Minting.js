@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { ethers, BigNumber } from "ethers";
 // ******** Config ********
 import whitelistJSON from "../../config/whitelistMintSignatures.json";
@@ -8,7 +8,7 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Loading from "../../components/Modals/Loading/Loading";
 import CustomCountdown from "../../components/CustomCountdown/CustomCountdown";
-import SuccessModal from "../../components/Modals/SuccessModal/SuccessModal";
+import ResultsModal from "../../components/Modals/ResultModal/ResultModal";
 // ******** HOC ********
 import withConnect from "../../hoc/withConnect";
 // ******** stores ********
@@ -27,6 +27,15 @@ import contract from "../../services/contract";
 import pricesOrder from "../../config/pricesOrder";
 // ******** Text ********
 import { DONT_ENOUGH_ETH, SOMETHING_WENT_WRONG } from "../../messages";
+// ******** Events ********
+import {
+  getAllEvents,
+  getEvent,
+  MEKA_CONVERT,
+  OOGA_ATTACKED,
+  MINT_MULTIPLE_ROBO,
+  makeRandomSubscription,
+} from "../../eventsListeners";
 // ******** Styles ********
 import {
   Wrapper,
@@ -52,7 +61,7 @@ const Minting = () => {
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [mintSign, setMintSign] = useState(emptyMintSign);
   // Total Amount
   const {
@@ -78,6 +87,10 @@ const Minting = () => {
     usePrices(userMetaMaskToken);
   const [priceMint, setPriceMint] = useState(BigNumber.from(0));
   const [priceMintAndStake, setPriceMintAndStake] = useState(BigNumber.from(0));
+  // Transaction Events
+  const tsxAmount = useRef(BigNumber.from(0));
+  const tsxStartFromTokenId = useRef(BigNumber.from(0));
+  const [tokens, setTokens] = useState(null);
 
   // loading state
   useEffect(() => {
@@ -181,9 +194,75 @@ const Minting = () => {
     getEthBalance();
   };
 
-  const handleCloseSuccessModal = () => {
-    setIsSuccessModalOpen(false);
+  const handleCloseResultsModal = () => {
+    setIsResultsModalOpen(false);
     getFreshData();
+    setTokens(null);
+    tsxAmount.current = BigNumber.from(0);
+    tsxStartFromTokenId.current = BigNumber.from(0);
+  };
+
+  const onRandomsReceived = async (requestId, entropy, event) => {
+    let txReceipt = await event.getTransactionReceipt();
+    let { mekaApesContract } = contract;
+
+    let amount = tsxAmount.current.toNumber();
+    let startTokenId = tsxStartFromTokenId.current.toNumber();
+    let tokens = [...Array(amount)].map((_, i) => ({
+      type: "crafting",
+      name: "Robo Ooga",
+      id: i + startTokenId,
+      stolen: null,
+    }));
+    let mekaConvertEvent = getAllEvents(
+      txReceipt,
+      mekaApesContract,
+      MEKA_CONVERT
+    );
+    let oogaAttackedEvent = getAllEvents(
+      txReceipt,
+      mekaApesContract,
+      OOGA_ATTACKED
+    );
+    if (mekaConvertEvent?.length > 0) {
+      let allTokens = [...tokens];
+      mekaConvertEvent.forEach((event) => {
+        let tokenId = event.args.tokenId.toNumber();
+        allTokens.forEach((token) => {
+          if (token.id === tokenId) {
+            token.name = "Mega Ape";
+          }
+        });
+      });
+      tokens = [...allTokens];
+    }
+    if (oogaAttackedEvent?.length > 0) {
+      let allTokens = [...tokens];
+      mekaConvertEvent.forEach((event) => {
+        let tokenId = event.args.tokenId.toNumber();
+        allTokens.forEach((token) => {
+          if (token.id === tokenId) {
+            token.stolen = true;
+          }
+        });
+      });
+      tokens = [...allTokens];
+    }
+    setTokens(tokens);
+    setLoading(false);
+    setIsResultsModalOpen(true);
+  };
+
+  const getMintMultiEventAndWaitSecondTx = (receipt) => {
+    let { mekaApesContract } = contract;
+    let muintMultiEvent = getEvent(
+      receipt,
+      mekaApesContract,
+      MINT_MULTIPLE_ROBO
+    );
+    tsxStartFromTokenId.current = muintMultiEvent.args.startFromTokenId;
+    tsxAmount.current = muintMultiEvent.args.amount;
+    makeRandomSubscription(receipt, contract, onRandomsReceived);
   };
 
   const handleClickMintAndStake = async () => {
@@ -202,10 +281,9 @@ const Minting = () => {
         setLoading(true);
         tsx
           .wait()
-          .then(async () => {
+          .then(async (receipt) => {
+            getMintMultiEventAndWaitSecondTx(receipt);
             getFreshData();
-            setLoading(false);
-            setIsSuccessModalOpen(true);
           })
           .catch((error) => {
             console.log(error);
@@ -236,10 +314,9 @@ const Minting = () => {
         setLoading(true);
         tsx
           .wait()
-          .then(async () => {
+          .then(async (receipt) => {
+            getMintMultiEventAndWaitSecondTx(receipt);
             getFreshData();
-            setLoading(false);
-            setIsSuccessModalOpen(true);
           })
           .catch((error) => {
             console.log(error);
@@ -327,12 +404,13 @@ const Minting = () => {
       </Content>
       <Footer page="minting" />
       {loading && <Loading open={loading} />}
-      {isSuccessModalOpen && (
-        <SuccessModal
-          open={isSuccessModalOpen}
-          handleClose={handleCloseSuccessModal}
-          title="Congratulation!"
-          text="You successfully minted your new Oogas! In the next couple of minutes, you can find out what you get."
+      {isResultsModalOpen && (
+        <ResultsModal
+          open={isResultsModalOpen}
+          handleClose={handleCloseResultsModal}
+          title={tokens?.length > 1 ? "You successful minted new tokens!" : "You successful minted new token!"}
+          tokens={tokens}
+          type="crafting"
         />
       )}
     </Wrapper>

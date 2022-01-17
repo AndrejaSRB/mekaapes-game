@@ -41,21 +41,33 @@ export const ModalWrapper = styled(Modal)`
 `;
 
 export const Title = styled.div`
-  font-size: 25px;
+  font-size: 21px;
   color: ${theme.color.white};
   margin-top: 25px;
-  margin-bottom: 32;
+  margin-bottom: 32px;
   text-align: center;
   @media only screen and (min-width: 789px) {
-    font-size: 38px;
-    margin-bottom: 21px;
+    font-size: 27px;
+    margin-bottom: 10px;
+  }
+`;
+
+export const Text = styled.div`
+  font-size: 16px;
+  color: ${theme.color.whiteGrey};
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  @media only screen and (min-width: 789px) {
+    font-size: 19px;
+    margin-bottom: 16px;
   }
 `;
 
 export const List = styled.ul`
   list-style: circle;
   li {
-      margin: 5px 0;
+    margin: 5px 0;
     font-size: 16px;
     color: ${theme.color.white};
   }

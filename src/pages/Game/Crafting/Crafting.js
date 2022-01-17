@@ -113,7 +113,6 @@ const Crafting = () => {
   // Transaction Events
   const tsxAmount = useRef(BigNumber.from(0));
   const tsxStartFromTokenId = useRef(BigNumber.from(0));
-
   const [tokens, setTokens] = useState(null);
 
   // Loading state

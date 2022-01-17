@@ -7,7 +7,7 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import MergeMekaApesModal from "../../../components/Modals/MergeMekaApes/MergeMekaApes";
 import Loading from "../../../components/Modals/Loading/Loading";
-import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
+import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
@@ -36,6 +36,12 @@ import {
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
+// ******** Events ********
+import {
+  MEKA_MERGE,
+  getAllEvents,
+  makeRandomSubscription,
+} from "../../../eventsListeners";
 // ******** Styles ********
 import {
   Wrapper,
@@ -59,7 +65,7 @@ const Merging = () => {
   const [burnMeka, setBurnMeka] = useState(null);
   const [selectedApe, setSelectedApe] = useState(null);
   const [type, setType] = useState(null);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [oppositeApe, setOppositeApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
@@ -76,6 +82,8 @@ const Merging = () => {
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
   const [mergePrice, setMergePrice] = useState(BigNumber.from(0));
+  // Events
+  const [tokens, setTokens] = useState(null);
 
   useEffect(() => {
     if (priceLoading) {
@@ -215,9 +223,36 @@ const Merging = () => {
     });
   };
 
-  const handleCloseSuccessModal = () => {
-    setIsSuccessModalOpen(false);
+  const handleCloseResultsModal = () => {
+    setIsResultsModalOpen(false);
     getFreshData();
+    getOogearBalance();
+  };
+
+  const onRandomsReceived = async (requestId, entropy, event) => {
+    let txReceipt = await event.getTransactionReceipt();
+    let { mekaApesContract } = contract;
+
+    let tokens = [];
+    let mekaConvertEvent = getAllEvents(
+      txReceipt,
+      mekaApesContract,
+      MEKA_MERGE
+    );
+    if (mekaConvertEvent?.length > 0) {
+      mekaConvertEvent.forEach((event) => {
+        let tokenId = event.args.tokenId.toNumber();
+        tokens.push({
+          type: "merge",
+          id: tokenId,
+        });
+      });
+    }
+    setTokens(tokens);
+    setLoading(false);
+    setKeepMeka(null);
+    setBurnMeka(null);
+    setIsResultsModalOpen(true);
   };
 
   const handleClickMerge = async () => {
@@ -231,13 +266,10 @@ const Merging = () => {
             setLoading(true);
             tsx
               .wait()
-              .then(() => {
+              .then((receipt) => {
+                makeRandomSubscription(receipt, contract, onRandomsReceived);
                 getOogearBalance();
                 getFreshData();
-                setLoading(false);
-                setKeepMeka(null);
-                setBurnMeka(null);
-                setIsSuccessModalOpen(true);
               })
               .catch((error) => {
                 console.log(error);
@@ -317,12 +349,12 @@ const Merging = () => {
         />
       )}
       {loader && <Loading open={loader} />}
-      {isSuccessModalOpen && (
-        <SuccessModal
-          open={isSuccessModalOpen}
-          handleClose={handleCloseSuccessModal}
-          title="Congratulation!"
-          text="You successfully merged your Meka Apes! Your Mega Meka is on its way. In the next couple of minutes, he will arrive."
+      {isResultsModalOpen && (
+        <ResultsModal
+          open={isResultsModalOpen}
+          handleClose={handleCloseResultsModal}
+          title="You successfully merged your Meka Apes!"
+          tokens={tokens}
         />
       )}
     </Wrapper>
