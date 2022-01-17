@@ -1,11 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLazyQuery } from "@apollo/client";
+import { ethers } from "ethers";
 // ******** Components ********
+import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
 import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
+import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 import StakedApe from "./StakedApe";
 import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
@@ -27,6 +30,7 @@ import {
   handleClickApe,
   handleClickStakedApe,
   arrangeStakedMobileList,
+  getApeName,
 } from "./helper";
 // ******** Queires ********
 import {
@@ -42,6 +46,8 @@ import { BalanceContext } from "../../../store/balance-context";
 // ******** Images ********
 import HeroImage from "../../../assets/factory_animation.gif";
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
+// ******** Events ********
+import { CLAIM_REWARD, getAllEvents } from "../../../eventsListeners";
 // ******** Styles ********
 import {
   Wrapper,
@@ -68,20 +74,12 @@ import {
   Subtitle,
   ButtonClaim,
 } from "./Factory.styles";
-import { message } from "antd";
 
 const NoItemFound = () => (
   <NotFoundItem>
     <p>No items found!</p>
   </NotFoundItem>
 );
-
-// TODO
-// Pull tokens
-// Pull current amount
-// Pull total amount
-// Sum total $OG staked tokens to the unclaimed total bellow the unstake button
-// Add clicked total sum to the Claim button
 
 const Factory = () => {
   const { userMetaMaskToken } = useContext(UserContext);
@@ -105,7 +103,9 @@ const Factory = () => {
 
   // Success Modal data
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [text, setText] = useState("");
+  const [tokens, setTokens] = useState(null);
 
   // data
   const [unstakedRoboList, setUnstakedRoboList] = useState(null);
@@ -422,7 +422,45 @@ const Factory = () => {
   const handleCloseSuccessModal = () => {
     setIsSuccessModalOpen(false);
     setText("");
+    setTokens(null);
     getFreshData();
+  };
+
+  const handleCloseResultsModal = () => {
+    setIsResultsModalOpen(false);
+    setText("");
+    setTokens(null);
+    getFreshData();
+  };
+
+  const getClaimEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let claimEvent = getAllEvents(receipt, mekaApesContract, CLAIM_REWARD);
+    let allTokens = [];
+    if (claimEvent?.length > 0) {
+      claimEvent.forEach((event) => {
+        let ape = stakedData.find(
+          (item) => +item.id === +event.args.tokenId.toNumber()
+        );
+        if (ape) {
+          let name = getApeName(ape);
+          allTokens.push({
+            type: "claim",
+            name: `${name} #${event.args.tokenId.toNumber()}`,
+            id: event.args.tokenId.toNumber(),
+            amount: ethers.utils.formatUnits(event.args.amount),
+          });
+        }
+      });
+    }
+    setTokens(allTokens);
+    getStakedApe({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    setLoading(false);
+    setIsResultsModalOpen(true);
   };
 
   const handleClickStake = async () => {
@@ -481,18 +519,9 @@ const Factory = () => {
           setLoading(true);
           tsx
             .wait()
-            .then(() => {
-              getStakedApe({
-                variables: {
-                  owner: userMetaMaskToken,
-                },
-              });
+            .then((receipt) => {
+              getClaimEvent(receipt);
               getOogearBalance();
-              setText(
-                "You successfully claim your $OG! In a couple of minutes, they will be on your balance."
-              );
-              setLoading(false);
-              setIsSuccessModalOpen(true);
             })
             .catch((error) => {
               console.log(error);
@@ -657,6 +686,15 @@ const Factory = () => {
           handleClose={handleCloseSuccessModal}
           title="Congratulation!"
           text={text}
+        />
+      )}
+      {isResultsModalOpen && (
+        <ResultsModal
+          open={isResultsModalOpen}
+          handleClose={handleCloseResultsModal}
+          tokens={tokens}
+          type="claim"
+          title="And here’s what heppend..."
         />
       )}
     </Wrapper>

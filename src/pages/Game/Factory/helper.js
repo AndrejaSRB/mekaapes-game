@@ -125,3 +125,19 @@ export const arrangeStakedMobileList = (list) => {
     return array;
   }
 };
+
+export const getApeName = (ape) => {
+  let name = "";
+  if (ape) {
+    if (ape.oogaType === 0) {
+      name = "Robo Ooga";
+    } else {
+      if (ape.level > 0) {
+        name = "Mega Meka";
+      } else {
+        name = "Meka Ape";
+      }
+    }
+  }
+  return name;
+};

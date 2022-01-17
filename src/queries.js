@@ -81,6 +81,7 @@ export const GET_STAKED_APE = gql`
       id
       oogaType
       owner
+      level
     }
   }
 `;

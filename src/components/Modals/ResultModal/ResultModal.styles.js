@@ -53,6 +53,7 @@ export const Title = styled.div`
 `;
 
 export const List = styled.ul`
+  list-style: circle;
   li {
       margin: 5px 0;
     font-size: 16px;

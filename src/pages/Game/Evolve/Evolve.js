@@ -6,7 +6,7 @@ import { message } from "antd";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
-import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
+import ResultModal from "../../../components/Modals/ResultModal/ResultModal";
 import Ape from "./Ape";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -24,6 +24,8 @@ import { UserContext } from "../../../store/user-context";
 import { PRE_SALE_IS_ONGOING, SOMETHING_WENT_WRONG } from "../../../messages";
 // ******** Queires ********
 import { GET_BABY_OOGAS } from "../../../queries";
+// ******** Events ********
+import { BABY_EVOLVE, getAllEvents } from "../../../eventsListeners";
 // ******** Styles ********
 import {
   Wrapper,
@@ -54,8 +56,9 @@ const Evolve = () => {
   const [selected, setSelected] = useState([]);
   const [isActive, setIsActive] = useState(null);
   const [minElementNumber, setMinElementNumber] = useState(16);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [tokens, setTokens] = useState(null);
   const [getBabies, { loading, data }] = useLazyQuery(GET_BABY_OOGAS);
 
   useEffect(() => {
@@ -220,13 +223,36 @@ const Evolve = () => {
     }
   };
 
-  const handleCloseSuccessModal = () => {
-    setIsSuccessModalOpen(false);
+  const handleCloseResultsModal = () => {
+    setIsResultsModalOpen(false);
     getBabies({
       variables: {
         owner: userMetaMaskToken,
       },
     });
+  };
+
+  const getEvolveEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let evolveEvent = getAllEvents(receipt, mekaApesContract, BABY_EVOLVE);
+    let allTokens = [];
+    if (evolveEvent?.length > 0) {
+      evolveEvent.forEach((event) => {
+        allTokens.push({
+          type: "evolve",
+          id: event.args.newTokenId.toNumber(),
+          level: 0,
+        });
+      });
+    }
+    setTokens(allTokens);
+    getBabies({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    setLoader(false);
+    setIsResultsModalOpen(true);
   };
 
   const handleClickEvolve = async () => {
@@ -240,14 +266,8 @@ const Evolve = () => {
           setLoader(true);
           tsx
             .wait()
-            .then(() => {
-              getBabies({
-                variables: {
-                  owner: userMetaMaskToken,
-                },
-              });
-              setLoader(false);
-              setIsSuccessModalOpen(true);
+            .then((receipt) => {
+              getEvolveEvent(receipt);
             })
             .catch((error) => {
               console.log(error);
@@ -316,12 +336,13 @@ const Evolve = () => {
       <Footer page="game" />
       {loader && <Loading open={loader} />}
 
-      {isSuccessModalOpen && (
-        <SuccessModal
-          open={isSuccessModalOpen}
-          handleClose={handleCloseSuccessModal}
+      {isResultsModalOpen && (
+        <ResultModal
+          open={isResultsModalOpen}
+          handleClose={handleCloseResultsModal}
           title="Congratulation!"
-          text="You successfully evolved your Baby Ooga! Your Meka Ape is on its way. In the next couple of minutes, he will arrive."
+          tokens={tokens}
+          type="evolve"
         />
       )}
     </Wrapper>

@@ -75,6 +75,8 @@ export const Text = styled.div`
   text-align: center;
   @media only screen and (min-width: 789px) {
     font-size: 21px;
+    max-width: 550px;
+    width: 100%;
   }
 `;
 
@@ -90,3 +92,17 @@ export const ButtonWrapper = styled.div`
   }
 `;
 
+export const List = styled.ul`
+  list-style: circle;
+  margin-top: 16px;
+  li {
+    margin: 5px 0;
+    font-size: 16px;
+    color: ${theme.color.white};
+  }
+  @media only screen and (min-width: 789px) {
+    li {
+      font-size: 18px;
+    }
+  }
+`;

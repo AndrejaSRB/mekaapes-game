@@ -7,10 +7,11 @@ import {
   Text,
   Title,
   ButtonWrapper,
-//   Animation,
+  //   Animation,
 } from "./SuccessModal.styles";
 
 const SuccessModal = ({ open, title, text, handleClose }) => {
+
   return (
     <ModalWrapper
       visible={open}
