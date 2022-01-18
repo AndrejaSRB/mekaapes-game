@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Images ********
-import ImagePlaceholder from "../../../assets/no-image.png";
+import ImagePlaceholder from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Styles ********
@@ -60,7 +60,7 @@ const StakedApe = ({
           {renderApeImage()}
           {!ape.placeholder && (
             <div>
-              <span>{ape.reward ? ape.reward : 0}</span>
+              <span>{ape.reward ? (+ape.reward).toFixed(2) : 0}</span>
             </div>
           )}
         </>

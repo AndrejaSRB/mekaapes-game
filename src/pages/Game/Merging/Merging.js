@@ -227,6 +227,9 @@ const Merging = () => {
     setIsResultsModalOpen(false);
     getFreshData();
     getOogearBalance();
+    setKeepMeka(null);
+    setBurnMeka(null);
+    setTokens(null);
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {

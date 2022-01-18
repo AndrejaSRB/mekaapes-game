@@ -17,6 +17,7 @@ import {
   SELECT_SOME_UNSTAKED_APE,
   SELECT_SOME_STAKED_APE,
   SOMETHING_WENT_WRONG,
+  SOMETHING_WENT_WRONG_UNSTAKE,
 } from "../../../messages";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -613,16 +614,17 @@ const Factory = () => {
               message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
-          setTotalClaim(0);
-          setSelectedStaked([]);
         } catch (error) {
           console.log(error);
           message.error(SOMETHING_WENT_WRONG);
         }
+        setTotalClaim(0);
+        setSelectedStaked([]);
       }
     } else {
       message.error(SELECT_SOME_STAKED_APE);
     }
+
   };
 
   const handleClickUnstake = async () => {
@@ -640,21 +642,18 @@ const Factory = () => {
             .then((receipt) => {
               getClaimEventAndWaitSecondTx(receipt);
               getOogearBalance();
-              //   setText(
-              //     "You successfully claim your $OG and unstake your Oogas! In a couple of minutes, you can check if they are successfully avoided attacks of Space Droid Federation and if they are safely unstaked from the factory."
-              //   );
             })
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
               setLoading(false);
             });
-          setTotalClaim(0);
-          setSelectedStaked([]);
         } catch (error) {
           console.log(error);
-          message.error(SOMETHING_WENT_WRONG);
+          message.error(SOMETHING_WENT_WRONG_UNSTAKE, 6);
         }
+        setTotalClaim(0);
+        setSelectedStaked([]);
       }
     } else {
       message.error(SELECT_SOME_STAKED_APE);
@@ -676,10 +675,12 @@ const Factory = () => {
               <img src={HeroImage} alt="Factory Robo" />
             </div>
             <p>
-              <span>$OG Balance:</span> {oogearBalance}
+              <span>$OG Balance:</span>{" "}
+              {oogearBalance && (+oogearBalance).toFixed(2)}
             </p>
             <p>
-              <span>$DMT Balance:</span> {dmtBalance}
+              <span>$DMT Balance:</span>{" "}
+              {dmtBalance && (+dmtBalance).toFixed(2)}
             </p>
           </MobileBoxHeader>
           <Boxes>
@@ -718,10 +719,12 @@ const Factory = () => {
             <MiddleBox>
               <img src={HeroImage} alt="hero ape" />
               <p>
-                <span>$OG Balance:</span> {oogearBalance}
+                <span>$OG Balance:</span>{" "}
+                {oogearBalance && (+oogearBalance).toFixed(2)}
               </p>
               <p>
-                <span>$DMT Balance:</span> {dmtBalance}
+                <span>$DMT Balance:</span>{" "}
+                {dmtBalance && (+dmtBalance).toFixed(2)}
               </p>
             </MiddleBox>
             <Staked>
@@ -741,7 +744,8 @@ const Factory = () => {
               <ButtonClaim
                 disabled={getIfItsClaimDisabled()}
                 onClick={handleClickClaim}>
-                Claim {totalSelectedClaim} $OG
+                Claim {totalSelectedClaim && (+totalSelectedClaim).toFixed(2)}{" "}
+                $OG
               </ButtonClaim>
               <ClaimAndUnstakeButton
                 disabled={getIfItsClaimDisabled()}
@@ -750,7 +754,8 @@ const Factory = () => {
               </ClaimAndUnstakeButton>
               <StakedText>
                 <p>
-                  Unclaimed: <span>{totalClaim} $OG</span>
+                  Unclaimed:{" "}
+                  <span>{totalClaim && (+totalClaim).toFixed(2)} $OG</span>
                 </p>
                 <p>
                   A Robo Ooga can only be unstaked when it has accumulated min.

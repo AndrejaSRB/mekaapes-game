@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Images ********
-import PlaceholderImage from "../../../assets/no-image.png";
+import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Styles ********

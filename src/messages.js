@@ -8,4 +8,6 @@ export const DONT_ENOUGH_DMT = "Sorry, you don't have enough $DMT.";
 export const DONT_ENOUGH_ETH = "Sorry, you don't have enough ETH.";
 export const SELECT_SOME_UNSTAKED_APE = "You have to select some unstaked ape.";
 export const SELECT_SOME_STAKED_APE = "You have to select some staked ape.";
-export const SOMETHING_WENT_WRONG = "Transaction failed. :( Maybe you already completed that transaction?";
+export const SOMETHING_WENT_WRONG = "Transaction failed. :(";
+export const SOMETHING_WENT_WRONG_UNSTAKE =
+  "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 6000 $OG.";
