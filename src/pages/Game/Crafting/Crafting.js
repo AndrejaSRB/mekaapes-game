@@ -24,6 +24,8 @@ import usePrices from "../../../hooks/usePrices";
 import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
 import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
 import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
+// ******** Services ********
+import gas from "../../../services/gas";
 // ******** Text ********
 import {
   APPROVE_DMT_TRANSACTION,
@@ -34,6 +36,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
+import { getCurrentGasFee } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -284,6 +287,13 @@ const Crafting = () => {
     setDisableApproveBtn(false);
   };
 
+  const getGasFee = async (amount, isStake) => {
+    let gasFee = await getCurrentGasFee();
+    let randomGasFee = await gas.getMintRandomGas(amount, isStake);
+    let total = gasFee.mul(randomGasFee);
+    return total;
+  };
+
   const onRandomsReceived = async (requestId, entropy, event) => {
     let txReceipt = await event.getTransactionReceipt();
     let { mekaApesContract } = contract;
@@ -351,8 +361,9 @@ const Crafting = () => {
     if (oogearCounter > 0) {
       if (checkBalance(oogearCounter, mintOGPrice, OGBalanceBigNumber)) {
         setIsDisableOGButtons(true);
+        let gasFee = await getGasFee(+oogearCounter, false);
         try {
-          let tsx = await contract.mintWithOG(+oogearCounter, false);
+          let tsx = await contract.mintWithOG(+oogearCounter, false, gasFee);
           setLoading(true);
           tsx
             .wait()
@@ -384,8 +395,9 @@ const Crafting = () => {
         checkBalance(oogearCounter, mintAndStakeOGPrice, OGBalanceBigNumber)
       ) {
         setIsDisableOGButtons(true);
+        let gasFee = await getGasFee(+oogearCounter, true);
         try {
-          let tsx = await contract.mintWithOG(+oogearCounter, true);
+          let tsx = await contract.mintWithOG(+oogearCounter, true, gasFee);
           setLoading(true);
           tsx
             .wait()
@@ -415,8 +427,9 @@ const Crafting = () => {
     if (dmtCounter > 0) {
       if (checkBalance(dmtCounter, mintDMTPrice, DMTBalanceBigNumber)) {
         setIsDisableDMTButton(true);
+        let gasFee = await getGasFee(+dmtCounter, true);
         try {
-          let tsx = await contract.mintWithDMT(dmtCounter);
+          let tsx = await contract.mintWithDMT(dmtCounter, gasFee);
           setLoading(true);
           tsx
             .wait()

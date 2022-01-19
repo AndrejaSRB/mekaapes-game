@@ -32,6 +32,8 @@ import {
   handleClickStakedApe,
   arrangeStakedMobileList,
   getApeName,
+  getCurrentGasFee,
+  getStakedRoboAmount,
 } from "./helper";
 // ******** Queires ********
 import {
@@ -41,6 +43,7 @@ import {
 } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
+import gas from "../../../services/gas";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 import { BalanceContext } from "../../../store/balance-context";
@@ -135,7 +138,6 @@ const Factory = () => {
     useListClaimAvaliableReward(stakedList, stakedApesData?.spaceOogas);
   // Transaction Events
   const unstakeTokensAmount = useRef(null);
-
   // Get all data
   useEffect(() => {
     let isMounted = true;
@@ -442,6 +444,14 @@ const Factory = () => {
     getFreshData();
   };
 
+  const getGasFee = async (list) => {
+    let amount = getStakedRoboAmount(list);
+    let gasFee = await getCurrentGasFee();
+    let randomGasFee = await gas.getUnstakeRandomGas(amount);
+    let total = gasFee.mul(randomGasFee);
+    return total;
+  };
+
   const onRandomsReceived = async (requestId, entropy, event) => {
     let txReceipt = await event.getTransactionReceipt();
     let { mekaApesContract } = contract;
@@ -624,7 +634,6 @@ const Factory = () => {
     } else {
       message.error(SELECT_SOME_STAKED_APE);
     }
-
   };
 
   const handleClickUnstake = async () => {
@@ -634,8 +643,9 @@ const Factory = () => {
         tokenIds.push(token.id);
       });
       if (tokenIds?.length > 0) {
+        let gasFee = await getGasFee(selectedStaked);
         try {
-          let tsx = await contract.unstake(tokenIds);
+          let tsx = await contract.unstake(tokenIds, gasFee);
           setLoading(true);
           tsx
             .wait()

@@ -13,7 +13,7 @@ const DMT_ERC20_CONTRACT_ADDRESS =
 const OG_ERC20_CONTRACT_ADDRESS =
   process.env.REACT_APP_OG_ERC20_CONTRACT_ADDRESS;
 
-  const APPROVE_AMOUNT =
+const APPROVE_AMOUNT =
   "115792089237316195423570985008687907853269984665640564039457584007913129639935"; //(2^256 - 1 )
 export class Contract {
   mekaApescontract = null;
@@ -59,13 +59,17 @@ export class Contract {
 
   // mints amount new tokens with $OG
   // toStake is boolean if is staked or not
-  async mintWithOG(amount, toStake) {
-    return await this.mekaApesContract.mintWithOG(amount, toStake);
+  async mintWithOG(amount, toStake, price) {
+    return await this.mekaApesContract.mintWithOG(amount, toStake, {
+      value: price,
+    });
   }
 
   // mints amount new tokens with $DMT
-  async mintWithDMT(amount) {
-    return await this.mekaApesContract.mintWithDMT(amount);
+  async mintWithDMT(amount, price) {
+    return await this.mekaApesContract.mintWithDMT(amount, {
+      value: price,
+    });
   }
 
   // stake multiple items
@@ -74,8 +78,10 @@ export class Contract {
   }
 
   // unstake multiple items
-  async unstake(itemList) {
-    return await this.mekaApesContract.unstake(itemList);
+  async unstake(itemList, price) {
+    return await this.mekaApesContract.unstake(itemList, {
+      value: price,
+    });
   }
 
   // claim reward for multiple items
@@ -99,8 +105,10 @@ export class Contract {
   // the burned one will give Mega Meka Ape
   // the first argument is saved token
   // the second argument is burned token
-  async mergeMekaApes(tokenIdSave, tokenIdBurn) {
-    return await this.mekaApesContract.mergeMekaApes(tokenIdSave, tokenIdBurn);
+  async mergeMekaApes(tokenIdSave, tokenIdBurn, price) {
+    return await this.mekaApesContract.mergeMekaApes(tokenIdSave, tokenIdBurn, {
+      value: price,
+    });
   }
 
   // total minted tokens

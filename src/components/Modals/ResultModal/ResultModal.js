@@ -25,7 +25,6 @@ const ResultModal = ({ open, handleClose, tokens, title }) => {
     } else if (token?.type === "merge") {
       return `Mega Meka #${token.id}`;
     } else if (token?.type === "unstake") {
-      // Robo Ooga #12771 left the factory, but all its $OG was stolen!
       let text = `${token.name} left the factory`;
       if (token.stolen) {
         if (token.stolenAmount === token.amount) {

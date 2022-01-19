@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
+import { BigNumber } from "ethers";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
+// ******** Services ********
+// import metamask from '../../../services/metamask';
 
 export const getListLength = (list) => {
   if (list && list.length > 0) {
@@ -140,4 +143,24 @@ export const getApeName = (ape) => {
     }
   }
   return name;
+};
+
+export const getCurrentGasFee = async () => {
+  // let gasFee = await metamask.signer.getFeeData(); // mainnet
+  // let maxFeePerGas = gasFee.maxFeePerGas;
+
+  let maxFeePerGas = BigNumber.from(100 * 10 ** 9); // testnet
+  return maxFeePerGas;
+};
+
+export const getStakedRoboAmount = (list) => {
+  let amount = 0;
+  if (list?.length > 0) {
+    list.forEach((item) => {
+      if (item.oogaType === 0) {
+        amount = amount + 1;
+      }
+    });
+  }
+  return amount;
 };

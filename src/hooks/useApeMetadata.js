@@ -21,6 +21,7 @@ const fetchItem = async (ape) => {
 
 const useApeMetadata = (ape) => {
   return useQuery(["ape-metadata", ape], () => fetchItem(ape), {
+    keepPreviousData: true,
     enabled:
       ape && (ape.reward !== null || ape.reward !== undefined) ? true : false,
   });

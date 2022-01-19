@@ -20,6 +20,7 @@ import {
 } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
+import gas from "../../../services/gas";
 // ******** Store ********
 import { MintedContext } from "../../../store/minted-context";
 import { BalanceContext } from "../../../store/balance-context";
@@ -34,6 +35,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
+import { getCurrentGasFee } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events ********
@@ -232,6 +234,13 @@ const Merging = () => {
     setTokens(null);
   };
 
+  const getGasFee = async () => {
+    let gasFee = await getCurrentGasFee();
+    let randomGasFee = await gas.getMergeRandomGas();
+    let total = gasFee.mul(randomGasFee);
+    return total;
+  };
+
   const onRandomsReceived = async (requestId, entropy, event) => {
     let txReceipt = await event.getTransactionReceipt();
     let { mekaApesContract } = contract;
@@ -263,9 +272,10 @@ const Merging = () => {
       if (OGBalanceBigNumber.gt(mergePrice)) {
         if (burnMeka && keepMeka) {
           setIsDisabled(true);
+          let gasFee = await getGasFee();
           try {
             // first one is saved, second one is burned
-            let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id);
+            let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id, gasFee);
             setLoading(true);
             tsx
               .wait()

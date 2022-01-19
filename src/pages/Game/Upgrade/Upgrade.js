@@ -35,7 +35,6 @@ import contract from "../../../services/contract";
 import priceOrder from "../../../config/pricesOrder";
 // ******** Text ********
 import {
-  APPROVE_DMT_TRANSACTION,
   DONT_ENOUGH_DMT,
   PRE_SALE_IS_ONGOING,
   SOMETHING_WENT_WRONG,
@@ -192,11 +191,7 @@ const Upgrade = () => {
   };
 
   const handleOpenApeModal = () => {
-    if (isApproved) {
-      setIsApeModalOpen(true);
-    } else {
-      message.info(APPROVE_DMT_TRANSACTION);
-    }
+    setIsApeModalOpen(true);
   };
 
   const handleCloseApeModal = () => {
