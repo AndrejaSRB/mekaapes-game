@@ -410,7 +410,6 @@ const Minting = () => {
           handleClose={handleCloseResultsModal}
           title={tokens?.length > 1 ? "You successful minted new tokens!" : "You successful minted new token!"}
           tokens={tokens}
-          type="crafting"
         />
       )}
     </Wrapper>

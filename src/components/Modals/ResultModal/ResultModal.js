@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+// ******** Functions ********
+import { beautifyNumber } from "../../../pages/Game/Factory/helper";
 // ******** Styles ********
 import {
   ModalWrapper,
@@ -8,22 +11,33 @@ import {
   Text,
 } from "./ResultModal.styles";
 
-const ResultModal = ({ open, handleClose, tokens, title }) => {
-  const getFixedValue = (amount) => amount && (+amount).toFixed(2);
+// TODO Claiming total amount
+// TODO Merge new Level
+// TODO Mint - get Gifted Meka Ape ID
+const ResultModal = ({ open, handleClose, tokens }) => {
+  const [messageType, setMessageType] = useState("");
+
+  useEffect(() => {
+    if (tokens?.length > 0) {
+      setMessageType(tokens[0]?.type);
+    }
+  }, [tokens]);
+
+  const getFixedValue = (amount) => amount && beautifyNumber(amount);
 
   const getMessage = (token) => {
-    if (token?.type === "claim") {
-      return `You received ${getFixedValue(token.amount)} $OG from ${
-        token.name
-      }`;
-    } else if (token?.type === "crafting") {
-      return `${token.name} #${token.id}  ${
-        token.stolen === null ? "" : "but your token has been stolen"
-      }`;
+    if (token?.type === "crafting") {
+      if (token.stolen === null) {
+        return (
+          <Text>{`You successfully minted ${token.name} #${token.id}!`}</Text>
+        );
+      } else {
+        return (
+          <Text>{`${token.name} #${token.id} was gifted to MekaApe #xxxx!`}</Text>
+        );
+      }
     } else if (token?.type === "evolve") {
-      return `Meka Ape #${token.id}`;
-    } else if (token?.type === "merge") {
-      return `Mega Meka #${token.id}`;
+      return `You successfully claimed MekaApe #${token.id}!`;
     } else if (token?.type === "unstake") {
       let text = `${token.name} left the factory`;
       if (token.stolen) {
@@ -42,14 +56,145 @@ const ResultModal = ({ open, handleClose, tokens, title }) => {
         )} $OG.`;
       }
       return text;
+    }
+  };
+
+  const getUnstakeMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <List>{renderTokens()}</List>
+        </>
+      );
     } else {
-      return "";
+      if (tokens?.length > 0) {
+        return tokens.map((token) => (
+          <Text key={token.id}>{getMessage(token)}</Text>
+        ));
+      }
+    }
+  };
+
+  const getCraftingMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully claimed:`}</Text>
+          <List>{renderTokens()}</List>
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token) => {
+          if (token.stolen === null) {
+            return (
+              <Text>{`You successfully minted ${token.name} #${token.id}!`}</Text>
+            );
+          } else {
+            return (
+              <Text>{`${token.name} #${token.id} was gifted to MekaApe #xxxx!`}</Text>
+            );
+          }
+        });
+      }
+    }
+  };
+
+  const getClaimMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+          <Text key={token.id}>{`You successfully claimed ${beautifyNumber(token.amount)} $OG after all taxes.`}</Text>
+      ));
+    }
+  };
+
+  const getMergeMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+        <Text
+          key={token.id}>{`MekaApe #${token.id} received Mega Level X`}</Text>
+      ));
+    }
+  };
+
+  const getUpgradeMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+        <Text
+          key={
+            token.id
+          }>{`Robo Ooga #${token.id} reached level ${token.level}`}</Text>
+      ));
+    }
+  };
+
+  const getEvolveMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully claimed:`}</Text>
+          <List>{renderTokens()}</List>
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token) => (
+          <Text
+            key={
+              token.id
+            }>{`You successfully claimed MekaApe #${token.id}!`}</Text>
+        ));
+      }
     }
   };
 
   const renderTokens = () => {
     if (tokens?.length > 0) {
       return tokens.map((token) => <li key={token.id}>{getMessage(token)}</li>);
+    }
+  };
+
+  const renderText = () => {
+    switch (messageType) {
+      case "evolve":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getEvolveMessage()}
+          </>
+        );
+      case "merge":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getMergeMessage()}
+          </>
+        );
+      case "claim":
+        return (
+          <>
+            <Title>Payday!</Title>
+            {getClaimMessage()}
+          </>
+        );
+      case "crafting":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getCraftingMessage()}
+          </>
+        );
+      case "unstake":
+        return <>{getUnstakeMessage()}</>;
+      case "upgrade":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getUpgradeMessage()}
+          </>
+        );
+      default:
+        break;
     }
   };
 
@@ -61,9 +206,7 @@ const ResultModal = ({ open, handleClose, tokens, title }) => {
       maskClosable={false}
       onCancel={handleClose}>
       <div className="content">
-        <Title>{title}</Title>
-        <Text>Here's the list of tokens:</Text>
-        <List>{renderTokens()}</List>
+        {renderText()}
         <ButtonWrapper>
           <button onClick={handleClose}>Close</button>
         </ButtonWrapper>

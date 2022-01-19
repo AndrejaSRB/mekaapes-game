@@ -8,7 +8,7 @@ import Footer from "../../../components/Footer/Footer";
 import LevelRoboOogas from "../../../components/Modals/LevelRoboOogas/LevelRoboOogas";
 import UpgradeInfo from "../../../components/Modals/UpgradeInfo/UpgradeInfo";
 import Loading from "../../../components/Modals/Loading/Loading";
-import SuccessModal from "../../../components/Modals/SuccessModal/SuccessModal";
+import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
@@ -33,6 +33,8 @@ import {
 import contract from "../../../services/contract";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
+// ******** Events ********
+import { LEVELUP_ROBO, getEvent } from "../../../eventsListeners";
 // ******** Text ********
 import {
   DONT_ENOUGH_DMT,
@@ -81,7 +83,7 @@ const Upgrade = () => {
   const [isApproved, setIsApproved] = useState(true);
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
   const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [list, setList] = useState(null);
   const [
     getUnstakedRoboOogas,
@@ -101,6 +103,8 @@ const Upgrade = () => {
     isLoading: isDMTpprovedLoading,
     refetch: getIfDMTIsApproved,
   } = useIsDMTTransactionApproved(userMetaMaskToken, price);
+  // Events
+  const [tokens, setTokens] = useState(null);
 
   useEffect(() => {
     if (
@@ -272,9 +276,30 @@ const Upgrade = () => {
     return disabled;
   };
 
-  const handleCloseSuccessModal = () => {
-    setIsSuccessModalOpen(false);
+  const handleCloseResultsModal = () => {
+    setIsResultsModalOpen(false);
     getFreshData();
+    setTokens(null);
+  };
+
+  const getUpgradeEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let upgradeEvent = getEvent(receipt, mekaApesContract, LEVELUP_ROBO);
+    let allTokens = [];
+    if (upgradeEvent) {
+      let id = upgradeEvent.args.oogaId.toNumber();
+      let level = upgradeEvent.args.newLevel.toNumber();
+      allTokens.push({
+        type: "upgrade",
+        id: id,
+        level: level,
+      });
+    }
+    setTokens(allTokens);
+    setSelectedApe(null);
+    getFreshData();
+    setLoading(false);
+    setIsResultsModalOpen(true);
   };
 
   const handleClickApproveDMT = async () => {
@@ -310,12 +335,9 @@ const Upgrade = () => {
             setLoading(true);
             tsx
               .wait()
-              .then(async () => {
-                getFreshData();
+              .then(async (receipt) => {
+                getUpgradeEvent(receipt);
                 getDmtBalance();
-                setLoading(false);
-                setSelectedApe(null);
-                setIsSuccessModalOpen(true);
               })
               .catch((error) => {
                 console.log(error);
@@ -421,12 +443,11 @@ const Upgrade = () => {
           handleClose={() => setIsOpenUpgradeInfoModal(false)}
         />
       )}
-      {isSuccessModalOpen && (
-        <SuccessModal
-          open={isSuccessModalOpen}
-          handleClose={handleCloseSuccessModal}
-          title="Congratulation!"
-          text="You successfully upgraded your Robo Ooga! Your stronger Robo Ooga is on its way. In the next couple of minutes, he will arrive."
+      {isResultsModalOpen && (
+        <ResultsModal
+          open={isResultsModalOpen}
+          handleClose={handleCloseResultsModal}
+          tokens={tokens}
         />
       )}
     </Wrapper>

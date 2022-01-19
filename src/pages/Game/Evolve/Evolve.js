@@ -340,9 +340,7 @@ const Evolve = () => {
         <ResultModal
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
-          title={tokens?.length > 1 ? "You successful evolved your Baby Ooga's!" : "You successful evolved your Baby Ooga!"}
           tokens={tokens}
-          type="evolve"
         />
       )}
     </Wrapper>

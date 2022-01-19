@@ -571,9 +571,7 @@ const Crafting = () => {
         <ResultsModal
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
-          title="Here's the list of minted tokens:"
           tokens={tokens}
-          type="crafting"
         />
       )}
     </Wrapper>

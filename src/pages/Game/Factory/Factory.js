@@ -34,7 +34,7 @@ import {
   getApeName,
   getCurrentGasFee,
   getStakedRoboAmount,
-  beautifyNumber
+  beautifyNumber,
 } from "./helper";
 // ******** Queires ********
 import {
@@ -57,6 +57,8 @@ import {
   getAllEvents,
   ATTACK_REWARD,
   makeRandomSubscription,
+  TAX_REWARD,
+  getEvent,
 } from "../../../eventsListeners";
 // ******** Styles ********
 import {
@@ -530,24 +532,15 @@ const Factory = () => {
 
   const getClaimEvent = (receipt) => {
     let { mekaApesContract } = contract;
-    let claimEvent = getAllEvents(receipt, mekaApesContract, CLAIM_REWARD);
+    let taxRewardEvent = getEvent(receipt, mekaApesContract, TAX_REWARD);
     let allTokens = [];
-    if (claimEvent?.length > 0) {
-      claimEvent.forEach((event) => {
-        let ape = stakedData.find(
-          (item) => +item.id === +event.args.tokenId.toNumber()
-        );
-        if (ape) {
-          let name = getApeName(ape);
-          allTokens.push({
-            type: "claim",
-            name: `${name} #${event.args.tokenId.toNumber()}`,
-            id: event.args.tokenId.toNumber(),
-            amount: ethers.utils.formatUnits(event.args.amount),
-            stolen: false,
-            stolenAmount: 0,
-          });
-        }
+    if (taxRewardEvent) {
+      let totalAmount = ethers.utils.formatUnits(taxRewardEvent.args.totalTax);
+      let id = ethers.utils.formatUnits(taxRewardEvent.args.claimId);
+      allTokens.push({
+        type: "claim",
+        amount: totalAmount,
+        id: id,
       });
     }
     setTokens(allTokens);
@@ -580,9 +573,7 @@ const Factory = () => {
           .wait()
           .then(() => {
             getFreshData();
-            setText(
-              "You successfully stake your Oogas in the Factory! In a couple of minutes, they will arrive."
-            );
+            setText("It can take few minutes.");
             setLoading(false);
             setIsSuccessModalOpen(true);
           })
@@ -783,7 +774,7 @@ const Factory = () => {
         <SuccessModal
           open={isSuccessModalOpen}
           handleClose={handleCloseSuccessModal}
-          title="Congratulation!"
+          title="Sent to the Factory!"
           text={text}
         />
       )}
@@ -792,7 +783,6 @@ const Factory = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
-          title="And here’s what heppend..."
         />
       )}
     </Wrapper>
