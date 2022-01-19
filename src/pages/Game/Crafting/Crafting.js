@@ -339,8 +339,10 @@ const Crafting = () => {
       mekaConvertEvent.forEach((event) => {
         let tokenId = event.args.tokenId.toNumber();
         allTokens.forEach((token) => {
+            let mekaApeId = token.args.tributeOogaId.toNumber();
           if (token.id === tokenId) {
             token.stolen = true;
+            token.stolenApeId = mekaApeId
           }
         });
       });

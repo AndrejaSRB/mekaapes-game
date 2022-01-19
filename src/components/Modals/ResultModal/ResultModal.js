@@ -11,8 +11,6 @@ import {
   Text,
 } from "./ResultModal.styles";
 
-// TODO Merge new Level
-// TODO Mint - get Gifted Meka Ape ID
 const ResultModal = ({ open, handleClose, tokens }) => {
   const [messageType, setMessageType] = useState("");
 
@@ -99,7 +97,7 @@ const ResultModal = ({ open, handleClose, tokens }) => {
                 white
                 key={
                   token.id
-                }>{`${token.name} #${token.id} was gifted to MekaApe #xxxx!`}</Text>
+                }>{`${token.name} #${token.id} was gifted to MekaApe #${token.stolenApeId}!`}</Text>
             );
           }
         });
@@ -122,7 +120,9 @@ const ResultModal = ({ open, handleClose, tokens }) => {
       return tokens.map((token) => (
         <Text
           white
-          key={token.id}>{`MekaApe #${token.id} received Mega Level X`}</Text>
+          key={
+            token.id
+          }>{`MekaApe #${token.id} received Mega Level ${token.level}`}</Text>
       ));
     }
   };

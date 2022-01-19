@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -254,9 +254,11 @@ const Merging = () => {
     if (mekaConvertEvent?.length > 0) {
       mekaConvertEvent.forEach((event) => {
         let tokenId = event.args.tokenId.toNumber();
+        let level = ethers.utils.formatUnits(event.args.megaLevel);
         tokens.push({
           type: "merge",
           id: tokenId,
+          level: level,
         });
       });
     }
