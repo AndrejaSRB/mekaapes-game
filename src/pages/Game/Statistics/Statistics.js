@@ -1,8 +1,16 @@
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import { ethers } from "ethers";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
+import Loading from "../../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
+// ******** Funcstions ********
+import { beautifyNumber } from '../Factory/helper';
+// ******** Queires ********
+import { GET_LEADERBOARD } from "../../../queries";
 // ******** Styles ********
 import {
   Wrapper,
@@ -18,6 +26,49 @@ import {
 } from "./Statistics.styles";
 
 const Statistics = () => {
+  const [loader, setLoader] = useState(false);
+  const { loading, data } = useQuery(GET_LEADERBOARD);
+
+  useEffect(() => {
+    if (loading) {
+      setLoader(true);
+    } else {
+      setLoader(false);
+    }
+  }, [loading]);
+
+  const reduceAddress = (address) => {
+    if (address && typeof address === "string") {
+      let string = address;
+      let userAddress = address;
+      let firstSix = userAddress.slice(0, 6);
+      let lastFour = userAddress.slice(-4);
+      string = `${firstSix}...${lastFour}`;
+      return string;
+    }
+  };
+
+  const renderLeaderboard = () => {
+    if (data?.owners?.length > 0) {
+      let { owners } = data;
+      return owners.map((user, index) => {
+        let position = "";
+        if (index === 0) {
+          position = "first";
+        } else if (index === owners.length - 1) {
+          position = "last";
+        }
+        let value = ethers.utils.formatUnits(user.ooGear);
+        return (
+          <Place position={position} key={user.id}>
+            <span>{reduceAddress(user.id)}</span>
+            <span className="number">{beautifyNumber(value)}</span>
+          </Place>
+        );
+      });
+    }
+  };
+
   return (
     <Wrapper>
       <Header page="game" />
@@ -60,56 +111,12 @@ const Statistics = () => {
           </Box>
           <LeaderboardsBox>
             <h4>Leaderboard</h4>
-            <BoardWrapper>
-              <Place position="first">
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place>
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-              <Place position="last">
-                <span>0x9677...9123</span>
-                <span className="number">32,370,000,000</span>
-              </Place>
-            </BoardWrapper>
+            <BoardWrapper>{renderLeaderboard()}</BoardWrapper>
           </LeaderboardsBox>
         </Holder>
       </Content>
       <Footer page="game" />
+      {loader && <Loading open={loader} />}
     </Wrapper>
   );
 };

@@ -164,3 +164,12 @@ export const getStakedRoboAmount = (list) => {
   }
   return amount;
 };
+
+export const beautifyNumber = (value) => {
+  const options = {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  };
+  const formattedNumber = Number(value).toLocaleString("en", options);
+  return formattedNumber;
+};

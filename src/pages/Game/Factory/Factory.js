@@ -34,6 +34,7 @@ import {
   getApeName,
   getCurrentGasFee,
   getStakedRoboAmount,
+  beautifyNumber
 } from "./helper";
 // ******** Queires ********
 import {
@@ -686,11 +687,11 @@ const Factory = () => {
             </div>
             <p>
               <span>$OG Balance:</span>{" "}
-              {oogearBalance && (+oogearBalance).toFixed(2)}
+              {oogearBalance && beautifyNumber(oogearBalance)}
             </p>
             <p>
               <span>$DMT Balance:</span>{" "}
-              {dmtBalance && (+dmtBalance).toFixed(2)}
+              {dmtBalance && beautifyNumber(dmtBalance)}
             </p>
           </MobileBoxHeader>
           <Boxes>
@@ -730,11 +731,11 @@ const Factory = () => {
               <img src={HeroImage} alt="hero ape" />
               <p>
                 <span>$OG Balance:</span>{" "}
-                {oogearBalance && (+oogearBalance).toFixed(2)}
+                {oogearBalance && beautifyNumber(oogearBalance)}
               </p>
               <p>
                 <span>$DMT Balance:</span>{" "}
-                {dmtBalance && (+dmtBalance).toFixed(2)}
+                {dmtBalance && beautifyNumber(dmtBalance)}
               </p>
             </MiddleBox>
             <Staked>
@@ -754,7 +755,7 @@ const Factory = () => {
               <ButtonClaim
                 disabled={getIfItsClaimDisabled()}
                 onClick={handleClickClaim}>
-                Claim {totalSelectedClaim && (+totalSelectedClaim).toFixed(2)}{" "}
+                Claim {totalSelectedClaim && beautifyNumber(totalSelectedClaim)}{" "}
                 $OG
               </ButtonClaim>
               <ClaimAndUnstakeButton
@@ -765,7 +766,7 @@ const Factory = () => {
               <StakedText>
                 <p>
                   Unclaimed:{" "}
-                  <span>{totalClaim && (+totalClaim).toFixed(2)} $OG</span>
+                  <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
                 </p>
                 <p>
                   A Robo Ooga can only be unstaked when it has accumulated min.

@@ -36,7 +36,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { getCurrentGasFee } from "../Factory/helper";
+import { getCurrentGasFee, beautifyNumber } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -507,10 +507,10 @@ const Crafting = () => {
                 </button>
               </ButtonBox>
               <HelperOGText>
-                Mint Price: {convertBigNumberToPrice(mintOGPrice)} $OG{" "}
+                Mint Price: {beautifyNumber(convertBigNumberToPrice(mintOGPrice))} $OG{" "}
                 <span>
                   Mint & Stake Price:{" "}
-                  {convertBigNumberToPrice(mintAndStakeOGPrice)} $OG
+                  {beautifyNumber(convertBigNumberToPrice(mintAndStakeOGPrice))} $OG
                 </span>
               </HelperOGText>
             </OogearBox>
@@ -551,7 +551,7 @@ const Crafting = () => {
                 </Button>
               )}
               <HelperText>
-                Price {convertBigNumberToPrice(mintDMTPrice)} $DMT{" "}
+                Price {beautifyNumber(convertBigNumberToPrice(mintDMTPrice))} $DMT{" "}
                 <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
               </HelperText>
             </DmtBox>

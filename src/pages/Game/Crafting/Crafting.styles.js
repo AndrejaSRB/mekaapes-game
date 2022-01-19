@@ -231,7 +231,7 @@ export const HelperOGText = styled.p`
     padding-left: 30px;
     span {
       display: inline;
-      padding-left: 0;
+      padding-left: 15px;
       margin-top: 0;
     }
   }

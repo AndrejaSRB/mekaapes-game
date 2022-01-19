@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import ImagePlaceholder from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
+// ******** Functions ********
+import { beautifyNumber } from '../Factory/helper';
 // ******** Styles ********
 import { ApeNft } from "./Factory.styles";
 
@@ -60,7 +62,7 @@ const StakedApe = ({
           {renderApeImage()}
           {!ape.placeholder && (
             <div>
-              <span>{ape.reward ? (+ape.reward).toFixed(2) : 0}</span>
+              <span>{ape.reward ? beautifyNumber(ape.reward) : 0}</span>
             </div>
           )}
         </>

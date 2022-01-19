@@ -97,3 +97,19 @@ export const GET_BABY_OOGAS = gql`
     }
   }
 `;
+
+// ******** Game Statistics ********
+
+export const GET_LEADERBOARD = gql`
+  query GetLeaderboard {
+    owners(
+      subgraphError: allow
+      orderBy: ooGear
+      orderDirection: desc
+      first: 420
+    ) {
+      id
+      ooGear
+    }
+  }
+`;
