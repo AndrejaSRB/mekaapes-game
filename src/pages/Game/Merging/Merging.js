@@ -8,6 +8,7 @@ import Footer from "../../../components/Footer/Footer";
 import MergeMekaApesModal from "../../../components/Modals/MergeMekaApes/MergeMekaApes";
 import Loading from "../../../components/Modals/Loading/Loading";
 import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
+import ActionsLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Images ********
@@ -32,6 +33,7 @@ import {
   PRE_SALE_IS_ONGOING,
   DONT_ENOUGH_OG,
   SOMETHING_WENT_WRONG,
+  ACTION_LOADING_MERGE,
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
@@ -72,6 +74,10 @@ const Merging = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
   const [list, setList] = useState(false);
+  // Action Loading
+  const [actionLoading, setActionLoading] = useState(false);
+  const [tsxNumber, setTsxNumber] = useState(1);
+
   const [
     getUnstakeMekaApes,
     { loading: unstakeLoading, data: unstakedMekaData },
@@ -86,14 +92,6 @@ const Merging = () => {
   const [mergePrice, setMergePrice] = useState(BigNumber.from(0));
   // Events
   const [tokens, setTokens] = useState(null);
-
-  useEffect(() => {
-    if (priceLoading) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [priceLoading]);
 
   // Set Price
   useEffect(() => {
@@ -118,6 +116,7 @@ const Merging = () => {
     }
   }, [unstakedMekaData, stakedMekaData]);
 
+  // Get Data
   useEffect(() => {
     let isMounted = true;
     if (userMetaMaskToken && isMounted && isApeModalOpen) {
@@ -142,13 +141,14 @@ const Merging = () => {
     getStakedMekaApes,
   ]);
 
+  // Loading state
   useEffect(() => {
-    if (unstakeLoading || stakeLoading) {
+    if (unstakeLoading || stakeLoading || priceLoading) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [unstakeLoading, stakeLoading]);
+  }, [unstakeLoading, stakeLoading, priceLoading]);
 
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
@@ -261,7 +261,8 @@ const Merging = () => {
       });
     }
     setTokens(tokens);
-    setLoading(false);
+    setActionLoading(false);
+    setTsxNumber(1);
     setKeepMeka(null);
     setBurnMeka(null);
     setIsResultsModalOpen(true);
@@ -275,11 +276,16 @@ const Merging = () => {
           let gasFee = await getGasFee();
           try {
             // first one is saved, second one is burned
-            let tsx = await contract.mergeMekaApes(keepMeka.id, burnMeka.id, gasFee);
-            setLoading(true);
+            let tsx = await contract.mergeMekaApes(
+              keepMeka.id,
+              burnMeka.id,
+              gasFee
+            );
+            setActionLoading(true);
             tsx
               .wait()
               .then((receipt) => {
+                setTsxNumber(2);
                 makeRandomSubscription(receipt, contract, onRandomsReceived);
                 getOogearBalance();
                 getFreshData();
@@ -287,7 +293,7 @@ const Merging = () => {
               .catch((error) => {
                 console.log(error);
                 message.error(SOMETHING_WENT_WRONG);
-                setLoading(false);
+                setActionLoading(false);
               });
           } catch (error) {
             console.log(error);
@@ -368,6 +374,14 @@ const Merging = () => {
           handleClose={handleCloseResultsModal}
           title="You successfully merged your Meka Apes!"
           tokens={tokens}
+        />
+      )}
+      {actionLoading && (
+        <ActionsLoading
+          open={actionLoading}
+          text={ACTION_LOADING_MERGE}
+          tsxNumber={tsxNumber}
+          tsxTotalNumber={2}
         />
       )}
     </Wrapper>

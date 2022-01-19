@@ -9,6 +9,7 @@ import Footer from "../../components/Footer/Footer";
 import Loading from "../../components/Modals/Loading/Loading";
 import CustomCountdown from "../../components/CustomCountdown/CustomCountdown";
 import ResultsModal from "../../components/Modals/ResultModal/ResultModal";
+import ActionsModal from "../../components/Modals/ActionLoading/ActionLoading";
 // ******** HOC ********
 import withConnect from "../../hoc/withConnect";
 // ******** stores ********
@@ -26,7 +27,11 @@ import contract from "../../services/contract";
 // ******** Config ********
 import pricesOrder from "../../config/pricesOrder";
 // ******** Text ********
-import { DONT_ENOUGH_ETH, SOMETHING_WENT_WRONG } from "../../messages";
+import {
+  DONT_ENOUGH_ETH,
+  SOMETHING_WENT_WRONG,
+  getActionLoadingMintMessage,
+} from "../../messages";
 // ******** Events ********
 import {
   getAllEvents,
@@ -63,6 +68,10 @@ const Minting = () => {
   const [loading, setLoading] = useState(false);
   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [mintSign, setMintSign] = useState(emptyMintSign);
+  // Action Modal
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoadingText, setActionLoadingText] = useState("");
+  const [tsxNumber, setTsxNumber] = useState(0);
   // Total Amount
   const {
     data: amount,
@@ -249,7 +258,9 @@ const Minting = () => {
       tokens = [...allTokens];
     }
     setTokens(tokens);
-    setLoading(false);
+    setActionLoading(false);
+    setActionLoadingText("");
+    setTsxNumber(0);
     setIsResultsModalOpen(true);
   };
 
@@ -278,16 +289,18 @@ const Minting = () => {
           priceMintAndStake.mul(counter),
           mintSign
         );
-        setLoading(true);
+        setActionLoadingText(getActionLoadingMintMessage(+counter));
+        setActionLoading(true);
         tsx
           .wait()
           .then(async (receipt) => {
+            setTsxNumber(2);
             getMintMultiEventAndWaitSecondTx(receipt);
             getFreshData();
           })
           .catch((error) => {
             console.log(error);
-            setLoading(false);
+            setActionLoading(false);
             message.error(SOMETHING_WENT_WRONG);
           });
       } catch (error) {
@@ -311,16 +324,18 @@ const Minting = () => {
           priceMint.mul(counter),
           mintSign
         );
-        setLoading(true);
+        setActionLoadingText(getActionLoadingMintMessage(+counter));
+        setActionLoading(true);
         tsx
           .wait()
           .then(async (receipt) => {
+            setTsxNumber(2);
             getMintMultiEventAndWaitSecondTx(receipt);
             getFreshData();
           })
           .catch((error) => {
             console.log(error);
-            setLoading(false);
+            setActionLoading(false);
             message.error(SOMETHING_WENT_WRONG);
           });
       } catch (error) {
@@ -408,8 +423,20 @@ const Minting = () => {
         <ResultsModal
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
-          title={tokens?.length > 1 ? "You successful minted new tokens!" : "You successful minted new token!"}
+          title={
+            tokens?.length > 1
+              ? "You successful minted new tokens!"
+              : "You successful minted new token!"
+          }
           tokens={tokens}
+        />
+      )}
+      {actionLoading && (
+        <ActionsModal
+          open={actionLoading}
+          text={actionLoadingText}
+          tsxNumber={tsxNumber}
+          tsxTotalNumber={2}
         />
       )}
     </Wrapper>

@@ -54,7 +54,7 @@ export const Title = styled.div`
 
 export const Text = styled.div`
   font-size: 16px;
-  color: ${theme.color.whiteGrey};
+  color: ${({white}) => white ? theme.color.white : theme.color.whiteGrey };
   margin-top: 16px;
   margin-bottom: 16px;
   text-align: center;

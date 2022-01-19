@@ -11,10 +11,11 @@ const Loading = ({ open }) => {
         <LoadingPicture>
           <img src={LoadingImage} alt="Loading" />
         </LoadingPicture>
-        <Text>Loading data
-            <Dot>.</Dot>
-            <Dot>.</Dot>
-            <Dot>.</Dot>
+        <Text>
+          Loading data
+          <Dot>.</Dot>
+          <Dot>.</Dot>
+          <Dot>.</Dot>
         </Text>
       </div>
     </ModalWrapper>

@@ -12,12 +12,16 @@ import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 import StakedApe from "./StakedApe";
 import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
+import ActionLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 // ******** Messages ********
 import {
   SELECT_SOME_UNSTAKED_APE,
   SELECT_SOME_STAKED_APE,
   SOMETHING_WENT_WRONG,
   SOMETHING_WENT_WRONG_UNSTAKE,
+  ACTION_LOADING_CLAIM,
+  getActionLoadingStakeMessage,
+  getActionLoadingUnstakeMessage,
 } from "../../../messages";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -112,6 +116,11 @@ const Factory = () => {
   const [totalClaim, setTotalClaim] = useState(0);
   const [totalSelectedClaim, setTotalSelectedClaim] = useState(0);
   const [loading, setLoading] = useState(false);
+  // Actions Loading
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoadingText, setActionLoadingText] = useState("");
+  const [tsxNumber, setTsxNumber] = useState(0);
+  const [tsxTotalNumber, setTsxTotalNumber] = useState(0);
 
   // Success Modal data
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -141,6 +150,7 @@ const Factory = () => {
     useListClaimAvaliableReward(stakedList, stakedApesData?.spaceOogas);
   // Transaction Events
   const unstakeTokensAmount = useRef(null);
+
   // Get all data
   useEffect(() => {
     let isMounted = true;
@@ -447,6 +457,20 @@ const Factory = () => {
     getFreshData();
   };
 
+  const clearActionLoading = () => {
+    setActionLoading(false);
+    setTsxTotalNumber(0);
+    setTsxNumber(0);
+    setActionLoadingText("");
+  };
+
+  const openActionLoading = (totalNumber, message) => {
+    setActionLoading(true);
+    setTsxTotalNumber(totalNumber);
+    setTsxNumber(1);
+    setActionLoadingText(message);
+  };
+
   const getGasFee = async (list) => {
     let amount = getStakedRoboAmount(list);
     let gasFee = await getCurrentGasFee();
@@ -499,7 +523,7 @@ const Factory = () => {
       unstakeTokens = [...allTokens];
     }
     setTokens(unstakeTokens);
-    setLoading(false);
+    clearActionLoading();
     setIsResultsModalOpen(true);
   };
 
@@ -549,7 +573,7 @@ const Factory = () => {
         owner: userMetaMaskToken,
       },
     });
-    setLoading(false);
+    clearActionLoading();
     setIsResultsModalOpen(true);
   };
 
@@ -568,19 +592,19 @@ const Factory = () => {
     if (tokenIds?.length > 0) {
       try {
         let tsx = await contract.stake(tokenIds);
-        setLoading(true);
+        openActionLoading(1, getActionLoadingStakeMessage(tokenIds));
         tsx
           .wait()
           .then(() => {
             getFreshData();
             setText("It can take few minutes.");
-            setLoading(false);
+            clearActionLoading();
             setIsSuccessModalOpen(true);
           })
           .catch((error) => {
             console.log(error);
             message.error(SOMETHING_WENT_WRONG);
-            setLoading(false);
+            clearActionLoading();
           });
       } catch (error) {
         console.log(error);
@@ -604,7 +628,7 @@ const Factory = () => {
       if (tokenIds?.length > 0) {
         try {
           let tsx = await contract.claimReward(tokenIds);
-          setLoading(true);
+          openActionLoading(1, ACTION_LOADING_CLAIM);
           tsx
             .wait()
             .then((receipt) => {
@@ -614,7 +638,7 @@ const Factory = () => {
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
-              setLoading(false);
+              clearActionLoading();
             });
         } catch (error) {
           console.log(error);
@@ -638,17 +662,18 @@ const Factory = () => {
         let gasFee = await getGasFee(selectedStaked);
         try {
           let tsx = await contract.unstake(tokenIds, gasFee);
-          setLoading(true);
+          openActionLoading(2, getActionLoadingUnstakeMessage(tokenIds));
           tsx
             .wait()
             .then((receipt) => {
+              setTsxNumber(2);
               getClaimEventAndWaitSecondTx(receipt);
               getOogearBalance();
             })
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
-              setLoading(false);
+              clearActionLoading(false);
             });
         } catch (error) {
           console.log(error);
@@ -783,6 +808,14 @@ const Factory = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
+        />
+      )}
+      {actionLoading && (
+        <ActionLoading
+          open={actionLoading}
+          text={actionLoadingText}
+          tsxNumber={tsxNumber}
+          tsxTotalNumber={tsxTotalNumber}
         />
       )}
     </Wrapper>

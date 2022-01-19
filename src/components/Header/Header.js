@@ -76,11 +76,11 @@ const Header = ({ page }) => {
         className={({ isActive }) => (isActive ? "active" : "")}>
         Whitepaper
       </NavLink>
-      <NavLink
+      {/* <NavLink
         to="/terms"
         className={({ isActive }) => (isActive ? "active" : "")}>
         Terms of Use
-      </NavLink>
+      </NavLink> */}
     </NavList>
   );
 

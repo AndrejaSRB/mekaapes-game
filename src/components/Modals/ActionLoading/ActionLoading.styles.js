@@ -6,10 +6,11 @@ import { Modal } from "antd";
 
 export const ModalWrapper = styled(Modal)`
   & > .ant-modal-content {
-    background-color: transparent;
+    background-color: #221c38;
     padding: 64px 0;
     color: ${theme.color.white};
     border-radius: 50px;
+    border: 10px solid ${theme.color.green};
     margin: 0 10px;
     & > .ant-modal-body {
       padding: 0;
@@ -40,6 +41,7 @@ export const ModalWrapper = styled(Modal)`
 export const LoadingPicture = styled.div`
   width: 100%;
   text-align: center;
+  margin-bottom: 16px;
   img {
     width: 170px;
     border-radius: 30px;
@@ -50,15 +52,6 @@ export const LoadingPicture = styled.div`
     img {
       width: 215px;
     }
-  }
-`;
-
-export const Text = styled.div`
-  font-size: 25px;
-  color: ${theme.color.white};
-  margin-top: 25px;
-  @media only screen and (min-width: 789px) {
-    font-size: 38px;
   }
 `;
 
@@ -79,5 +72,25 @@ export const Dot = styled.span`
   }
   &:nth-child(3) {
     animation-delay: 500ms;
+  }
+`;
+
+export const SmallText = styled.div`
+  font-size: 16px;
+  color: ${theme.color.white};
+  margin-top: 12px;
+  text-align: center;
+  @media only screen and (min-width: 789px) {
+    font-size: 21px;
+    max-width: 500px
+  }
+`;
+
+export const HelperText = styled.div`
+  font-size: 14px;
+  color: ${theme.color.whiteGrey};
+  margin-top: 14px;
+  @media only screen and (min-width: 789px) {
+    font-size: 18px;
   }
 `;

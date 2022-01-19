@@ -60,6 +60,7 @@ export class Contract {
   // mints amount new tokens with $OG
   // toStake is boolean if is staked or not
   async mintWithOG(amount, toStake, price) {
+      console.log('price', price);
     return await this.mekaApesContract.mintWithOG(amount, toStake, {
       value: price,
     });

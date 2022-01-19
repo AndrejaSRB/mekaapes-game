@@ -11,7 +11,6 @@ import {
   Text,
 } from "./ResultModal.styles";
 
-// TODO Claiming total amount
 // TODO Merge new Level
 // TODO Mint - get Gifted Meka Ape ID
 const ResultModal = ({ open, handleClose, tokens }) => {
@@ -88,11 +87,19 @@ const ResultModal = ({ open, handleClose, tokens }) => {
         return tokens.map((token) => {
           if (token.stolen === null) {
             return (
-              <Text>{`You successfully minted ${token.name} #${token.id}!`}</Text>
+              <Text
+                white
+                key={
+                  token.id
+                }>{`You successfully minted ${token.name} #${token.id}!`}</Text>
             );
           } else {
             return (
-              <Text>{`${token.name} #${token.id} was gifted to MekaApe #xxxx!`}</Text>
+              <Text
+                white
+                key={
+                  token.id
+                }>{`${token.name} #${token.id} was gifted to MekaApe #xxxx!`}</Text>
             );
           }
         });
@@ -103,7 +110,9 @@ const ResultModal = ({ open, handleClose, tokens }) => {
   const getClaimMessage = () => {
     if (tokens?.length > 0) {
       return tokens.map((token) => (
-          <Text key={token.id}>{`You successfully claimed ${beautifyNumber(token.amount)} $OG after all taxes.`}</Text>
+        <Text white key={token.id}>{`You successfully claimed ${beautifyNumber(
+          token.amount
+        )} $OG after all taxes.`}</Text>
       ));
     }
   };
@@ -112,6 +121,7 @@ const ResultModal = ({ open, handleClose, tokens }) => {
     if (tokens?.length > 0) {
       return tokens.map((token) => (
         <Text
+          white
           key={token.id}>{`MekaApe #${token.id} received Mega Level X`}</Text>
       ));
     }
@@ -121,6 +131,7 @@ const ResultModal = ({ open, handleClose, tokens }) => {
     if (tokens?.length > 0) {
       return tokens.map((token) => (
         <Text
+          white
           key={
             token.id
           }>{`Robo Ooga #${token.id} reached level ${token.level}`}</Text>
@@ -140,6 +151,7 @@ const ResultModal = ({ open, handleClose, tokens }) => {
       if (tokens?.length > 0) {
         return tokens.map((token) => (
           <Text
+            white
             key={
               token.id
             }>{`You successfully claimed MekaApe #${token.id}!`}</Text>
@@ -220,6 +232,5 @@ export default ResultModal;
 ResultModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
   tokens: PropTypes.array.isRequired,
 };

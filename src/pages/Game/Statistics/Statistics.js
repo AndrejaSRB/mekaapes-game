@@ -8,7 +8,7 @@ import Loading from "../../../components/Modals/Loading/Loading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Funcstions ********
-import { beautifyNumber } from '../Factory/helper';
+import { beautifyNumber } from "../Factory/helper";
 // ******** Queires ********
 import { GET_LEADERBOARD } from "../../../queries";
 // ******** Styles ********
@@ -69,6 +69,55 @@ const Statistics = () => {
     }
   };
 
+  const getBeautifiedNumber = (value) =>
+    value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  const renderGameStatus = () => {
+    if (data?.gameStatus) {
+      const { gameStatus } = data;
+      return (
+        <div>
+          <Stats position="first">
+            <span>MekaApes Minted:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.mekaApesMinted)}
+            </span>
+          </Stats>
+          <Stats>
+            <span>MekaApes Staked:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.mekaApesStaked)}
+            </span>
+          </Stats>
+          <Stats>
+            <span>Robo Oogas Minted:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.roboOogasMinted)}
+            </span>
+          </Stats>
+          <Stats>
+            <span>Robo Oogas Staked:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.roboOogasStaked)}
+            </span>
+          </Stats>
+          <Stats>
+            <span>MekaApes Gifted:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.mekaApesGifted)}
+            </span>
+          </Stats>
+          <Stats position="last">
+            <span>Robo Oogas Gifted:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
+            </span>
+          </Stats>
+        </div>
+      );
+    }
+  };
+
   return (
     <Wrapper>
       <Header page="game" />
@@ -79,32 +128,7 @@ const Statistics = () => {
         <Holder>
           <Box>
             <h4>Game Status</h4>
-            <div>
-              <Stats position="first">
-                <span>MekaApes Minted:</span>
-                <span className="number">3.212</span>
-              </Stats>
-              <Stats>
-                <span>MekaApes Staked:</span>
-                <span className="number">3.212</span>
-              </Stats>
-              <Stats>
-                <span>Robo Oogas Minted:</span>
-                <span className="number">3.212</span>
-              </Stats>
-              <Stats>
-                <span>Robo Oogas Staked:</span>
-                <span className="number">3.212</span>
-              </Stats>
-              <Stats>
-                <span>MekaApes Gifted:</span>
-                <span className="number">3.212</span>
-              </Stats>
-              <Stats position="last">
-                <span>Robo Oogas Gifted:</span>
-                <span className="number">3.212</span>
-              </Stats>
-            </div>
+            {renderGameStatus()}
             <TotalText>
               Daily Users: <span>1.500.000</span>
             </TotalText>

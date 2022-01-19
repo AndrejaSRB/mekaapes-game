@@ -111,5 +111,14 @@ export const GET_LEADERBOARD = gql`
       id
       ooGear
     }
+    gameStatus(subgraphError: allow, id: "gamestatus") {
+      id
+      mekaApesMinted
+      mekaApesStaked
+      roboOogasMinted
+      roboOogasStaked
+      roboOogasGifted
+      mekaApesGifted
+    }
   }
 `;

@@ -7,6 +7,7 @@ import Footer from "../../../components/Footer/Footer";
 import StatusBar from "../../../components/StatusBar/StatusBar";
 import Loading from "../../../components/Modals/Loading/Loading";
 import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
+import ActionsModal from "../../../components/Modals/ActionLoading/ActionLoading";
 // ******** Images ********
 import Animation from "../../../assets/crafting_animation.gif";
 // ******** HOC ********
@@ -33,6 +34,7 @@ import {
   DONT_ENOUGH_OG,
   DONT_ENOUGH_DMT,
   SOMETHING_WENT_WRONG,
+  getActionLoadingMintMessage,
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
@@ -88,6 +90,10 @@ const Crafting = () => {
   const [isDMTApproved, setIsDMTApproved] = useState(true);
   const [disabledApproveBtn, setDisableApproveBtn] = useState(false);
   const [loader, setLoading] = useState(false);
+  // Action Modal
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoadingText, setActionLoadingText] = useState("");
+  const [tsxNumber, setTsxNumber] = useState(0);
   // Total Amount
   const {
     data: totalMintedTokens,
@@ -341,7 +347,9 @@ const Crafting = () => {
       tokens = [...allTokens];
     }
     setTokens(tokens);
-    setLoading(false);
+    setActionLoading(false);
+    setActionLoadingText("");
+    setTsxNumber(0);
     setIsResultsModalOpen(true);
   };
 
@@ -364,10 +372,12 @@ const Crafting = () => {
         let gasFee = await getGasFee(+oogearCounter, false);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, false, gasFee);
-          setLoading(true);
+          setActionLoadingText(getActionLoadingMintMessage(+oogearCounter));
+          setActionLoading(true);
           tsx
             .wait()
             .then(async (receipt) => {
+              setTsxNumber(2);
               getMintMultiEventAndWaitSecondTx(receipt);
               getOogearBalance();
               getTotalMinted();
@@ -375,7 +385,7 @@ const Crafting = () => {
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
-              setLoading(false);
+              setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
@@ -398,10 +408,12 @@ const Crafting = () => {
         let gasFee = await getGasFee(+oogearCounter, true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true, gasFee);
-          setLoading(true);
+          setActionLoadingText(getActionLoadingMintMessage(+oogearCounter));
+          setActionLoading(true);
           tsx
             .wait()
             .then(async (receipt) => {
+              setTsxNumber(2);
               getMintMultiEventAndWaitSecondTx(receipt);
               getOogearBalance();
               getTotalMinted();
@@ -409,7 +421,7 @@ const Crafting = () => {
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
-              setLoading(false);
+              setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
@@ -430,10 +442,12 @@ const Crafting = () => {
         let gasFee = await getGasFee(+dmtCounter, true);
         try {
           let tsx = await contract.mintWithDMT(dmtCounter, gasFee);
-          setLoading(true);
+          setActionLoadingText(getActionLoadingMintMessage(+dmtCounter));
+          setActionLoading(true);
           tsx
             .wait()
             .then(async (receipt) => {
+              setTsxNumber(2);
               getMintMultiEventAndWaitSecondTx(receipt);
               getDmtBalance();
               getTotalMinted();
@@ -442,7 +456,7 @@ const Crafting = () => {
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
-              setLoading(false);
+              setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
@@ -507,10 +521,12 @@ const Crafting = () => {
                 </button>
               </ButtonBox>
               <HelperOGText>
-                Mint Price: {beautifyNumber(convertBigNumberToPrice(mintOGPrice))} $OG{" "}
+                Mint Price:{" "}
+                {beautifyNumber(convertBigNumberToPrice(mintOGPrice))} $OG{" "}
                 <span>
                   Mint & Stake Price:{" "}
-                  {beautifyNumber(convertBigNumberToPrice(mintAndStakeOGPrice))} $OG
+                  {beautifyNumber(convertBigNumberToPrice(mintAndStakeOGPrice))}{" "}
+                  $OG
                 </span>
               </HelperOGText>
             </OogearBox>
@@ -551,7 +567,8 @@ const Crafting = () => {
                 </Button>
               )}
               <HelperText>
-                Price {beautifyNumber(convertBigNumberToPrice(mintDMTPrice))} $DMT{" "}
+                Price {beautifyNumber(convertBigNumberToPrice(mintDMTPrice))}{" "}
+                $DMT{" "}
                 <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
               </HelperText>
             </DmtBox>
@@ -572,6 +589,14 @@ const Crafting = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
+        />
+      )}
+      {actionLoading && (
+        <ActionsModal
+          open={actionLoading}
+          text={actionLoadingText}
+          tsxNumber={tsxNumber}
+          tsxTotalNumber={2}
         />
       )}
     </Wrapper>

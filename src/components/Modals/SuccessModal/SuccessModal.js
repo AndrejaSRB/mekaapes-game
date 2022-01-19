@@ -21,9 +21,6 @@ const SuccessModal = ({ open, title, text, handleClose }) => {
       onCancel={handleClose}>
       <div className="content">
         <Title>{title}</Title>
-        {/* <Animation>
-          <img src={Image} alt="test" />
-        </Animation> */}
         <Text>{text}</Text>
         <ButtonWrapper>
           <button onClick={handleClose}>Close</button>

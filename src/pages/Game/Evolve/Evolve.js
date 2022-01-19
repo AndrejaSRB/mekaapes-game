@@ -7,6 +7,7 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
 import ResultModal from "../../../components/Modals/ResultModal/ResultModal";
+import ActionsLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 import Ape from "./Ape";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
@@ -21,7 +22,11 @@ import contract from "../../../services/contract";
 import { MintedContext } from "../../../store/minted-context";
 import { UserContext } from "../../../store/user-context";
 // ******** Text ********
-import { PRE_SALE_IS_ONGOING, SOMETHING_WENT_WRONG } from "../../../messages";
+import {
+  PRE_SALE_IS_ONGOING,
+  SOMETHING_WENT_WRONG,
+  getActionLoadingEvolveMessage,
+} from "../../../messages";
 // ******** Queires ********
 import { GET_BABY_OOGAS } from "../../../queries";
 // ******** Events ********
@@ -58,6 +63,8 @@ const Evolve = () => {
   const [minElementNumber, setMinElementNumber] = useState(16);
   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoadingText, setActionLoadingText] = useState("");
   const [tokens, setTokens] = useState(null);
   const [getBabies, { loading, data }] = useLazyQuery(GET_BABY_OOGAS);
 
@@ -251,7 +258,8 @@ const Evolve = () => {
         owner: userMetaMaskToken,
       },
     });
-    setLoader(false);
+    setActionLoadingText("");
+    setActionLoading(false);
     setIsResultsModalOpen(true);
   };
 
@@ -263,7 +271,9 @@ const Evolve = () => {
         selected.forEach((token) => tokenIds.push(token.id));
         try {
           let tsx = await contract.evolveBabyOogas(tokenIds);
-          setLoader(true);
+          setActionLoading(true);
+          setActionLoadingText(getActionLoadingEvolveMessage(selected));
+
           tsx
             .wait()
             .then((receipt) => {
@@ -272,7 +282,7 @@ const Evolve = () => {
             .catch((error) => {
               console.log(error);
               message.error(SOMETHING_WENT_WRONG);
-              setLoader(false);
+              setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
@@ -341,6 +351,14 @@ const Evolve = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
+        />
+      )}
+      {actionLoading && (
+        <ActionsLoading
+          open={actionLoading}
+          text={actionLoadingText}
+          tsxNumber={1}
+          tsxTotalNumber={1}
         />
       )}
     </Wrapper>

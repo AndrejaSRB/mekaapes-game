@@ -9,6 +9,7 @@ import LevelRoboOogas from "../../../components/Modals/LevelRoboOogas/LevelRoboO
 import UpgradeInfo from "../../../components/Modals/UpgradeInfo/UpgradeInfo";
 import Loading from "../../../components/Modals/Loading/Loading";
 import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
+import ActionsLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
@@ -40,6 +41,7 @@ import {
   DONT_ENOUGH_DMT,
   PRE_SALE_IS_ONGOING,
   SOMETHING_WENT_WRONG,
+  ACTION_LOADING_UPGRADE
 } from "../../../messages";
 // ******** Styles ********
 import {
@@ -80,6 +82,7 @@ const Upgrade = () => {
   const [selectedApe, setSelectedApe] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
   const [isApprovedBtnDisabled, setIsApprovedBtnDisabled] = useState(false);
   const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
@@ -298,7 +301,7 @@ const Upgrade = () => {
     setTokens(allTokens);
     setSelectedApe(null);
     getFreshData();
-    setLoading(false);
+    setActionLoading(false);
     setIsResultsModalOpen(true);
   };
 
@@ -332,7 +335,7 @@ const Upgrade = () => {
           setIsDisabled(true);
           try {
             let tsx = await contract.levelUpRoboOooga(selectedApe.id);
-            setLoading(true);
+            setActionLoading(true);
             tsx
               .wait()
               .then(async (receipt) => {
@@ -342,7 +345,7 @@ const Upgrade = () => {
               .catch((error) => {
                 console.log(error);
                 message.error(SOMETHING_WENT_WRONG);
-                setLoading(false);
+                setActionLoading(false);
               });
           } catch (error) {
             console.log(error);
@@ -448,6 +451,14 @@ const Upgrade = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
+        />
+      )}
+      {actionLoading && (
+        <ActionsLoading
+          open={actionLoading}
+          text={ACTION_LOADING_UPGRADE}
+          tsxNumber={1}
+          tsxTotalNumber={1}
         />
       )}
     </Wrapper>
