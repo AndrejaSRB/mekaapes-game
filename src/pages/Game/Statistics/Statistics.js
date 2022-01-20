@@ -23,6 +23,7 @@ import {
   LeaderboardsBox,
   Place,
   BoardWrapper,
+  StatsBox,
 } from "./Statistics.styles";
 
 const Statistics = () => {
@@ -76,7 +77,7 @@ const Statistics = () => {
     if (data?.gameStatus) {
       const { gameStatus } = data;
       return (
-        <div>
+        <StatsBox>
           <Stats position="first">
             <span>MekaApes Minted:</span>
             <span className="number">
@@ -113,8 +114,10 @@ const Statistics = () => {
               {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
             </span>
           </Stats>
-        </div>
+        </StatsBox>
       );
+    } else {
+      return <StatsBox />;
     }
   };
 

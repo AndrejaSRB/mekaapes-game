@@ -281,3 +281,9 @@ export const Place = styled.div`
     }
   }
 `;
+
+export const StatsBox = styled.div`
+  @media only screen and (min-width: 1200px) {
+    min-height: 400px;
+  }
+`;

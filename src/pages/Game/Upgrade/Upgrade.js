@@ -92,11 +92,15 @@ const Upgrade = () => {
   const [
     getUnstakedRoboOogas,
     { loading: unstakedRoboLoading, data: unstakedRoboData },
-  ] = useLazyQuery(GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS);
+  ] = useLazyQuery(GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS, {
+    fetchPolicy: "no-cache",
+  });
   const [
     getStakedRoboOogas,
     { loading: stakedRoboLoading, data: stakedRoboData },
-  ] = useLazyQuery(GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS);
+  ] = useLazyQuery(GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS, {
+    fetchPolicy: "no-cache",
+  });
   // Prices
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
