@@ -57,8 +57,8 @@ import {
 const emptyMintSign = {
   mintAllowance: 0,
   _v: 0,
-  _s: 0,
-  _r: 0,
+  _s: ethers.constants.HashZero,
+  _r: ethers.constants.HashZero,
 };
 
 const Minting = () => {
@@ -288,11 +288,9 @@ const Minting = () => {
   };
 
   const handleClickMintAndStake = async () => {
-    if (
-      currentETHBalance.toString() >
-      +priceMintAndStake.toString() * counter
-    ) {
+    if (currentETHBalance.gt(priceMintAndStake.mul(counter))) {
       setIsDisabled(true);
+
       try {
         let tsx = await contract.mint(
           counter,
@@ -326,7 +324,7 @@ const Minting = () => {
   };
 
   const handleClickMint = async () => {
-    if (currentETHBalance.toString() > priceMint.toString() * counter) {
+    if (currentETHBalance.gt(priceMint.mul(counter))) {
       setIsDisabled(true);
       try {
         let tsx = await contract.mint(
