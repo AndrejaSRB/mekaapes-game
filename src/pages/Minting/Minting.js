@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import { ethers, BigNumber } from "ethers";
+import { useApolloClient } from "@apollo/client";
 // ******** Config ********
 import whitelistJSON from "../../config/whitelistMintSignatures.json";
 // ******** Components ********
@@ -61,6 +62,7 @@ const emptyMintSign = {
 };
 
 const Minting = () => {
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const { isMintSale } = useContext(MintedContext);
   const [counter, setCounter] = useState(0);
@@ -197,15 +199,24 @@ const Minting = () => {
     }
   };
 
-  const getFreshData = () => {
+  const getFreshData = async () => {
     getTotalMinted();
     getMaxTokenAmount();
     getEthBalance();
+    await getFreshTokens();
   };
 
-  const handleCloseResultsModal = () => {
+  const getFreshTokens = async () => {
+    await client.cache.reset().then(async () => {
+      await client.refetchQueries({
+        include: ["GetUnstakeRoboOogas", "GetUnstakeMekaApes", "GetStakedApe"],
+      });
+    });
+  };
+
+  const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
-    getFreshData();
+    await getFreshData();
     setTokens(null);
     tsxAmount.current = BigNumber.from(0);
     tsxStartFromTokenId.current = BigNumber.from(0);

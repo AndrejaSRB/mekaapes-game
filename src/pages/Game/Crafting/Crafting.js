@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { BigNumber } from "ethers";
+import { useApolloClient } from "@apollo/client";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -74,6 +75,7 @@ const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
 
 const Crafting = () => {
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const {
     getOogearBalance,
@@ -259,13 +261,22 @@ const Crafting = () => {
     return balance.gt(totalPrice);
   };
 
-  const handleCloseResultsModal = () => {
+  const getFreshTokens = async () => {
+    await client.cache.reset().then(async () => {
+      await client.refetchQueries({
+        include: ["GetUnstakeRoboOogas", "GetUnstakeMekaApes", "GetStakedApe"],
+      });
+    });
+  };
+
+  const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
     getTotalMinted();
     getTotalMintedDMTAmount();
     setTokens(null);
     tsxAmount.current = BigNumber.from(0);
     tsxStartFromTokenId.current = BigNumber.from(0);
+    await getFreshTokens();
   };
 
   const handleClickApproveDMT = async () => {
@@ -339,10 +350,10 @@ const Crafting = () => {
       mekaConvertEvent.forEach((event) => {
         let tokenId = event.args.tokenId.toNumber();
         allTokens.forEach((token) => {
-            let mekaApeId = token.args.tributeOogaId.toNumber();
+          let mekaApeId = token.args.tributeOogaId.toNumber();
           if (token.id === tokenId) {
             token.stolen = true;
-            token.stolenApeId = mekaApeId
+            token.stolenApeId = mekaApeId;
           }
         });
       });

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -52,6 +52,7 @@ import {
 //TOOD display something after evolve
 
 const Evolve = () => {
+  const client = useApolloClient();
   const { width } = useWindowDimenstions();
   const { isMintSale } = useContext(MintedContext);
   const { userMetaMaskToken } = useContext(UserContext);
@@ -230,13 +231,15 @@ const Evolve = () => {
     }
   };
 
-  const handleCloseResultsModal = () => {
-    setIsResultsModalOpen(false);
-    getBabies({
-      variables: {
-        owner: userMetaMaskToken,
-      },
+  const handleCloseResultsModal = async () => {
+    await client.cache.reset().then(async () => {
+      getBabies({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
     });
+    setIsResultsModalOpen(false);
   };
 
   const getEvolveEvent = (receipt) => {

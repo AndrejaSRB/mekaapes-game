@@ -6,9 +6,8 @@ const ORIGIN = process.env.REACT_APP_ORIGIN;
 
 const fetchItem = async (ape) => {
   if (ape.id && !ape.placeholder) {
-    let customId = 2002000 + +ape.id;
     let response = await axios.get(
-      `${MEKAGAME_AWS_METADATA}/${customId}.json`,
+      `${MEKAGAME_AWS_METADATA}/${ape.id}.json`,
       {
         headers: {
           "Access-Control-Allow-Origin": ORIGIN,

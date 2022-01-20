@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 import { BigNumber } from "ethers";
 // ******** Components ********
 import { message } from "antd";
@@ -41,7 +41,7 @@ import {
   DONT_ENOUGH_DMT,
   PRE_SALE_IS_ONGOING,
   SOMETHING_WENT_WRONG,
-  ACTION_LOADING_UPGRADE
+  ACTION_LOADING_UPGRADE,
 } from "../../../messages";
 // ******** Styles ********
 import {
@@ -75,6 +75,7 @@ const LevelBox = ({ level }) => (
 );
 
 const Upgrade = () => {
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const { isMintSale } = useContext(MintedContext);
   const { getDmtBalance, DMTBalanceBigNumber } = useContext(BalanceContext);
@@ -254,16 +255,18 @@ const Upgrade = () => {
     }
   };
 
-  const getFreshData = () => {
-    getUnstakedRoboOogas({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getStakedRoboOogas({
-      variables: {
-        owner: userMetaMaskToken,
-      },
+  const getFreshData = async () => {
+    await client.cache.reset().then(async () => {
+      getUnstakedRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getStakedRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
     });
   };
 
@@ -279,9 +282,9 @@ const Upgrade = () => {
     return disabled;
   };
 
-  const handleCloseResultsModal = () => {
+  const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
-    getFreshData();
+    await getFreshData();
     setTokens(null);
   };
 

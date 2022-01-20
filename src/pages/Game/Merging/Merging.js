@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 import { BigNumber, ethers } from "ethers";
 // ******** Components ********
 import { message } from "antd";
@@ -61,6 +61,7 @@ import {
 } from "./Merging.styles";
 
 const Merging = () => {
+  const client = useApolloClient();
   const { isMintSale } = useContext(MintedContext);
   const { userMetaMaskToken } = useContext(UserContext);
   const { getOogearBalance, OGBalanceBigNumber } = useContext(BalanceContext);
@@ -212,16 +213,18 @@ const Merging = () => {
     }
   };
 
-  const getFreshData = () => {
-    getUnstakeMekaApes({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getStakedMekaApes({
-      variables: {
-        owner: userMetaMaskToken,
-      },
+  const getFreshData = async () => {
+    await client.cache.reset().then(async () => {
+      getUnstakeMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getStakedMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
     });
   };
 
