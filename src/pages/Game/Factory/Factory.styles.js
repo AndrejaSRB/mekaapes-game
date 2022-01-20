@@ -163,7 +163,7 @@ export const NftList = styled.div`
     margin-bottom: 49px;
   }
   @media only screen and (min-width: 1200px) {
-    max-width: 332px;
+    max-width: 339px;
     margin-bottom: ${({ meka }) => (meka ? "0px" : "35px")};
     height: 148px;
   }

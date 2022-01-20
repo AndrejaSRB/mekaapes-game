@@ -270,6 +270,7 @@ const Merging = () => {
     setTsxNumber(1);
     setKeepMeka(null);
     setBurnMeka(null);
+    getFreshData();
     setIsResultsModalOpen(true);
   };
 

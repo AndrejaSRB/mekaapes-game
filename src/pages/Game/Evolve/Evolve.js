@@ -231,7 +231,7 @@ const Evolve = () => {
     }
   };
 
-  const handleCloseResultsModal = async () => {
+  const getFreshData = async () => {
     await client.cache.reset().then(async () => {
       getBabies({
         variables: {
@@ -239,6 +239,10 @@ const Evolve = () => {
         },
       });
     });
+  };
+
+  const handleCloseResultsModal = async () => {
+    getFreshData();
     setIsResultsModalOpen(false);
   };
 
@@ -256,11 +260,7 @@ const Evolve = () => {
       });
     }
     setTokens(allTokens);
-    getBabies({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
+    getFreshData();
     setActionLoadingText("");
     setActionLoading(false);
     setIsResultsModalOpen(true);
