@@ -173,3 +173,7 @@ export const beautifyNumber = (value) => {
   const formattedNumber = Number(value).toLocaleString("en", options);
   return formattedNumber;
 };
+
+export const getRandomArbitrary = () => {
+  return Math.random() * (100 * 10 ** 9 - 1) + 1;
+};

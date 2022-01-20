@@ -254,6 +254,7 @@ const Merging = () => {
       mekaApesContract,
       MEKA_MERGE
     );
+    console.log('mekaConvertEvent', mekaConvertEvent);
     if (mekaConvertEvent?.length > 0) {
       mekaConvertEvent.forEach((event) => {
         let tokenId = event.args.tokenId.toNumber();
