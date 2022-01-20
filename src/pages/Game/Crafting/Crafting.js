@@ -265,6 +265,7 @@ const Crafting = () => {
     getTotalMinted();
     getTotalMintedDMTAmount();
     setTokens(null);
+    setCraftingType(null);
     tsxAmount.current = BigNumber.from(0);
     tsxStartFromTokenId.current = BigNumber.from(0);
   };

@@ -121,8 +121,7 @@ const MergeMekaApes = ({
       <div className="content">
         <Title>MekaApes</Title>
         <Subtitle>
-          Select the MekaApe you want to merge. Staked MekaApes can't be merged.
-          You need to unstake the MekaApes before being able to merge them.
+          Select the MekaApe you want to merge.
         </Subtitle>
         <MekaApesBox length={listLength}>{handleRenderElements()}</MekaApesBox>
         <ButtonWrapper>

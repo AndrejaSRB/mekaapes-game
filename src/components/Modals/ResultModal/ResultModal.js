@@ -11,7 +11,6 @@ import {
   Text,
 } from "./ResultModal.styles";
 
-// TODO fix crafting (minting) messages mint&stake and stake - implement the same logic on Minting.js page
 const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
   const [messageType, setMessageType] = useState("");
 
@@ -27,11 +26,11 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
     if (token?.type === "crafting") {
       if (token.stolen === null) {
         return (
-          <Text>{`You successfully minted ${token.name} #${token.id}!`}</Text>
+          <Text white>{`You successfully minted ${token.name} #${token.id}!`}</Text>
         );
       } else {
         return (
-          <Text>{`${token.name} #${token.id} was gifted to MekaApe #xxxx!`}</Text>
+          <Text white>{`${token.name} #${token.id} was gifted to MekaApe #${token.stolenApeId}!`}</Text>
         );
       }
     } else if (token?.type === "evolve") {
@@ -77,11 +76,6 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
     if (tokens?.length > 1) {
       return (
         <>
-          <Text>
-            {craftingType === "mint&stake"
-              ? `Your NFTs are successfully minted and staked in the Factory.`
-              : `Your NFTs are successfully minted.`}
-          </Text>
           <List>{renderTokens()}</List>
         </>
       );
@@ -198,6 +192,11 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
         return (
           <>
             <Title>Congratulations!</Title>
+            <Text>
+              {craftingType === "mint&stake"
+                ? `Your NFTs are successfully minted and staked in the Factory.`
+                : `Your NFTs are successfully minted.`}
+            </Text>
             {getCraftingMessage()}
           </>
         );

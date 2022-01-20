@@ -16,7 +16,7 @@ export const SOMETHING_WENT_WRONG_UNSTAKE =
 export const ACTION_LOADING_CLAIM =
   "Claiming $OG is in progress. It might take a couple of minutes.";
 export const ACTION_LOADING_MERGE =
-  "Merging your Meka Apes is in the progress. Your new Mega Meka will come soon. It could take a couple of minutes.";
+  "Merging your MekaApes is in the progress. Your new Mega Meka will come soon. It could take a couple of minutes.";
 
 export const getActionLoadingUpgrade = (id) =>
   `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;

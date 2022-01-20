@@ -102,6 +102,7 @@ const Minting = () => {
   const tsxAmount = useRef(BigNumber.from(0));
   const tsxStartFromTokenId = useRef(BigNumber.from(0));
   const [tokens, setTokens] = useState(null);
+  const [craftingType, setCraftingType] = useState(null);
 
   // loading state
   useEffect(() => {
@@ -218,6 +219,7 @@ const Minting = () => {
     setIsResultsModalOpen(false);
     await getFreshData();
     setTokens(null);
+    setCraftingType(null);
     tsxAmount.current = BigNumber.from(0);
     tsxStartFromTokenId.current = BigNumber.from(0);
   };
@@ -250,7 +252,7 @@ const Minting = () => {
         let tokenId = event.args.tokenId.toNumber();
         allTokens.forEach((token) => {
           if (token.id === tokenId) {
-            token.name = "Mega Ape";
+            token.name = "MegaApe";
           }
         });
       });
@@ -290,6 +292,7 @@ const Minting = () => {
   const handleClickMintAndStake = async () => {
     if (currentETHBalance.gt(priceMintAndStake.mul(counter))) {
       setIsDisabled(true);
+      setCraftingType('mint&stake');
 
       try {
         let tsx = await contract.mint(
@@ -326,6 +329,7 @@ const Minting = () => {
   const handleClickMint = async () => {
     if (currentETHBalance.gt(priceMint.mul(counter))) {
       setIsDisabled(true);
+      setCraftingType('mint');
       try {
         let tsx = await contract.mint(
           counter,
@@ -432,12 +436,8 @@ const Minting = () => {
         <ResultsModal
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
-          title={
-            tokens?.length > 1
-              ? "You successful minted new tokens!"
-              : "You successful minted new token!"
-          }
           tokens={tokens}
+          craftingType={craftingType}
         />
       )}
       {actionLoading && (
