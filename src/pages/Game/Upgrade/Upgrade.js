@@ -41,7 +41,7 @@ import {
   DONT_ENOUGH_DMT,
   PRE_SALE_IS_ONGOING,
   SOMETHING_WENT_WRONG,
-  ACTION_LOADING_UPGRADE,
+  getActionLoadingUpgrade,
 } from "../../../messages";
 // ******** Styles ********
 import {
@@ -113,6 +113,7 @@ const Upgrade = () => {
   } = useIsDMTTransactionApproved(userMetaMaskToken, price);
   // Events
   const [tokens, setTokens] = useState(null);
+  const [text, setText] = useState("");
 
   useEffect(() => {
     if (
@@ -289,6 +290,7 @@ const Upgrade = () => {
   const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
     await getFreshData();
+    setText("");
     setTokens(null);
   };
 
@@ -340,6 +342,7 @@ const Upgrade = () => {
       if (DMTBalanceBigNumber.gt(price)) {
         if (selectedApe) {
           setIsDisabled(true);
+          setText(getActionLoadingUpgrade(selectedApe.id));
           try {
             let tsx = await contract.levelUpRoboOooga(selectedApe.id);
             setActionLoading(true);
@@ -463,7 +466,7 @@ const Upgrade = () => {
       {actionLoading && (
         <ActionsLoading
           open={actionLoading}
-          text={ACTION_LOADING_UPGRADE}
+          text={text}
           tsxNumber={1}
           tsxTotalNumber={1}
         />

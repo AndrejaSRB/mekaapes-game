@@ -11,7 +11,8 @@ import {
   Text,
 } from "./ResultModal.styles";
 
-const ResultModal = ({ open, handleClose, tokens }) => {
+// TODO fix crafting (minting) messages mint&stake and stake - implement the same logic on Minting.js page
+const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
   const [messageType, setMessageType] = useState("");
 
   useEffect(() => {
@@ -76,7 +77,11 @@ const ResultModal = ({ open, handleClose, tokens }) => {
     if (tokens?.length > 1) {
       return (
         <>
-          <Text>{`You successfully claimed:`}</Text>
+          <Text>
+            {craftingType === "mint&stake"
+              ? `Your NFTs are successfully minted and staked in the Factory.`
+              : `Your NFTs are successfully minted.`}
+          </Text>
           <List>{renderTokens()}</List>
         </>
       );
@@ -110,7 +115,7 @@ const ResultModal = ({ open, handleClose, tokens }) => {
       return tokens.map((token) => (
         <Text white key={token.id}>{`You successfully claimed ${beautifyNumber(
           token.amount
-        )} $OG after all taxes.`}</Text>
+        )} $OG!`}</Text>
       ));
     }
   };
@@ -122,7 +127,7 @@ const ResultModal = ({ open, handleClose, tokens }) => {
           white
           key={
             token.id
-          }>{`MekaApe #${token.id} received Mega Level ${token.level}`}</Text>
+          }>{`MekaApe #${token.id} received Mega Level M${token.level}!`}</Text>
       ));
     }
   };

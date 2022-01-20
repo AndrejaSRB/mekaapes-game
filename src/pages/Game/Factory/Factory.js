@@ -597,7 +597,7 @@ const Factory = () => {
           .wait()
           .then(() => {
             getFreshData();
-            setText("It can take few minutes.");
+            setText(`It may take a few minutes until your NFTs are displayed as "staked".`);
             clearActionLoading();
             setIsSuccessModalOpen(true);
           })
@@ -799,7 +799,7 @@ const Factory = () => {
         <SuccessModal
           open={isSuccessModalOpen}
           handleClose={handleCloseSuccessModal}
-          title="Sent to the Factory!"
+          title="Your NFTs are staked in the Factory"
           text={text}
         />
       )}

@@ -123,6 +123,7 @@ const Crafting = () => {
   const tsxAmount = useRef(BigNumber.from(0));
   const tsxStartFromTokenId = useRef(BigNumber.from(0));
   const [tokens, setTokens] = useState(null);
+  const [craftingType, setCraftingType] = useState(null);
 
   // Loading state
   useEffect(() => {
@@ -328,7 +329,7 @@ const Crafting = () => {
         let tokenId = event.args.tokenId.toNumber();
         allTokens.forEach((token) => {
           if (token.id === tokenId) {
-            token.name = "Mega Ape";
+            token.name = "MekaApe";
           }
         });
       });
@@ -371,6 +372,7 @@ const Crafting = () => {
     if (oogearCounter > 0) {
       if (checkBalance(oogearCounter, mintOGPrice, OGBalanceBigNumber)) {
         setIsDisableOGButtons(true);
+        setCraftingType('mint');
         let gasFee = await getGasFee(+oogearCounter, false);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, false, gasFee);
@@ -407,6 +409,7 @@ const Crafting = () => {
         checkBalance(oogearCounter, mintAndStakeOGPrice, OGBalanceBigNumber)
       ) {
         setIsDisableOGButtons(true);
+        setCraftingType('mint&stake');
         let gasFee = await getGasFee(+oogearCounter, true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true, gasFee);
@@ -441,6 +444,7 @@ const Crafting = () => {
     if (dmtCounter > 0) {
       if (checkBalance(dmtCounter, mintDMTPrice, DMTBalanceBigNumber)) {
         setIsDisableDMTButton(true);
+        setCraftingType('mint&stake');
         let gasFee = await getGasFee(+dmtCounter, true);
         try {
           let tsx = await contract.mintWithDMT(dmtCounter, gasFee);
@@ -591,6 +595,7 @@ const Crafting = () => {
           open={isResultsModalOpen}
           handleClose={handleCloseResultsModal}
           tokens={tokens}
+          craftingType={craftingType}
         />
       )}
       {actionLoading && (

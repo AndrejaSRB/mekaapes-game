@@ -138,7 +138,7 @@ export const getApeName = (ape) => {
       if (ape.level > 0) {
         name = "Mega Meka";
       } else {
-        name = "Meka Ape";
+        name = "MekaApe";
       }
     }
   }

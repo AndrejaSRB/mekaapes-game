@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useLazyQuery, useApolloClient } from "@apollo/client";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -254,11 +254,14 @@ const Merging = () => {
       mekaApesContract,
       MEKA_MERGE
     );
-    console.log('mekaConvertEvent', mekaConvertEvent);
+    console.log("mekaConvertEvent", mekaConvertEvent);
     if (mekaConvertEvent?.length > 0) {
       mekaConvertEvent.forEach((event) => {
         let tokenId = event.args.tokenId.toNumber();
-        let level = ethers.utils.formatUnits(event.args.megaLevel);
+        let level = 0;
+        if (BigNumber.isBigNumber(event.args.megaLevel)) {
+          level = event.args.megaLevel.toNumber();
+        }
         tokens.push({
           type: "merge",
           id: tokenId,

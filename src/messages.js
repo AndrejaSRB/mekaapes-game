@@ -14,43 +14,43 @@ export const SOMETHING_WENT_WRONG_UNSTAKE =
 
 // ******** Actions loading messages ********
 export const ACTION_LOADING_CLAIM =
-  "Claiming your $OG is in the progress. It could take a couple of minutes.";
+  "Claiming $OG is in progress. It might take a couple of minutes.";
 export const ACTION_LOADING_MERGE =
   "Merging your Meka Apes is in the progress. Your new Mega Meka will come soon. It could take a couple of minutes.";
-export const ACTION_LOADING_UPGRADE =
-  "Upgrading your Robo Ooga is in the progress. He will receive a new level soon. It could take a couple of minutes.";
+
+export const getActionLoadingUpgrade = (id) =>
+  `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;
 
 export const getActionLoadingStakeMessage = (list) => {
   if (list?.length > 1) {
     let number = list?.length;
-    return `Staking your ${number} Oogas is in the progress. It could take a couple of minutes.`;
+    return `You’re ${number} NFTs are sent to the Factory. This process might take a couple of minutes.`;
   } else {
-    return "Staking your Ooga is in the progress. It could take a couple of minutes.";
+    return "You’re NFs is sent to the Factory. This process might take a couple of minutes.";
   }
 };
 
 export const getActionLoadingUnstakeMessage = (list) => {
   if (list?.length > 1) {
     let number = list?.length;
-    return `Unstaking your ${number} Oogas is in the progress. It could take a couple of minutes.`;
+    return `Your ${number} NFTs are leaving the Factory. This process might take a couple of minutes.`;
   } else {
-    return "Unstaking your Ooga is in the progress. It could take a couple of minutes.";
+    return "Your NFT is leaving the Factory. This process might take a couple of minutes.";
   }
 };
 
 export const getActionLoadingEvolveMessage = (list) => {
   if (list?.length > 1) {
-    let number = list?.length;
-    return `Evolving your ${number} Baby Oogas is in the progress. Your new Meka Apes are on their way. It could take a couple of minutes.`;
+    return `Baby Ooga evolution in progress. Your new MekaApes are already on their way! It might take a couple of minutes.`;
   } else {
-    return "Evolving your Baby Ooga is in the progress. Your new Meka Ape is on its way. It could take a couple of minutes.";
+    return "Baby Ooga evolution in progress. Your new MekaApe is already on it’s way! It might take a couple of minutes.";
   }
 };
 
 export const getActionLoadingMintMessage = (amount) => {
   if (amount > 1) {
-    return `Minting your new ${amount} Oogas is in the progress. It could take a couple of minutes.`;
+    return `Your ${amount} NFTs are getting minted. This process might take a couple of minutes. `;
   } else {
-    return "Minting your new Ooga is in the progress. It could take a couple of minutes.";
+    return "Your NFT is getting minted. This process might take a couple of minutes.";
   }
 };
