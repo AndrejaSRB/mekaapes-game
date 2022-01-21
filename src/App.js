@@ -34,9 +34,7 @@ const App = () => {
 
   useEffect(() => {
     if (userMetaMaskToken) {
-      Sentry.setContext("character", {
-        name: userMetaMaskToken,
-      });
+      Sentry.setUser({ email: userMetaMaskToken });
     }
   }, [userMetaMaskToken]);
 

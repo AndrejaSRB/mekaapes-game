@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 import { BigNumber, ethers } from "ethers";
 import * as Sentry from "@sentry/react";
 // ******** Components ********
@@ -88,6 +88,7 @@ import {
   CustomUnstakeCheckbox,
   Subtitle,
   ButtonClaim,
+  SelectedCounter,
 } from "./Factory.styles";
 
 const NoItemFound = () => (
@@ -97,6 +98,7 @@ const NoItemFound = () => (
 );
 
 const Factory = () => {
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const { dmtBalance, oogearBalance, getOogearBalance } =
     useContext(BalanceContext);
@@ -422,40 +424,41 @@ const Factory = () => {
     }
   };
 
-  const getFreshData = () => {
-    getStakedApe({
-      variables: {
-        owner: userMetaMaskToken,
-      },
+  const getFreshData = async () => {
+    await client.cache.reset().then(() => {
+      getStakedApe({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getUnstakedRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getUnstakeMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getAvaliableRewards();
     });
-    getUnstakedRoboOogas({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getUnstakeMekaApes({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getAvaliableRewards();
   };
 
-  const handleCloseSuccessModal = () => {
+  const handleCloseSuccessModal = async () => {
     setIsSuccessModalOpen(false);
     setText("");
     setTokens(null);
-    getFreshData();
+    await getFreshData();
   };
 
-  const handleCloseResultsModal = () => {
+  const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
     setText("");
     setTokens(null);
     unstakeTokensAmount.current = null;
     getOogearBalance();
-    getFreshData();
-    // 573
+    await getFreshData();
   };
 
   const clearActionLoading = () => {
@@ -606,8 +609,8 @@ const Factory = () => {
         openActionLoading(1, getActionLoadingStakeMessage(tokenIds));
         tsx
           .wait()
-          .then(() => {
-            getFreshData();
+          .then(async () => {
+            await getFreshData();
             setText(
               `It may take a few minutes until your NFTs are displayed as "staked".`
             );
@@ -767,6 +770,14 @@ const Factory = () => {
               <NftList length={getListLength(unstakedRoboList)}>
                 {renderUnstakedRobo()}
               </NftList>
+              {unstakedRoboList?.length > 0 && (
+                <SelectedCounter>
+                  <span>Selected Robo Oogas:</span>
+                  <span className="numbers">
+                    {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/{unstakedRoboList?.length}
+                  </span>
+                </SelectedCounter>
+              )}
               <Subtitle>
                 <h6 className="meka">MekaApes:</h6>
                 <CustomUnstakeCheckbox
@@ -778,6 +789,14 @@ const Factory = () => {
               <NftList meka length={getListLength(unstakedMekaList)}>
                 {renderUnstakedMeka()}
               </NftList>
+              {unstakedMekaList?.length > 0 && (
+                <SelectedCounter>
+                  <span>Selected MekaApes:</span>
+                  <span className="numbers">
+                    {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/{unstakedMekaList?.length}
+                  </span>
+                </SelectedCounter>
+              )}
               <Button
                 type="stake"
                 disabled={getIfItsStakeDisabled()}
@@ -811,6 +830,14 @@ const Factory = () => {
               <ApeListDesktop length={stakedData?.length}>
                 {renderDesktopStakedApes()}
               </ApeListDesktop>
+              {stakedApesData?.spaceOogas?.length > 0 && (
+                <SelectedCounter staked>
+                  <span>Selected NFTs:</span>
+                  <span className="numbers">
+                    {selectedStaked ? selectedStaked?.length : 0}/{stakedApesData?.spaceOogas?.length}
+                  </span>
+                </SelectedCounter>
+              )}
               <ButtonClaim
                 disabled={getIfItsClaimDisabled()}
                 onClick={handleClickClaim}>

@@ -164,7 +164,8 @@ export const NftList = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     max-width: 339px;
-    margin-bottom: ${({ meka }) => (meka ? "0px" : "35px")};
+    /* margin-bottom: ${({ meka }) => (meka ? "0px" : "35px")}; */
+    margin-bottom: 16px;
     height: 148px;
   }
 `;
@@ -399,13 +400,13 @@ export const ApeListDesktop = styled.div`
     height: 228px;
     overflow-y: scroll;
     overflow-x: hidden;
-    justify-content: ${({length}) => {
-        if(length && length > 0){
-            return 'flex-start';
-        }else {
-            return 'center';
-        }
-    }}
+    justify-content: ${({ length }) => {
+      if (length && length > 0) {
+        return "flex-start";
+      } else {
+        return "center";
+      }
+    }};
   }
   @media only screen and (min-width: 1200px) {
     max-width: 388px;
@@ -695,5 +696,23 @@ export const ApeInProgress = styled.div`
     img {
       width: 103px;
     }
+  }
+`;
+
+export const SelectedCounter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${theme.color.white};
+  max-width: 332px;
+  margin: ${({staked}) => staked ? "24px auto 16px auto" : "0 auto 16px auto"};
+  .numbers {
+    color: ${theme.color.green};
+  }
+  @media only screen and (min-width: 900px) {
+    max-width: 564px;
+  }
+  @media only screen and (min-width: 1200px) {
+    max-width: 339px;
   }
 `;
