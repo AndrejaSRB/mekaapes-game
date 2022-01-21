@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLazyQuery } from "@apollo/client";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -61,8 +61,6 @@ import {
   getAllEvents,
   ATTACK_REWARD,
   makeRandomSubscription,
-  TAX_REWARD,
-  getEvent,
 } from "../../../eventsListeners";
 // ******** Styles ********
 import {
@@ -454,7 +452,9 @@ const Factory = () => {
     setText("");
     setTokens(null);
     unstakeTokensAmount.current = null;
+    getOogearBalance();
     getFreshData();
+    // 573
   };
 
   const clearActionLoading = () => {
@@ -500,7 +500,7 @@ const Factory = () => {
         if (ape) {
           let name = getApeName(ape);
           unstakeTokens.push({
-            type: "claim",
+            type: "unstake",
             name: `${name} #${event.args.tokenId.toNumber()}`,
             id: event.args.tokenId.toNumber(),
             amount: ethers.utils.formatUnits(event.args.amount),
@@ -556,16 +556,26 @@ const Factory = () => {
 
   const getClaimEvent = (receipt) => {
     let { mekaApesContract } = contract;
-    let taxRewardEvent = getEvent(receipt, mekaApesContract, TAX_REWARD);
+    let claimRewardEvent = getAllEvents(
+      receipt,
+      mekaApesContract,
+      CLAIM_REWARD
+    );
     let allTokens = [];
-    if (taxRewardEvent) {
-      let totalAmount = ethers.utils.formatUnits(taxRewardEvent.args.totalTax);
-      let id = ethers.utils.formatUnits(taxRewardEvent.args.claimId);
-      allTokens.push({
-        type: "claim",
-        amount: totalAmount,
-        id: id,
+
+    if (claimRewardEvent?.length > 0) {
+      let totalClaimAmount = BigNumber.from(0);
+      claimRewardEvent.forEach((event) => {
+        totalClaimAmount = totalClaimAmount.add(event.args.amount);
       });
+      if (BigNumber.isBigNumber(totalClaimAmount)) {
+        let totalAmount = ethers.utils.formatUnits(totalClaimAmount);
+        allTokens.push({
+          type: "claim",
+          amount: totalAmount,
+          id: "claim",
+        });
+      }
     }
     setTokens(allTokens);
     getStakedApe({
@@ -597,7 +607,9 @@ const Factory = () => {
           .wait()
           .then(() => {
             getFreshData();
-            setText(`It may take a few minutes until your NFTs are displayed as "staked".`);
+            setText(
+              `It may take a few minutes until your NFTs are displayed as "staked".`
+            );
             clearActionLoading();
             setIsSuccessModalOpen(true);
           })

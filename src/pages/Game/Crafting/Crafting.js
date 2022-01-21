@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { BigNumber } from "ethers";
+import { useApolloClient } from "@apollo/client";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -74,6 +75,7 @@ const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
 
 const Crafting = () => {
+    const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const {
     getOogearBalance,
@@ -262,7 +264,9 @@ const Crafting = () => {
 
   const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
+    await client.cache.reset();
     getTotalMinted();
+    getOogearBalance();
     getTotalMintedDMTAmount();
     setTokens(null);
     setCraftingType(null);
@@ -338,10 +342,13 @@ const Crafting = () => {
     }
     if (oogaAttackedEvent?.length > 0) {
       let allTokens = [...tokens];
-      mekaConvertEvent.forEach((event) => {
-        let tokenId = event.args.tokenId.toNumber();
+      oogaAttackedEvent.forEach((event) => {
+        let tokenId = event.args.oogaId.toNumber();
         allTokens.forEach((token) => {
-          let mekaApeId = token.args.tributeOogaId.toNumber();
+          let mekaApeId = "xxxx";
+          if (BigNumber.isBigNumber(event.args.tributeOogaId)) {
+            mekaApeId = event.args.tributeOogaId.toNumber();
+          }
           if (token.id === tokenId) {
             token.stolen = true;
             token.stolenApeId = mekaApeId;
@@ -373,7 +380,7 @@ const Crafting = () => {
     if (oogearCounter > 0) {
       if (checkBalance(oogearCounter, mintOGPrice, OGBalanceBigNumber)) {
         setIsDisableOGButtons(true);
-        setCraftingType('mint');
+        setCraftingType("mint");
         let gasFee = await getGasFee(+oogearCounter, false);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, false, gasFee);
@@ -410,7 +417,7 @@ const Crafting = () => {
         checkBalance(oogearCounter, mintAndStakeOGPrice, OGBalanceBigNumber)
       ) {
         setIsDisableOGButtons(true);
-        setCraftingType('mint&stake');
+        setCraftingType("mint&stake");
         let gasFee = await getGasFee(+oogearCounter, true);
         try {
           let tsx = await contract.mintWithOG(+oogearCounter, true, gasFee);
@@ -445,7 +452,7 @@ const Crafting = () => {
     if (dmtCounter > 0) {
       if (checkBalance(dmtCounter, mintDMTPrice, DMTBalanceBigNumber)) {
         setIsDisableDMTButton(true);
-        setCraftingType('mint&stake');
+        setCraftingType("mint&stake");
         let gasFee = await getGasFee(+dmtCounter, true);
         try {
           let tsx = await contract.mintWithDMT(dmtCounter, gasFee);

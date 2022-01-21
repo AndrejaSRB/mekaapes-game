@@ -201,7 +201,11 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
           </>
         );
       case "unstake":
-        return <>{getUnstakeMessage()}</>;
+        return <>
+        <Title>Unstaking successfull!</Title>
+        <Text>Here’s what happened:</Text>
+        {getUnstakeMessage()}
+        </>;
       case "upgrade":
         return (
           <>

@@ -7,7 +7,7 @@ export const CLAIM_REWARD = "ClaimReward";
 export const ATTACK_REWARD = "AttackReward";
 export const BABY_EVOLVE = "BabyOogaEvolve";
 export const LEVELUP_ROBO = "LevelUpRoboOoga";
-export const TAX_REWARD = "TaxReward"
+export const TAX_REWARD = "TaxReward";
 
 export const getEvent = (receipt, contract, eventName) => {
   const randomRequestTopic = contract.interface.getEventTopic(eventName);
