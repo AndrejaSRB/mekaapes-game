@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLazyQuery, useApolloClient } from "@apollo/client";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -284,11 +285,21 @@ const Evolve = () => {
             })
             .catch((error) => {
               console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Evolve tsx.wait",
+                },
+              });
               message.error(SOMETHING_WENT_WRONG);
               setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Evolve 1st tsx",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG);
         }
         setSelected([]);

@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { useLazyQuery, useApolloClient } from "@apollo/client";
 import { BigNumber } from "ethers";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -327,11 +328,21 @@ const Upgrade = () => {
         })
         .catch((error) => {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Robo Upgrade ApproveDMT tsx.wait",
+            },
+          });
           setLoading(false);
           message.error(SOMETHING_WENT_WRONG);
         });
     } catch (error) {
       console.log(error);
+      Sentry.captureException(new Error(error), {
+        tags: {
+          section: "Robo Upgrade ApproveDMT 1st tsx",
+        },
+      });
       message.error(SOMETHING_WENT_WRONG);
     }
     setIsApprovedBtnDisabled(false);
@@ -354,11 +365,21 @@ const Upgrade = () => {
               })
               .catch((error) => {
                 console.log(error);
+                Sentry.captureException(new Error(error), {
+                  tags: {
+                    section: "Robo Upgrade tsx.wait",
+                  },
+                });
                 message.error(SOMETHING_WENT_WRONG);
                 setActionLoading(false);
               });
           } catch (error) {
             console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "Robo Upgrade 1st tsx",
+              },
+            });
             message.error(SOMETHING_WENT_WRONG);
           }
           setIsDisabled(false);

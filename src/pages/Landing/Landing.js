@@ -95,7 +95,7 @@ const Landing = () => {
             <img src={OGToken} alt="Robo Oogas" />
             <p className="width">
               In the Factory, Robo Oogas convert scrap metal into $OG which is
-              used to craft new Roba Oogas and MekaApes.
+              used to craft new Robo Oogas and MekaApes.
             </p>
           </Box>
           <Box>

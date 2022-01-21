@@ -1,6 +1,7 @@
 import { useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ReactQueryDevtools } from "react-query/devtools";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
 import ScrollToTop from "./components/ScrollToTop";
 // ******** Pages ********
@@ -30,6 +31,14 @@ const App = () => {
       document.removeEventListener("touchstart", function () {}, false);
     };
   }, []);
+
+  useEffect(() => {
+    if (userMetaMaskToken) {
+      Sentry.setContext("character", {
+        name: userMetaMaskToken,
+      });
+    }
+  }, [userMetaMaskToken]);
 
   useEffect(() => {
     if (userMetaMaskToken) {

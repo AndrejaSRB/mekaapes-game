@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { BigNumber } from "ethers";
 import { useApolloClient } from "@apollo/client";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -75,7 +76,7 @@ const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
 
 const Crafting = () => {
-    const client = useApolloClient();
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const {
     getOogearBalance,
@@ -287,11 +288,21 @@ const Crafting = () => {
         })
         .catch((error) => {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Crafting ApproveDMT tsx.wait",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG);
           setLoading(false);
         });
     } catch (error) {
       console.log(error);
+      Sentry.captureException(new Error(error), {
+        tags: {
+          section: "Crafting ApproveDMT 1st tsx",
+        },
+      });
       message.error(SOMETHING_WENT_WRONG);
       getDmtBalance();
       getOogearBalance();
@@ -396,11 +407,21 @@ const Crafting = () => {
             })
             .catch((error) => {
               console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Crafting Mint with $OG tsx.wait",
+                },
+              });
               message.error(SOMETHING_WENT_WRONG);
               setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Crafting Mint with $OG 1st tsx",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG);
         }
         setOogeaerCounter(0);
@@ -433,11 +454,21 @@ const Crafting = () => {
             })
             .catch((error) => {
               console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Crafting Mint&Stake with $OG tsx.wait",
+                },
+              });
               message.error(SOMETHING_WENT_WRONG);
               setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Crafting Mint&Stake with $OG 1st tsx",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG);
         }
         setOogeaerCounter(0);
@@ -469,11 +500,21 @@ const Crafting = () => {
             })
             .catch((error) => {
               console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Crafting Mint with $DMT tsx.wait",
+                },
+              });
               message.error(SOMETHING_WENT_WRONG);
               setActionLoading(false);
             });
         } catch (error) {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Crafting Mint with $DMT 1st tsx",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG);
         }
         setDmtCounter(0);

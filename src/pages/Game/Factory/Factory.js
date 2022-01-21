@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLazyQuery } from "@apollo/client";
 import { BigNumber, ethers } from "ethers";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
 import { message } from "antd";
 import Header from "../../../components/Header/Header";
@@ -615,11 +616,21 @@ const Factory = () => {
           })
           .catch((error) => {
             console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "Factory Stake tsx.wait",
+              },
+            });
             message.error(SOMETHING_WENT_WRONG);
             clearActionLoading();
           });
       } catch (error) {
         console.log(error);
+        Sentry.captureException(new Error(error), {
+          tags: {
+            section: "Factory Stake 1st tsx",
+          },
+        });
         message.error(SOMETHING_WENT_WRONG);
       }
       setSelectAllUnstakedMeka(false);
@@ -649,11 +660,21 @@ const Factory = () => {
             })
             .catch((error) => {
               console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Factory Claim tsx.wait",
+                },
+              });
               message.error(SOMETHING_WENT_WRONG);
               clearActionLoading();
             });
         } catch (error) {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Factory Claim 1st tsx",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG);
         }
         setTotalClaim(0);
@@ -684,11 +705,21 @@ const Factory = () => {
             })
             .catch((error) => {
               console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Factory Unstake tsx.wait",
+                },
+              });
               message.error(SOMETHING_WENT_WRONG);
               clearActionLoading(false);
             });
         } catch (error) {
           console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Factory Unstake 1st tsx",
+            },
+          });
           message.error(SOMETHING_WENT_WRONG_UNSTAKE, 6);
         }
         setTotalClaim(0);
