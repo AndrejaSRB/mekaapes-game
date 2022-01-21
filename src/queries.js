@@ -79,7 +79,7 @@ export const GET_UNSTAKE_MEKA_APES = gql`
 
 export const GET_STAKED_APE = gql`
   query GetStakedApe($owner: String!) {
-    spaceOogas(subgraphError: allow, where: { staker: $owner }, first: 900) {
+    spaceOogas(subgraphError: allow, where: { staker: $owner }, first: 900, orderBy: oogaType, orderDirection: desc) {
       id
       oogaType
       owner

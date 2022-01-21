@@ -5,6 +5,8 @@ import { ethers } from "ethers";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
+// ******** Hooks ********
+import useDailyUsers from "../../../hooks/useDailyUsers";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Funcstions ********
@@ -29,14 +31,16 @@ import {
 const Statistics = () => {
   const [loader, setLoader] = useState(false);
   const { loading, data } = useQuery(GET_LEADERBOARD);
+  const { data: dailyUsers, isLoading: dailyUsersIsLoading } = useDailyUsers();
+
 
   useEffect(() => {
-    if (loading) {
+    if (loading || dailyUsersIsLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [loading]);
+  }, [loading, dailyUsersIsLoading]);
 
   const reduceAddress = (address) => {
     if (address && typeof address === "string") {
@@ -133,7 +137,7 @@ const Statistics = () => {
             <h4>Game Status</h4>
             {renderGameStatus()}
             <TotalText>
-              Daily Users: <span>1.500.000</span>
+              Daily Users: <span>{dailyUsers ? dailyUsers : 0}</span>
             </TotalText>
           </Box>
           <LeaderboardsBox>
