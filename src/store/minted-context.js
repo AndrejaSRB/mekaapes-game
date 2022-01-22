@@ -3,21 +3,21 @@ import { useState, createContext, useEffect, useContext } from "react";
 import { UserContext } from "./user-context";
 // ******** Hooks ********
 import useMintSale from "../hooks/useMintSale";
-// import usePublicSale from "../hooks/usePublicSale";
+import usePublicSale from "../hooks/usePublicSale";
 
 export const MintedContext = createContext({
-  isMintSale: true,
-//   isPublicSale: false,
+  isMintSale: false,
+  //   isPublicSale: false,
   getTotalMinted: () => {},
 });
 
 const MintedContextProvider = ({ children }) => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const [isMintSale, setIsMintSale] = useState(true);
-//   const [isPublicSale, setIsPublicSale] = useState(false);
+  const [isMintSale, setIsMintSale] = useState(false);
+  const [isPublicSale, setIsPublicSale] = useState(false);
   const { data: status, refetch: getTotalMinted } =
     useMintSale(userMetaMaskToken);
-//   const { data: publicSaleStatus } = usePublicSale(userMetaMaskToken);
+  const { data: publicSaleStatus } = usePublicSale(userMetaMaskToken);
 
   // Get pre sale mint status
   useEffect(() => {
@@ -26,10 +26,17 @@ const MintedContextProvider = ({ children }) => {
     }
   }, [status]);
 
+  // Get pre sale public mint status
+  useEffect(() => {
+    if (publicSaleStatus !== null && publicSaleStatus !== undefined) {
+      setIsPublicSale(publicSaleStatus);
+    }
+  }, [publicSaleStatus]);
+
   const contextValue = {
     isMintSale: isMintSale,
     getTotalMinted: getTotalMinted,
-    // isPublicSale: isPublicSale,
+    isPublicSale: isPublicSale,
   };
 
   return (

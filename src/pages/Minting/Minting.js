@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext, useRef } from "react";
 import { ethers, BigNumber } from "ethers";
 import { useApolloClient } from "@apollo/client";
+import * as Sentry from "@sentry/react";
 // ******** Config ********
 import whitelistJSON from "../../config/whitelistMintSignatures.json";
 // ******** Components ********
@@ -64,7 +65,7 @@ const emptyMintSign = {
 const Minting = () => {
   const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
-  const { isMintSale } = useContext(MintedContext);
+  const { isMintSale, isPublicSale } = useContext(MintedContext);
   const [counter, setCounter] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -103,6 +104,8 @@ const Minting = () => {
   const tsxStartFromTokenId = useRef(BigNumber.from(0));
   const [tokens, setTokens] = useState(null);
   const [craftingType, setCraftingType] = useState(null);
+
+  console.log('isPublicSale', isPublicSale);
 
   // loading state
   useEffect(() => {
@@ -289,7 +292,6 @@ const Minting = () => {
     if (currentETHBalance.gt(priceMintAndStake.mul(counter))) {
       setIsDisabled(true);
       setCraftingType("mint&stake");
-
       try {
         let tsx = await contract.mint(
           counter,
@@ -308,11 +310,21 @@ const Minting = () => {
           })
           .catch((error) => {
             console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "ETH Mint&Stake tsx.wait",
+              },
+            });
             setActionLoading(false);
             message.error(SOMETHING_WENT_WRONG);
           });
       } catch (error) {
         console.log(error);
+        Sentry.captureException(new Error(error), {
+          tags: {
+            section: "ETH Mint&Stake 1st tsx",
+          },
+        });
         message.error(SOMETHING_WENT_WRONG);
       }
       setCounter(0);
@@ -344,11 +356,21 @@ const Minting = () => {
           })
           .catch((error) => {
             console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "ETH Mint tsx.wait",
+              },
+            });
             setActionLoading(false);
             message.error(SOMETHING_WENT_WRONG);
           });
       } catch (error) {
         console.log(error);
+        Sentry.captureException(new Error(error), {
+          tags: {
+            section: "ETH Mint 1st tsx",
+          },
+        });
         message.error(SOMETHING_WENT_WRONG);
       }
       setCounter(0);
@@ -366,12 +388,12 @@ const Minting = () => {
           You're currently able to mint: <span>{maxTokenAmount}</span>
         </Title>
         <MainBox>
-          {!isMintSale ? (
+          {isPublicSale ? (
             <h4>MekaApes Game Public Sale</h4>
           ) : (
             <h4>MekaApes Game Whitelist Sale</h4>
           )}
-          {!isMintSale ? (
+          {isPublicSale ? (
             <IntroText>
               Public mint is live! The game starts immediately after the public
               sale!{" "}

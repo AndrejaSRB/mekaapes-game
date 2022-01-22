@@ -21,11 +21,9 @@ const CraftingTable = () => (
       <Cell>
         <div className="smaller">Crafting Price</div>
         <div className="bigger">
-          Crafting with $OG gets more expensive over time:
-          <br />- Robo Ooga #10,001 - #25,000: <span>“4,000” $OG</span>
-          <br />- Robo Ooga #25,001 - #40,000: <span>“8,000” $OG</span>
-          <br />- Robo Ooga #40,001 - #55,000: <span>“12,000” $OG</span>
-          <br />
+          In the beginning minting costs 4,000 $OG but it gets more expensive
+          over time. For every 4000th mint the $OG mint price increases by 1,000
+          $OG.
         </div>
         <div className="bigger">
           Price: 120 $DMT
@@ -52,7 +50,9 @@ const CraftingTable = () => (
         <div className="bigger">
           10% risk Mint gets gifted to a random MekaApe as a Tribute
         </div>
-        <div className="bigger">5% risk Mint gets gifted to a random MekaApe as a Tribute</div>
+        <div className="bigger">
+          5% risk Mint gets gifted to a random MekaApe as a Tribute
+        </div>
       </Cell>
       <Cell>
         <div className="smaller">Craft & Stake</div>

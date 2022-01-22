@@ -98,3 +98,22 @@ export const Color = styled.div`
     height: 96px;
   }
 `;
+
+export const TotalBox = styled.div`
+  border: 5px solid ${theme.color.borderColor};
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: ${theme.color.white};
+  padding: 10px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  width: 100%;
+  @media only screen and (min-width: 1024px) {
+    font-size: 28px;
+    padding: 35px 70px;
+    border: 10px solid ${theme.color.borderColor};
+  }
+`;

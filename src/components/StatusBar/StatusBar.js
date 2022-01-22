@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Styles ********
-import { Wrapper, Box, Color } from "./StatusBar.styles";
+import { Wrapper, Color, TotalBox } from "./StatusBar.styles";
 
 const StatusBar = ({ totalNumber }) => {
   const [status, setStatus] = useState(0);
@@ -21,7 +21,7 @@ const StatusBar = ({ totalNumber }) => {
   return (
     <Wrapper>
       <Color width={percentage()} />
-      <Box width="18.18" place="first">
+      {/* <Box width="18.18" place="first">
         10 <span className="mobile">k</span>{" "}
         <span className="desktop">,000</span>
       </Box>
@@ -36,7 +36,10 @@ const StatusBar = ({ totalNumber }) => {
       <Box place="last" width="27.27">
         55<span className="mobile">k</span>{" "}
         <span className="desktop">,000</span>
-      </Box>
+      </Box> */}
+      <TotalBox>
+          {status} / 55,000
+      </TotalBox>
     </Wrapper>
   );
 };
