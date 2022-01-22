@@ -105,8 +105,6 @@ const Minting = () => {
   const [tokens, setTokens] = useState(null);
   const [craftingType, setCraftingType] = useState(null);
 
-  console.log('isPublicSale', isPublicSale);
-
   // loading state
   useEffect(() => {
     if (
@@ -207,11 +205,19 @@ const Minting = () => {
     }
   };
 
+  const getFreshTokens = async () => {
+    await client.cache.reset().then(async () => {
+      await client.refetchQueries({
+        include: ["GetUnstakeRoboOogas", "GetUnstakeMekaApes", "GetStakedApe"],
+      });
+    });
+  };
+
   const getFreshData = async () => {
     getTotalMinted();
     getMaxTokenAmount();
     getEthBalance();
-    await client.cache.reset();
+    await getFreshTokens();
   };
 
   const handleCloseResultsModal = async () => {
@@ -289,7 +295,10 @@ const Minting = () => {
   };
 
   const handleClickMintAndStake = async () => {
-    if (currentETHBalance.gt(priceMintAndStake.mul(counter))) {
+    if (
+      currentETHBalance.gt(priceMintAndStake.mul(counter)) ||
+      currentETHBalance.eq(priceMintAndStake.mul(counter))
+    ) {
       setIsDisabled(true);
       setCraftingType("mint&stake");
       try {
@@ -335,7 +344,10 @@ const Minting = () => {
   };
 
   const handleClickMint = async () => {
-    if (currentETHBalance.gt(priceMint.mul(counter))) {
+    if (
+      currentETHBalance.gt(priceMint.mul(counter)) ||
+      currentETHBalance.eq(priceMint.mul(counter))
+    ) {
       setIsDisabled(true);
       setCraftingType("mint");
       try {

@@ -38,7 +38,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { getCurrentGasFee } from "../Factory/helper";
+import { getCurrentGasFee, beautifyPrice } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events ********
@@ -94,6 +94,12 @@ const Merging = () => {
   const [mergePrice, setMergePrice] = useState(BigNumber.from(0));
   // Events
   const [tokens, setTokens] = useState(null);
+
+  useEffect(() => {
+    if (userMetaMaskToken) {
+      getOogearBalance();
+    }
+  }, [getOogearBalance, userMetaMaskToken]);
 
   // Set Price
   useEffect(() => {
@@ -281,7 +287,10 @@ const Merging = () => {
 
   const handleClickMerge = async () => {
     if (!isMintSale) {
-      if (OGBalanceBigNumber.gt(mergePrice)) {
+      if (
+        OGBalanceBigNumber.gt(mergePrice) ||
+        OGBalanceBigNumber.eq(mergePrice)
+      ) {
         if (burnMeka && keepMeka) {
           setIsDisabled(true);
           let gasFee = await getGasFee();
@@ -345,8 +354,8 @@ const Merging = () => {
               will receive a random Mega Level (M1, M2 or M3). The MekaApe on
               the right will get burned. With the Mega Level, MekaApes get a
               bigger share of the $OG tax and also gain the ability to be gifted
-              new mints. Merging costs ${convertBigNumberToPrice(
-                mergePrice
+              new mints. Merging costs ${beautifyPrice(
+                convertBigNumberToPrice(mergePrice)
               )} $OG.`}
             </h6>
           </TitleBox>

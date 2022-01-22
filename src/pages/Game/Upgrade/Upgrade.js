@@ -19,6 +19,7 @@ import { InfoOutlined } from "@ant-design/icons";
 import Placeholder from "../../../assets/placeholder.png";
 // ******** Functions ********
 import { getLevelText, convertBigNumberToPrice } from "./helpers";
+import { beautifyPrice } from "../Factory/helper";
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
@@ -133,6 +134,12 @@ const Upgrade = () => {
     unstakedRoboLoading,
     stakedRoboLoading,
   ]);
+
+  useEffect(() => {
+    if (userMetaMaskToken) {
+      getDmtBalance();
+    }
+  }, [getDmtBalance, userMetaMaskToken]);
 
   // Set Price
   useEffect(() => {
@@ -350,7 +357,7 @@ const Upgrade = () => {
 
   const handleClickButton = async () => {
     if (!isMintSale) {
-      if (DMTBalanceBigNumber.gt(price)) {
+      if (DMTBalanceBigNumber.gt(price) || DMTBalanceBigNumber.eq(price)) {
         if (selectedApe) {
           setIsDisabled(true);
           setText(getActionLoadingUpgrade(selectedApe.id));
@@ -439,7 +446,8 @@ const Upgrade = () => {
               )}
             </ButtonBox>
             <HelperText>
-              Each Level-Up costs {convertBigNumberToPrice(price)} $DMT. You can
+              Each Level-Up costs{" "}
+              {beautifyPrice(convertBigNumberToPrice(price))} $DMT. You can
               convert $OG to $DMT here:
               <a
                 href="https://opensea.io/collection/oogaverse"

@@ -174,6 +174,11 @@ export const beautifyNumber = (value) => {
   return formattedNumber;
 };
 
+export const beautifyPrice = (value) => {
+    const formattedNumber = Number(value).toLocaleString("en");
+    return formattedNumber;
+  };
+
 export const getRandomArbitrary = () => {
   return Math.random() * (100 * 10 ** 9 - 1) + 1;
 };

@@ -40,7 +40,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { getCurrentGasFee, beautifyNumber } from "../Factory/helper";
+import { getCurrentGasFee, beautifyPrice } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -260,12 +260,20 @@ const Crafting = () => {
 
   const checkBalance = (counter, price, balance) => {
     let totalPrice = price.mul(+counter);
-    return balance.gt(totalPrice);
+    return balance.gt(totalPrice) || balance.eq(totalPrice);
+  };
+
+  const getFreshData = async () => {
+    await client.cache.reset().then(async () => {
+      await client.refetchQueries({
+        include: ["GetUnstakeRoboOogas", "GetUnstakeMekaApes", "GetStakedApe"],
+      });
+    });
   };
 
   const handleCloseResultsModal = async () => {
     setIsResultsModalOpen(false);
-    await client.cache.reset();
+    await getFreshData();
     getTotalMinted();
     getOogearBalance();
     getTotalMintedDMTAmount();
@@ -577,10 +585,10 @@ const Crafting = () => {
               </ButtonBox>
               <HelperOGText>
                 Mint Price:{" "}
-                {beautifyNumber(convertBigNumberToPrice(mintOGPrice))} $OG{" "}
+                {beautifyPrice(convertBigNumberToPrice(mintOGPrice))} $OG{" "}
                 <span>
                   Mint & Stake Price:{" "}
-                  {beautifyNumber(convertBigNumberToPrice(mintAndStakeOGPrice))}{" "}
+                  {beautifyPrice(convertBigNumberToPrice(mintAndStakeOGPrice))}{" "}
                   $OG
                 </span>
               </HelperOGText>
@@ -622,7 +630,7 @@ const Crafting = () => {
                 </Button>
               )}
               <HelperText>
-                Price {beautifyNumber(convertBigNumberToPrice(mintDMTPrice))}{" "}
+                Price {beautifyPrice(convertBigNumberToPrice(mintDMTPrice))}{" "}
                 $DMT{" "}
                 <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
               </HelperText>

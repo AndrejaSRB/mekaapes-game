@@ -45,6 +45,9 @@ const Loading = ({ open, text, tsxNumber, tsxTotalNumber }) => {
         {tsxTotal > 1 && (
           <HelperText>{`Current transaction ${tsxNum}/${tsxTotal}`}</HelperText>
         )}
+        <HelperText>
+          Waiting for a long time? Try refreshing the page.
+        </HelperText>
       </div>
     </ModalWrapper>
   );
