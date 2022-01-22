@@ -167,12 +167,14 @@ const Minting = () => {
   useEffect(() => {
     if (!isMintSale) {
       setIsDisabled(true);
+    }
+  }, [isMintSale]);
+
+  useEffect(() => {
+    if (counter > 0) {
+      setIsDisabled(false);
     } else {
-      if (counter > 0) {
-        setIsDisabled(false);
-      } else {
-        setIsDisabled(true);
-      }
+      setIsDisabled(true);
     }
   }, [counter, isMintSale]);
 
@@ -439,7 +441,7 @@ const Minting = () => {
           </Counter>
           <ButtonWrapper>
             <button
-              disabled={isDisabled}
+              disabled={isDisabled || counter === 0}
               className="noselect"
               onClick={handleClickMintAndStake}>
               Mint & Stake
@@ -448,7 +450,7 @@ const Minting = () => {
               <span>Price {getSmallETHPrice(priceMintAndStake)} ETH</span>
             </Price>
             <button
-              disabled={isDisabled}
+              disabled={isDisabled || counter === 0}
               className="noselect orange"
               onClick={handleClickMint}>
               Mint Only
