@@ -21,13 +21,13 @@ export class Metamask {
     return address;
   }
 
-//   async getBalance(address) {
-//     const balance = await this.provider.getBalance(address);
-//     return balance;
-//   }
+  async getChainId() {
+    const chainId = await this.provider.getNetwork();
+    return chainId;
+  }
 
   async getBalance(address) {
-    return await this.provider.getBalance(address);;
+    return await this.provider.getBalance(address);
   }
 
   checkMetamaskConnection() {

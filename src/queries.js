@@ -63,6 +63,7 @@ export const GET_UNSTAKE_ROBO_OOGAS = gql`
       id
       oogaType
       owner
+      level
     }
   }
 `;
@@ -73,6 +74,7 @@ export const GET_UNSTAKE_MEKA_APES = gql`
       id
       oogaType
       owner
+      level
     }
   }
 `;

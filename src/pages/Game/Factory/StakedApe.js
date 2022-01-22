@@ -5,7 +5,7 @@ import ImagePlaceholder from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Functions ********
-import { beautifyNumber, getRandomArbitrary } from '../Factory/helper';
+import { beautifyNumber } from '../Factory/helper';
 // ******** Styles ********
 import { ApeNft } from "./Factory.styles";
 
@@ -24,14 +24,15 @@ const StakedApe = ({
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      if (data) {
-        setImage(`${data.image}?random=${getRandomArbitrary()}`);
+      if (data && ape) {
+        let level = ape?.level;
+        setImage(`${data.image}?level=${level}`);
       }
     }
     return () => {
       isMounted = false;
     };
-  }, [data]);
+  }, [data, ape]);
 
   const renderApeImage = () => {
     if (image && !isLoading) {

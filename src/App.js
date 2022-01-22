@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import * as Sentry from "@sentry/react";
 // ******** Components ********
 import ScrollToTop from "./components/ScrollToTop";
+import { notification } from "antd";
 // ******** Pages ********
 import Landing from "./pages/Landing/Landing";
 import Minting from "./pages/Minting/Minting";
@@ -21,6 +22,8 @@ import { UserContext } from "./store/user-context";
 import metamask from "./services/metamask";
 
 const DEVTOOLS = process.env.REACT_APP_DEVTOOLS;
+const CHAIN_ID = process.env.REACT_APP_CHAIN_ID;
+const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME;
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
@@ -41,6 +44,22 @@ const App = () => {
   useEffect(() => {
     if (userMetaMaskToken) {
       metamask.checkMetamaskConnection();
+    }
+  }, [userMetaMaskToken]);
+
+  useEffect(() => {
+    if (userMetaMaskToken) {
+      const getChainId = async () => {
+        let network = await metamask.getChainId();
+        if (+network?.chainId !== +CHAIN_ID) {
+          notification.error({
+            message: "EVM Network Problem!",
+            description: `Please switch your network to the ${CHAIN_NAME}.`,
+            duration: 0,
+          });
+        }
+      };
+      getChainId();
     }
   }, [userMetaMaskToken]);
 

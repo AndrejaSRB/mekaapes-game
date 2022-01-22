@@ -164,12 +164,16 @@ const Minting = () => {
   }, [userMetaMaskToken]);
 
   useEffect(() => {
-    if (counter > 0) {
-      setIsDisabled(false);
-    } else {
+    if (!isMintSale) {
       setIsDisabled(true);
+    } else {
+      if (counter > 0) {
+        setIsDisabled(false);
+      } else {
+        setIsDisabled(true);
+      }
     }
-  }, [counter]);
+  }, [counter, isMintSale]);
 
   const handleCounter = (type) => () => {
     if (type === "plus" && counter < maxTokenAmount) {
@@ -204,15 +208,7 @@ const Minting = () => {
     getTotalMinted();
     getMaxTokenAmount();
     getEthBalance();
-    await getFreshTokens();
-  };
-
-  const getFreshTokens = async () => {
-    await client.cache.reset().then(async () => {
-      await client.refetchQueries({
-        include: ["GetUnstakeRoboOogas", "GetUnstakeMekaApes", "GetStakedApe"],
-      });
-    });
+    await client.cache.reset();
   };
 
   const handleCloseResultsModal = async () => {
@@ -292,7 +288,7 @@ const Minting = () => {
   const handleClickMintAndStake = async () => {
     if (currentETHBalance.gt(priceMintAndStake.mul(counter))) {
       setIsDisabled(true);
-      setCraftingType('mint&stake');
+      setCraftingType("mint&stake");
 
       try {
         let tsx = await contract.mint(
@@ -329,7 +325,7 @@ const Minting = () => {
   const handleClickMint = async () => {
     if (currentETHBalance.gt(priceMint.mul(counter))) {
       setIsDisabled(true);
-      setCraftingType('mint');
+      setCraftingType("mint");
       try {
         let tsx = await contract.mint(
           counter,

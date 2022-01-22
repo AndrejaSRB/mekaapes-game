@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import ImagePlaceholder from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
-// ******** Functions ********
-import { getRandomArbitrary } from "../Factory/helper";
 // ******** Styles ********
 import { Nft } from "./Factory.styles";
 
@@ -24,14 +22,15 @@ const UnstakeRoboApe = ({
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      if (data) {
-        setImage(`${data.image}?random=${getRandomArbitrary()}`);
+      if (data && robo) {
+        let level = robo?.level;
+        setImage(`${data.image}?level=${level}`);
       }
     }
     return () => {
       isMounted = false;
     };
-  }, [data]);
+  }, [data, robo]);
 
   const renderApeImage = () => {
     if (image && !isLoading) {

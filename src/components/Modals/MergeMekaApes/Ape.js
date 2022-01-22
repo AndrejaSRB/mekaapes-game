@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
-// ******** Functions ********
-import { getRandomArbitrary } from "../../../pages/Game/Factory/helper";
 // ******** Styles ********
 import { Ape, ApeImage } from "./MergeMekaApes.styles";
 
@@ -16,14 +14,15 @@ const MergeMekaApe = ({ ape, handleClickApe, getIfActive }) => {
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      if (data) {
-        setImage(`${data.image}?random=${getRandomArbitrary()}`);
+      if (data && ape) {
+        let level = ape?.level;
+        setImage(`${data.image}?level=${level}`);
       }
     }
     return () => {
       isMounted = false;
     };
-  }, [data]);
+  }, [data, ape]);
 
   const renderApeImage = () => {
     if (image && !isLoading) {
