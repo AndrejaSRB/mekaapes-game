@@ -259,7 +259,7 @@ const Minting = () => {
         let tokenId = event.args.tokenId.toNumber();
         allTokens.forEach((token) => {
           if (token.id === tokenId) {
-            token.name = "MegaApe";
+            token.name = "MekaApe";
           }
         });
       });
