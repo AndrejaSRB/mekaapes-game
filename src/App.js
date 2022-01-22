@@ -18,6 +18,7 @@ import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
+import { MintedContext } from './store/minted-context';
 // ******** Services ********
 import metamask from "./services/metamask";
 
@@ -27,6 +28,7 @@ const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME;
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
+  const { isMintSale } = useContext(MintedContext);
 
   useEffect(() => {
     document.addEventListener("touchstart", function () {}, false);
@@ -78,7 +80,7 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         {/* <Route path="/terms" element={<TermsOfUse />} /> */}
         <Route path="/whitepaper" element={<Whitepaper />} />
-        <Route path="/minting" element={<Minting />} />
+        {isMintSale && <Route path="/minting" element={<Minting />} />}
         <Route path="/game/factory" element={<Factory />} />
         <Route path="/game/statistics" element={<Statistics />} />
         <Route path="/game/crafting" element={<Crafting />} />

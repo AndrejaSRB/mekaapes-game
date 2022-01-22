@@ -1,3 +1,4 @@
+import { useContext } from "react";
 // ******** components ********
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -9,6 +10,8 @@ import MekaApeImage from "../../assets/mekaape_landing.png";
 import OGToken from "../../assets/og_token.png";
 import DMTToken from "../../assets/dmt_token.gif";
 import Logo from "../../assets/logo.svg";
+// ******** Stores ********
+import { MintedContext } from "../../store/minted-context";
 // ******** Styled ********
 import {
   Wrapper,
@@ -25,6 +28,8 @@ import {
 } from "./Landing.styles";
 
 const Landing = () => {
+  const { isMintSale } = useContext(MintedContext);
+
   return (
     <Wrapper>
       <Header page="landing" />
@@ -65,7 +70,7 @@ const Landing = () => {
               Robo Oogas or merge two MekaApes to unlock extra utility!
             </Text>
             <ButtonWrapper>
-              <Link to="/minting">Minting</Link>
+              {isMintSale && <Link to="/minting">Minting</Link>}
               <Link to="/game/factory">Enter the Game</Link>
             </ButtonWrapper>
           </BottomContent>

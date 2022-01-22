@@ -2,36 +2,198 @@
     {
         "address": "0x1733c7dEFE47c96dfda8D7e6b935a72D99Bac6b1",
         "mintSign": {
-            "mintAllowance": 57,
+            "mintAllowance": 100,
             "_v": {
                 "type": "BigNumber",
                 "hex": "0x1c"
             },
             "_s": {
                 "type": "BigNumber",
-                "hex": "0xff7e6b585dc68b3cb27c6be48c962e1034f40e60d121698d251dc6f181dc94"
+                "hex": "0x5faa27f8b8fd03dc3a099205621aaa08cec2e914ad4084d8df97b5da3adf9f25"
             },
             "_r": {
                 "type": "BigNumber",
-                "hex": "0x7a6b6e4a0300f1cabf5b16f1172e48ed337deb2961c025e4d0ac1d248a373480"
+                "hex": "0xeeba7a2e2e7e33f80dfc6d9ea3ecae71b6262a8e6c739390604e85faa7a56469"
             }
         }
     },
     {
         "address": "0x8Cf3307AaF2Dc94b6D10ea859eA8151c70Be5EcB",
         "mintSign": {
-            "mintAllowance": 3,
+            "mintAllowance": 10,
             "_v": {
                 "type": "BigNumber",
                 "hex": "0x1c"
             },
             "_s": {
                 "type": "BigNumber",
-                "hex": "0x63d0423576df2b167ec3d84450bc8178b1e6578e9820cab75d1143af63a0d6eb"
+                "hex": "0x297d983eea96fc2b9d304f3fff37a6feae5da5b996e7d4590c4616ce3c5e7f55"
             },
             "_r": {
                 "type": "BigNumber",
-                "hex": "0x853684d1cc0585040314f976dfbc08718721282b23c23b6536bf1935888b80b5"
+                "hex": "0xece49c47261c1110ada2e0c52f9905fa16f548312ad4803b0ecb87f035afab23"
+            }
+        }
+    },
+    {
+        "address": "0x58B3a28C3dF26407Fd45f833b101072FC492f23c",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x26422e3cea2a3e159a51ed1ef084f930b802e5d97d148e76c2b3630759e61e6b"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x4ddf0a578a1202cebb1d4d444896e9533385e3ce16e972e8440771d64e237fc3"
+            }
+        }
+    },
+    {
+        "address": "0x8194E4181b96aDD434e1c37E161e4fb2F92C5990",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x5a854077796978ea1db536d4cdb540cbb1a36331925a292281450ca43ab1984a"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x45c6b2cc19073359317d41521361258054ce9442df05eb90eb015c36752c6ce1"
+            }
+        }
+    },
+    {
+        "address": "0xE4f15C618689ff0de68E110EE97d017B91C26871",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x72267bed86c11c46e11f32a5cdb0035c723b4c2a79b70396378138acd4c1a8c9"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x4e00867ef7a07386c2104402f121dad171683599270802f9fe95d18aefab325d"
+            }
+        }
+    },
+    {
+        "address": "0xBAe1919ECed427Aa9182B9Eb0e7B2a3778f3DC72",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x2129c27b70f57b220a4b8f9560b065af1a908b6b87de9d156dd65e874458c637"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x8f8da55a3c18736e4d5d3bf58663fbbef6ae4b53af9f9cee5311c4fd02d916c3"
+            }
+        }
+    },
+    {
+        "address": "0xae23FdEec40600ca8d95a040985D8DC61A58601d",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x1d96e72affddb01ec56c97b4d645fd046be0d2867d4cc9ace96af2671af89321"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x4c06b7fab245ef7c178db4bf3cfdd1bd70294027718f0ffefabc84fe8cf75ce4"
+            }
+        }
+    },
+    {
+        "address": "0x1605a306502bd0c3E9aDE8e1afff2809b4C237Ed",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x25ff09c131f2c73f15c476193010c0b42e41fccd97297da69ebd612e5f92599d"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x0b470aea46e8b3137d70d9fb2c852569472cb86e74a33b5a629aef28fed22c41"
+            }
+        }
+    },
+    {
+        "address": "0x4842f1aEe89f256a4a93963803F0Df81481997e2",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x0a6c38d40f8e71e74c7a0106b41f6ad52b785ece74337b2ebc1054574e39ce03"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0x48b02758c8f7931ec52dd57b8775fa0358b2fd35db6a6f1522aaa667f7be5c6f"
+            }
+        }
+    },
+    {
+        "address": "0xA1F4791727217a1d6160e5a8995Ca138ccDA3D75",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x23502b2776c08b9e7da990d07ace06c87059d2740b0382f22f0d33b73d63bf0b"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0xd54d860c78d98df48a5009c51a03a125aa04bb4e1bab79d8e22b035565fd3754"
+            }
+        }
+    },
+    {
+        "address": "0x4E028D4253A0b285Ca12ADCD098FDa48bBa1a470",
+        "mintSign": {
+            "mintAllowance": 10,
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": {
+                "type": "BigNumber",
+                "hex": "0x76a74131deb491d8f0a74e1698dc5560dd191e576c0c1172cfeab3e8abe1fe13"
+            },
+            "_r": {
+                "type": "BigNumber",
+                "hex": "0xb6ec9012baea47c39fe3a011425089ee041bffd34524ab21029006c57acad0f3"
             }
         }
     }

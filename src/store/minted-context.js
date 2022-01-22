@@ -3,16 +3,21 @@ import { useState, createContext, useEffect, useContext } from "react";
 import { UserContext } from "./user-context";
 // ******** Hooks ********
 import useMintSale from "../hooks/useMintSale";
+// import usePublicSale from "../hooks/usePublicSale";
 
 export const MintedContext = createContext({
   isMintSale: true,
+//   isPublicSale: false,
   getTotalMinted: () => {},
 });
 
 const MintedContextProvider = ({ children }) => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [isMintSale, setIsMintSale] = useState(true);
-  const { data: status, refetch: getTotalMinted } = useMintSale(userMetaMaskToken);
+//   const [isPublicSale, setIsPublicSale] = useState(false);
+  const { data: status, refetch: getTotalMinted } =
+    useMintSale(userMetaMaskToken);
+//   const { data: publicSaleStatus } = usePublicSale(userMetaMaskToken);
 
   // Get pre sale mint status
   useEffect(() => {
@@ -24,6 +29,7 @@ const MintedContextProvider = ({ children }) => {
   const contextValue = {
     isMintSale: isMintSale,
     getTotalMinted: getTotalMinted,
+    // isPublicSale: isPublicSale,
   };
 
   return (
