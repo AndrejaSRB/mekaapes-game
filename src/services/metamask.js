@@ -22,8 +22,10 @@ export class Metamask {
   }
 
   async getChainId() {
-    const chainId = await this.provider.getNetwork();
-    return chainId;
+    if (this.provider) {
+      const chainId = await this.provider.getNetwork();
+      return chainId;
+    }
   }
 
   async getBalance(address) {
