@@ -9,7 +9,7 @@ const getMaxTokenAmount = async (address) => {
   if (address) {
     if (whitelistJSON && whitelistJSON.length > 0) {
       let isWhitelisted = whitelistJSON.find(
-        (users) => users.address === address
+        (users) => users.address.toLowerCase() === address.toLowerCase()
       );
       if (isWhitelisted) {
         const { mintSign } = isWhitelisted;
