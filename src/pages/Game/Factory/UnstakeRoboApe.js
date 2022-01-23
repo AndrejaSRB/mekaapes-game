@@ -24,7 +24,8 @@ const UnstakeRoboApe = ({
     if (isMounted) {
       if (data && robo) {
         let level = robo?.level;
-        setImage(`${data.image}?level=${level}`);
+        let type = robo?.oogaType;
+        setImage(`${data.image}?level=${level}&type=${type}`);
       }
     }
     return () => {

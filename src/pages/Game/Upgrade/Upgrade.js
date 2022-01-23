@@ -450,7 +450,7 @@ const Upgrade = () => {
               {beautifyPrice(convertBigNumberToPrice(price))} $DMT. You can
               convert $OG to $DMT here:
               <a
-                href="https://opensea.io/collection/oogaverse"
+                href="https://app.sushi.com/swap?inputCurrency=0xE89C20096b636fFec9fd26d1a623F42A33eaD309&outputCurrency=0x5b1d655c93185b06b00f7925791106132cb3ad75"
                 target="_blank"
                 rel="noreferrer">
                 SushiSwap

@@ -5,7 +5,7 @@ import ImagePlaceholder from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Functions ********
-import { beautifyNumber } from '../Factory/helper';
+import { beautifyNumber } from "../Factory/helper";
 // ******** Styles ********
 import { ApeNft } from "./Factory.styles";
 
@@ -26,7 +26,8 @@ const StakedApe = ({
     if (isMounted) {
       if (data && ape) {
         let level = ape?.level;
-        setImage(`${data.image}?level=${level}`);
+        let type = ape?.oogaType;
+        setImage(`${data.image}?level=${level}&type=${type}`);
       }
     }
     return () => {

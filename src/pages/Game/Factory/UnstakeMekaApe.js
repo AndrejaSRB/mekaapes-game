@@ -24,7 +24,8 @@ const UnstakeMekApe = ({
     if (isMounted) {
       if (data && meka) {
         let level = meka?.level;
-        setImage(`${data.image}?level=${level}`);
+        let type = meka?.oogaType;
+        setImage(`${data.image}?level=${level}&type=${type}`);
       }
     }
     return () => {

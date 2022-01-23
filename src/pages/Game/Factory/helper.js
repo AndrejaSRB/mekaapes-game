@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
-import { BigNumber } from "ethers";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Services ********
-// import metamask from '../../../services/metamask';
+import metamask from "../../../services/metamask";
 
 export const getListLength = (list) => {
   if (list && list.length > 0) {
@@ -146,11 +145,9 @@ export const getApeName = (ape) => {
 };
 
 export const getCurrentGasFee = async () => {
-  // let gasFee = await metamask.signer.getFeeData(); // mainnet
-  // let maxFeePerGas = gasFee.maxFeePerGas;
-
-  let maxFeePerGas = BigNumber.from(100 * 10 ** 9); // testnet
-  return maxFeePerGas;
+  let gasFeeMainnet = await metamask.signer.getFeeData(); // mainnet
+  let gasPriceMainnet = gasFeeMainnet.gasPrice;
+  return gasPriceMainnet;
 };
 
 export const getStakedRoboAmount = (list) => {
@@ -175,9 +172,9 @@ export const beautifyNumber = (value) => {
 };
 
 export const beautifyPrice = (value) => {
-    const formattedNumber = Number(value).toLocaleString("en");
-    return formattedNumber;
-  };
+  const formattedNumber = Number(value).toLocaleString("en");
+  return formattedNumber;
+};
 
 export const getRandomArbitrary = () => {
   return Math.random() * (100 * 10 ** 9 - 1) + 1;

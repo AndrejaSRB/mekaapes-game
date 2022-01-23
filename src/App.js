@@ -18,7 +18,7 @@ import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
-import { MintedContext } from './store/minted-context';
+import { MintedContext } from "./store/minted-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 

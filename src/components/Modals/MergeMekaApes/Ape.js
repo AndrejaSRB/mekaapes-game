@@ -16,7 +16,8 @@ const MergeMekaApe = ({ ape, handleClickApe, getIfActive }) => {
     if (isMounted) {
       if (data && ape) {
         let level = ape?.level;
-        setImage(`${data.image}?level=${level}`);
+        let type = ape?.oogaType;
+        setImage(`${data.image}?level=${level}&type=${type}`);
       }
     }
     return () => {
