@@ -6,14 +6,14 @@ import useMintSale from "../hooks/useMintSale";
 import usePublicSale from "../hooks/usePublicSale";
 
 export const MintedContext = createContext({
-  isMintSale: true,
-    isPublicSale: false,
+  isMintSale: false,
+  isPublicSale: false,
   getTotalMinted: () => {},
 });
 
 const MintedContextProvider = ({ children }) => {
   const { userMetaMaskToken } = useContext(UserContext);
-  const [isMintSale, setIsMintSale] = useState(true);
+  const [isMintSale, setIsMintSale] = useState(false);
   const [isPublicSale, setIsPublicSale] = useState(false);
   const { data: status, refetch: getTotalMinted } =
     useMintSale(userMetaMaskToken);

@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { ethers } from "ethers";
 // ******** Components ********
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
+// ******** Store ********
+import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
 import useDailyUsers from "../../../hooks/useDailyUsers";
+import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Funcstions ********
@@ -29,17 +32,20 @@ import {
 } from "./Statistics.styles";
 
 const Statistics = () => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const [loader, setLoader] = useState(false);
   const { loading, data } = useQuery(GET_LEADERBOARD);
   const { data: dailyUsers, isLoading: dailyUsersIsLoading } = useDailyUsers();
+  const { data: totalMintedTokens, isLoading: totalAmountLoading } =
+    useTotalAmountMintedTokens(userMetaMaskToken);
 
   useEffect(() => {
-    if (loading || dailyUsersIsLoading) {
+    if (loading || dailyUsersIsLoading || totalAmountLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [loading, dailyUsersIsLoading]);
+  }, [loading, dailyUsersIsLoading, totalAmountLoading]);
 
   const reduceAddress = (address) => {
     if (address && typeof address === "string") {
@@ -95,7 +101,11 @@ const Statistics = () => {
           <Stats>
             <span>MekaApes Staked:</span>
             <span className="number">
-              {getBeautifiedNumber(gameStatus?.mekaApesStaked)}
+              {getPercent(
+                gameStatus?.mekaApesStaked,
+                gameStatus?.mekaApesMinted
+              )}
+              %
             </span>
           </Stats>
           <Stats>
@@ -106,12 +116,6 @@ const Statistics = () => {
           </Stats>
           <Stats>
             <span>Robo Oogas Staked:</span>
-            <span className="number">
-              {getBeautifiedNumber(gameStatus?.roboOogasStaked)}
-            </span>
-          </Stats>
-          <Stats>
-            <span>Robo Oogas Staked %:</span>
             <span className="number">
               {getPercent(
                 gameStatus?.roboOogasStaked,
@@ -132,10 +136,16 @@ const Statistics = () => {
               {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
             </span>
           </Stats> */}
-          <Stats position="last">
+          <Stats>
             <span>NFTs Gifted:</span>
             <span className="number">
               {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
+            </span>
+          </Stats>
+          <Stats position="last">
+            <span>Total Minted NFTs:</span>
+            <span className="number">
+              {getBeautifiedNumber(totalMintedTokens ? totalMintedTokens : 0)}
             </span>
           </Stats>
         </StatsBox>

@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 // ******** Services ********
 import contract from "../services/contract";
 
-const INTERVAL_PERIOD = 120000; // 2min
+// const INTERVAL_PERIOD = 120000; // 2min
 
 const getMintStatus = async () => {
   let status = await contract.getMintSaleStatus();
@@ -12,7 +12,6 @@ const getMintStatus = async () => {
 const useMintSale = (token) => {
   return useQuery("mint-status", getMintStatus, {
     enabled: token ? true : false,
-    refetchInterval: INTERVAL_PERIOD,
   });
 };
 
