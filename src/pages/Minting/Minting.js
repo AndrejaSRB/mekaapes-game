@@ -152,7 +152,7 @@ const Minting = () => {
     if (userMetaMaskToken) {
       if (whitelistJSON && whitelistJSON.length > 0) {
         let isWhitelisted = whitelistJSON.find(
-          (users) => users.address === userMetaMaskToken
+          (users) => users.address.toLowerCase() === userMetaMaskToken.toLowerCase()
         );
         if (isWhitelisted) {
           const { mintSign } = isWhitelisted;
