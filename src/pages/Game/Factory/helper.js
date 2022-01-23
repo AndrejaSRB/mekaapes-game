@@ -147,7 +147,7 @@ export const getApeName = (ape) => {
 export const getCurrentGasFee = async () => {
   let gasFeeMainnet = await metamask.signer.getFeeData(); // mainnet
   let gasPriceMainnet = gasFeeMainnet.gasPrice;
-  let price = gasPriceMainnet.add(10 * (10**9));
+  let price = gasPriceMainnet.mul(115).div(100);
   return price;
 };
 
