@@ -137,7 +137,7 @@ const Statistics = () => {
             <h4>Game Status</h4>
             {renderGameStatus()}
             <TotalText>
-              Daily Users: <span>{dailyUsers ? dailyUsers : 0}</span>
+              Daily Views: <span>{dailyUsers ? dailyUsers : 0}</span>
             </TotalText>
           </Box>
           <LeaderboardsBox>

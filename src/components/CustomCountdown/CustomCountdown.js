@@ -12,7 +12,7 @@ import {
   EndTitle,
 } from "./CustomCountdown.styles";
 
-const END_PRE_SALE_DATE = "2022-01-23T16:30:00.000Z"; // 23.1.2022 17:30:00
+const END_PRE_SALE_DATE = "2022-01-23T18:30:00.000Z"; // 23.1.2022 19:30:00
 
 const CustomCountdown = ({ getCurrentAmount }) => {
   const renderNumber = (number) => {
