@@ -135,7 +135,9 @@ export class Contract {
   // DMT_ERC20 Contract functions:
 
   async getDMTBalance(address) {
-    return await this.dmtERC20Contract.balanceOf(address);
+    if (address) {
+      return await this.dmtERC20Contract.balanceOf(address);
+    }
   }
 
   async approveDMTtransaction() {
@@ -156,7 +158,9 @@ export class Contract {
   // OG_ERC20 Contract functions:
 
   async getOGBalance(address) {
-    return await this.ogERC20Contract.balanceOf(address);
+    if (address) {
+      return await this.ogERC20Contract.balanceOf(address);
+    }
   }
 
   // Test functions
