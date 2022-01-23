@@ -33,7 +33,6 @@ const Statistics = () => {
   const { loading, data } = useQuery(GET_LEADERBOARD);
   const { data: dailyUsers, isLoading: dailyUsersIsLoading } = useDailyUsers();
 
-
   useEffect(() => {
     if (loading || dailyUsersIsLoading) {
       setLoader(true);
@@ -77,6 +76,11 @@ const Statistics = () => {
   const getBeautifiedNumber = (value) =>
     value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+  const getPercent = (a, b) => {
+    const percent = (a / b) * 100;
+    return percent.toFixed(2);
+  };
+
   const renderGameStatus = () => {
     if (data?.gameStatus) {
       const { gameStatus } = data;
@@ -107,13 +111,29 @@ const Statistics = () => {
             </span>
           </Stats>
           <Stats>
+            <span>Robo Oogas Staked %:</span>
+            <span className="number">
+              {getPercent(
+                gameStatus?.roboOogasStaked,
+                gameStatus?.roboOogasMinted
+              )}
+              %
+            </span>
+          </Stats>
+          {/* <Stats>
             <span>MekaApes Gifted:</span>
             <span className="number">
               {getBeautifiedNumber(gameStatus?.mekaApesGifted)}
             </span>
-          </Stats>
-          <Stats position="last">
+          </Stats> */}
+          {/* <Stats position="last">
             <span>Robo Oogas Gifted:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
+            </span>
+          </Stats> */}
+          <Stats position="last">
+            <span>NFTs Gifted:</span>
             <span className="number">
               {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
             </span>
@@ -137,7 +157,8 @@ const Statistics = () => {
             <h4>Game Status</h4>
             {renderGameStatus()}
             <TotalText>
-              Daily Views: <span>{dailyUsers ? beautifyPrice(dailyUsers) : 0}</span>
+              Daily Views:{" "}
+              <span>{dailyUsers ? beautifyPrice(dailyUsers) : 0}</span>
             </TotalText>
           </Box>
           <LeaderboardsBox>
