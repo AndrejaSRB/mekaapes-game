@@ -10,7 +10,7 @@ import useDailyUsers from "../../../hooks/useDailyUsers";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Funcstions ********
-import { beautifyNumber } from "../Factory/helper";
+import { beautifyNumber, beautifyPrice } from "../Factory/helper";
 // ******** Queires ********
 import { GET_LEADERBOARD } from "../../../queries";
 // ******** Styles ********
@@ -137,7 +137,7 @@ const Statistics = () => {
             <h4>Game Status</h4>
             {renderGameStatus()}
             <TotalText>
-              Daily Views: <span>{dailyUsers ? dailyUsers : 0}</span>
+              Daily Views: <span>{dailyUsers ? beautifyPrice(dailyUsers) : 0}</span>
             </TotalText>
           </Box>
           <LeaderboardsBox>

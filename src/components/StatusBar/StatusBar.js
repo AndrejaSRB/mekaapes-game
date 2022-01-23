@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+// ******** Functions ********
+import { beautifyPrice } from '../../pages/Game/Factory/helper';
 // ******** Styles ********
 import { Wrapper, Color, TotalBox } from "./StatusBar.styles";
 
@@ -38,7 +40,7 @@ const StatusBar = ({ totalNumber }) => {
         <span className="desktop">,000</span>
       </Box> */}
       <TotalBox>
-          {status} / 55,000
+          {beautifyPrice(status)} / 55,000
       </TotalBox>
     </Wrapper>
   );

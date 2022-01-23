@@ -111,6 +111,8 @@ export const TotalBox = styled.div`
   justify-content: center;
   border-radius: 50px;
   width: 100%;
+  position: relative;
+  z-index: 1;
   @media only screen and (min-width: 1024px) {
     font-size: 28px;
     padding: 35px 70px;
