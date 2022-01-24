@@ -71,7 +71,7 @@ import {
   HelperOGText,
 } from "./Crafting.styles";
 
-const MAX_TOKEN_AMOUNT = 20;
+const MAX_TOKEN_AMOUNT = 4;
 const TOTAL_MINTED_AMOUNT = 55000;
 const TOTAL_MINTED_DMT_AMOUNT = 10000;
 
