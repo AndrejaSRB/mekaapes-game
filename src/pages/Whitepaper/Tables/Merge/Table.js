@@ -27,7 +27,7 @@ const MergeTable = () => (
       <Cell>
         <div className="smaller">Mega Meka M3</div>
         <div className="bigger">3.6x</div>
-        <div className="bigger">3.6x</div>
+        <div className="bigger">1.8x</div>
       </Cell>
     </Body>
   </Table>
