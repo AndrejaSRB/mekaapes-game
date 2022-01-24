@@ -40,7 +40,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { getCurrentGasFee, beautifyPrice } from "../Factory/helper";
+import { beautifyPrice } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -319,10 +319,8 @@ const Crafting = () => {
   };
 
   const getGasFee = async (amount, isStake) => {
-    let gasFee = await getCurrentGasFee();
-    let randomGasFee = await gas.getMintRandomGas(amount, isStake);
-    let total = gasFee.mul(randomGasFee);
-    return total;
+    let gasFee = await gas.getMintRandomGas(amount, isStake);
+    return gasFee;
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {

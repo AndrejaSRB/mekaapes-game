@@ -38,7 +38,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { getCurrentGasFee, beautifyPrice } from "../Factory/helper";
+import { beautifyPrice } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events ********
@@ -245,10 +245,8 @@ const Merging = () => {
   };
 
   const getGasFee = async () => {
-    let gasFee = await getCurrentGasFee();
-    let randomGasFee = await gas.getMergeRandomGas();
-    let total = gasFee.mul(randomGasFee);
-    return total;
+    let gasFee = await gas.getMergeRandomGas();
+    return gasFee;
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {

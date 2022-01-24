@@ -37,7 +37,6 @@ import {
   handleClickStakedApe,
   arrangeStakedMobileList,
   getApeName,
-  getCurrentGasFee,
   getStakedRoboAmount,
   beautifyNumber,
 } from "./helper";
@@ -486,10 +485,8 @@ const Factory = () => {
 
   const getGasFee = async (list) => {
     let amount = getStakedRoboAmount(list);
-    let gasFee = await getCurrentGasFee();
-    let randomGasFee = await gas.getUnstakeRandomGas(amount);
-    let total = gasFee.mul(randomGasFee);
-    return total;
+    let gasFee = await gas.getUnstakeRandomGas(amount);
+    return gasFee;
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {
@@ -707,6 +704,7 @@ const Factory = () => {
           tokenIds.push(token.id);
         }
       });
+
       if (tokenIds?.length > 0) {
         let gasFee = await getGasFee(selectedStaked);
         try {
