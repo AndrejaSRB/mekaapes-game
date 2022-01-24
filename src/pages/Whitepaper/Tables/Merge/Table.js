@@ -22,14 +22,13 @@ const MergeTable = () => (
       <Cell>
         <div className="smaller">Mega Meka M2</div>
         <div className="bigger">2.8x</div>
-        <div className="bigger">Space</div>
+        <div className="bigger">Stars</div>
       </Cell>
       <Cell>
         <div className="smaller">Mega Meka M3</div>
         <div className="bigger">3.8x</div>
         <div className="bigger">4th Dimension</div>
       </Cell>
-
     </Body>
   </Table>
 );

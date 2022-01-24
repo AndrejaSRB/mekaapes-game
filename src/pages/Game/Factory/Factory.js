@@ -475,6 +475,15 @@ const Factory = () => {
     setActionLoadingText(message);
   };
 
+  const getSelectedStakedNumber = () => {
+    if (selectedStaked?.length > 0) {
+      let realTokens = selectedStaked.filter((selected) => selected.owner);
+      return realTokens.length;
+    } else {
+      return 0;
+    }
+  };
+
   const getGasFee = async (list) => {
     let amount = getStakedRoboAmount(list);
     let gasFee = await getCurrentGasFee();
@@ -649,7 +658,9 @@ const Factory = () => {
     let tokenIds = [];
     if (selectedStaked?.length > 0) {
       selectedStaked.forEach((token) => {
-        tokenIds.push(token.id);
+        if (token.owner) {
+          tokenIds.push(token.id);
+        }
       });
       if (tokenIds?.length > 0) {
         try {
@@ -692,7 +703,9 @@ const Factory = () => {
     let tokenIds = [];
     if (selectedStaked?.length > 0) {
       selectedStaked.forEach((token) => {
-        tokenIds.push(token.id);
+        if (token.owner) {
+          tokenIds.push(token.id);
+        }
       });
       if (tokenIds?.length > 0) {
         let gasFee = await getGasFee(selectedStaked);
@@ -774,7 +787,8 @@ const Factory = () => {
                 <SelectedCounter>
                   <span>Selected Robo Oogas:</span>
                   <span className="numbers">
-                    {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/{unstakedRoboList?.length}
+                    {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/
+                    {unstakedRoboList?.length}
                   </span>
                 </SelectedCounter>
               )}
@@ -793,7 +807,8 @@ const Factory = () => {
                 <SelectedCounter>
                   <span>Selected MekaApes:</span>
                   <span className="numbers">
-                    {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/{unstakedMekaList?.length}
+                    {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/
+                    {unstakedMekaList?.length}
                   </span>
                 </SelectedCounter>
               )}
@@ -834,7 +849,8 @@ const Factory = () => {
                 <SelectedCounter staked>
                   <span>Selected NFTs:</span>
                   <span className="numbers">
-                    {selectedStaked ? selectedStaked?.length : 0}/{stakedApesData?.spaceOogas?.length}
+                    {selectedStaked ? getSelectedStakedNumber() : 0}/
+                    {stakedApesData?.spaceOogas?.length}
                   </span>
                 </SelectedCounter>
               )}
@@ -855,7 +871,8 @@ const Factory = () => {
                   <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
                 </p>
                 <p>
-                A Robo Ooga can only be unstaked when it has claimable min. 6,000 $OG
+                  A Robo Ooga can only be unstaked when it has claimable min.
+                  6,000 $OG
                 </p>
               </StakedText>
             </Staked>
