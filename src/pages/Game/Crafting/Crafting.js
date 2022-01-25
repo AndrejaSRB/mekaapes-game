@@ -72,6 +72,7 @@ import {
   Balance,
   BalanceMobile,
   BalanceDesktop,
+  DmtBoxWrapper,
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 4;
@@ -611,52 +612,56 @@ const Crafting = () => {
                 {dmtBalance && beautifyNumber(dmtBalance)}
               </Balance>
             </BalanceDesktop>
-            <DmtBox>
-              <BalanceMobile>
-                <span>$DMT Balance:</span>{" "}
-                {dmtBalance && beautifyNumber(dmtBalance)}
-              </BalanceMobile>
-              <Counter>
-                <div
-                  className={
-                    dmtCounter === 0 || isMintSale ? "minus disabled" : "minus"
-                  }
-                  onClick={handleDmtCounter("minus")}>
-                  <MinusOutlined />
-                </div>
-                <div className="number noselect" counter={dmtCounter}>
-                  {dmtCounter}
-                </div>
-                <div
-                  className={
-                    dmtCounter === MAX_TOKEN_AMOUNT || isMintSale
-                      ? "plus disabled"
-                      : "plus"
-                  }
-                  onClick={handleDmtCounter("plus")}>
-                  <PlusOutlined />
-                </div>
-              </Counter>
+            <DmtBoxWrapper>
+              <DmtBox>
+                <BalanceMobile>
+                  <span>$DMT Balance:</span>{" "}
+                  {dmtBalance && beautifyNumber(dmtBalance)}
+                </BalanceMobile>
+                <Counter>
+                  <div
+                    className={
+                      dmtCounter === 0 || isMintSale
+                        ? "minus disabled"
+                        : "minus"
+                    }
+                    onClick={handleDmtCounter("minus")}>
+                    <MinusOutlined />
+                  </div>
+                  <div className="number noselect" counter={dmtCounter}>
+                    {dmtCounter}
+                  </div>
+                  <div
+                    className={
+                      dmtCounter === MAX_TOKEN_AMOUNT || isMintSale
+                        ? "plus disabled"
+                        : "plus"
+                    }
+                    onClick={handleDmtCounter("plus")}>
+                    <PlusOutlined />
+                  </div>
+                </Counter>
 
-              {isDMTApproved ? (
-                <Button
-                  disabled={getDMTBtnIsDisabled()}
-                  onClick={handleClickMintWithDMT}>
-                  $DMT Mint & Stake
-                </Button>
-              ) : (
-                <Button
-                  disabled={disabledApproveBtn}
-                  onClick={handleClickApproveDMT}>
-                  Approve $DMT Transaction
-                </Button>
-              )}
-              <HelperText>
-                Price {beautifyPrice(convertBigNumberToPrice(mintDMTPrice))}{" "}
-                $DMT{" "}
-                <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
-              </HelperText>
-            </DmtBox>
+                {isDMTApproved ? (
+                  <Button
+                    disabled={getDMTBtnIsDisabled()}
+                    onClick={handleClickMintWithDMT}>
+                    $DMT Mint & Stake
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={disabledApproveBtn}
+                    onClick={handleClickApproveDMT}>
+                    Approve $DMT Transaction
+                  </Button>
+                )}
+                <HelperText>
+                  Price {beautifyPrice(convertBigNumberToPrice(mintDMTPrice))}{" "}
+                  $DMT{" "}
+                  <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
+                </HelperText>
+              </DmtBox>
+            </DmtBoxWrapper>
           </CounterBox>
           <Text>
             When minting Robo Oogas with $OG or $DMT there is a 10% chance that

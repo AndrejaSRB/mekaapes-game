@@ -289,7 +289,7 @@ export const Button = styled.button`
     width: 380px;
   }
   @media only screen and (min-width: 1200px) {
-    width: 388px;
+    width: 460px;
   }
 `;
 
@@ -369,5 +369,13 @@ export const BalanceDesktop = styled.div`
       display: block;
       color: ${theme.color.green};
     }
+  }
+`;
+
+export const DmtBoxWrapper = styled.div`
+  @media only screen and (min-width: 1200px) {
+    display: flex;
+    width: 460px;
+    justify-content: flex-end;
   }
 `;
