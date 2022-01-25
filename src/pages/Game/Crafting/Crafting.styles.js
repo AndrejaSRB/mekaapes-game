@@ -330,3 +330,44 @@ export const AnimationBox = styled.div`
     }
   }
 `;
+
+export const BalanceMobile = styled.div`
+  color: ${theme.color.white};
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 18px;
+  span {
+    display: block;
+    color: ${theme.color.green};
+  }
+  @media only screen and (min-width: 1024px) {
+    font-size: 22px;
+  }
+  @media only screen and (min-width: 1200px) {
+    display: none;
+  }
+`;
+
+export const Balance = styled.div`
+  color: ${theme.color.white};
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 18px;
+  @media only screen and (min-width: 1200px) {
+    font-size: 20px;
+    margin-bottom: 28px;
+  }
+`;
+
+export const BalanceDesktop = styled.div`
+  display: none;
+  @media only screen and (min-width: 1200px) {
+    display: block;
+    position: relative;
+    top: -72px;
+    span {
+      display: block;
+      color: ${theme.color.green};
+    }
+  }
+`;

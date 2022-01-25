@@ -40,7 +40,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { beautifyPrice } from "../Factory/helper";
+import { beautifyPrice, beautifyNumber } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -69,6 +69,9 @@ import {
   CounterBox,
   AnimationBox,
   HelperOGText,
+  Balance,
+  BalanceMobile,
+  BalanceDesktop,
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 4;
@@ -83,6 +86,8 @@ const Crafting = () => {
     getDmtBalance,
     DMTBalanceBigNumber,
     OGBalanceBigNumber,
+    dmtBalance,
+    oogearBalance,
   } = useContext(BalanceContext);
   const { isMintSale } = useContext(MintedContext);
   const [oogearCounter, setOogeaerCounter] = useState(0);
@@ -275,6 +280,7 @@ const Crafting = () => {
     setIsResultsModalOpen(false);
     await getFreshData();
     getTotalMinted();
+    getDmtBalance();
     getOogearBalance();
     getTotalMintedDMTAmount();
     setTokens(null);
@@ -546,6 +552,10 @@ const Crafting = () => {
           <StatusBar totalNumber={totalMintedTokens} />
           <CounterBox>
             <OogearBox>
+              <BalanceMobile>
+                <span>$OG Balance:</span>{" "}
+                {oogearBalance && beautifyNumber(oogearBalance)}
+              </BalanceMobile>
               <Counter>
                 <div
                   className={
@@ -591,7 +601,21 @@ const Crafting = () => {
                 </span>
               </HelperOGText>
             </OogearBox>
+            <BalanceDesktop>
+              <Balance>
+                <span>$OG Balance:</span>{" "}
+                {oogearBalance && beautifyNumber(oogearBalance)}
+              </Balance>
+              <Balance>
+                <span>$DMT Balance:</span>{" "}
+                {dmtBalance && beautifyNumber(dmtBalance)}
+              </Balance>
+            </BalanceDesktop>
             <DmtBox>
+              <BalanceMobile>
+                <span>$DMT Balance:</span>{" "}
+                {dmtBalance && beautifyNumber(dmtBalance)}
+              </BalanceMobile>
               <Counter>
                 <div
                   className={

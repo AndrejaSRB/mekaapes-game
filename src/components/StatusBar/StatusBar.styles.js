@@ -13,6 +13,9 @@ export const Wrapper = styled.div`
   @media only screen and (min-width: 1024px) {
     margin-bottom: 46px;
   }
+  @media only screen and (min-width: 1200px) {
+    margin-bottom: 120px;
+  }
 `;
 
 export const Box = styled.div`
