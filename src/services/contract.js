@@ -39,8 +39,10 @@ export class Contract {
   }
 
   // gives mekaApes to the user
-  async evolveBabyOogas(itemIds) {
-    return await this.mekaApesContract.evolveBabyOogas(itemIds);
+  async evolveBabyOogas(itemIds, gasLimit) {
+    return await this.mekaApesContract.evolveBabyOogas(itemIds, {
+      gasLimit: gasLimit,
+    });
   }
 
   // applies only to pre-sale in ETH
@@ -59,34 +61,41 @@ export class Contract {
 
   // mints amount new tokens with $OG
   // toStake is boolean if is staked or not
-  async mintWithOG(amount, toStake, price) {
+  async mintWithOG(amount, toStake, price, gasLimit) {
     return await this.mekaApesContract.mintWithOG(amount, toStake, {
       value: price,
+      gasLimit: gasLimit,
     });
   }
 
   // mints amount new tokens with $DMT
-  async mintWithDMT(amount, price) {
+  async mintWithDMT(amount, price, gasLimit) {
     return await this.mekaApesContract.mintWithDMT(amount, {
       value: price,
+      gasLimit: gasLimit,
     });
   }
 
   // stake multiple items
-  async stake(itemList) {
-    return await this.mekaApesContract.stake(itemList);
+  async stake(itemList, gasLimit) {
+    return await this.mekaApesContract.stake(itemList, {
+        gasLimit: gasLimit
+    });
   }
 
   // unstake multiple items
-  async unstake(itemList, price) {
+  async unstake(itemList, price, gasLimit) {
     return await this.mekaApesContract.unstake(itemList, {
       value: price,
+      gasLimit: gasLimit,
     });
   }
 
   // claim reward for multiple items
-  async claimReward(itemList) {
-    return await this.mekaApesContract.claimReward(itemList);
+  async claimReward(itemList, gasLimit) {
+    return await this.mekaApesContract.claimReward(itemList, {
+        gasLimit: gasLimit
+    });
   }
 
   // get $OG claimable amount for token list at same order as sent
@@ -97,17 +106,20 @@ export class Contract {
   }
 
   // level up Robo Ooga
-  async levelUpRoboOooga(item) {
-    return await this.mekaApesContract.levelUpRoboOooga(item);
+  async levelUpRoboOooga(item, gasLimit) {
+    return await this.mekaApesContract.levelUpRoboOooga(item, {
+      gasLimit: gasLimit,
+    });
   }
 
   // merge two Meka Apes, one will be burned, and another will be kept
   // the burned one will give Mega Meka Ape
   // the first argument is saved token
   // the second argument is burned token
-  async mergeMekaApes(tokenIdSave, tokenIdBurn, price) {
+  async mergeMekaApes(tokenIdSave, tokenIdBurn, price, gasLimit) {
     return await this.mekaApesContract.mergeMekaApes(tokenIdSave, tokenIdBurn, {
       value: price,
+      gasLimit: gasLimit,
     });
   }
 

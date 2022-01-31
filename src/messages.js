@@ -24,9 +24,9 @@ export const getActionLoadingUpgrade = (id) =>
 export const getActionLoadingStakeMessage = (list) => {
   if (list?.length > 1) {
     let number = list?.length;
-    return `You’re ${number} NFTs are sent to the Factory. This process might take a couple of minutes.`;
+    return `Your ${number} NFTs are sent to the Factory. This process might take a couple of minutes.`;
   } else {
-    return "You’re NFs is sent to the Factory. This process might take a couple of minutes.";
+    return "Your NFT is sent to the Factory. This process might take a couple of minutes.";
   }
 };
 

@@ -38,7 +38,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { beautifyPrice } from "../Factory/helper";
+import { beautifyPrice, getReducedEstimatedGas } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events ********
@@ -246,7 +246,25 @@ const Merging = () => {
 
   const getGasFee = async () => {
     let gasFee = await gas.getMergeRandomGas();
-    return gasFee;
+    // increasing gasFee for 7%
+    let increasedGas = null;
+    if (BigNumber.isBigNumber(gasFee)) {
+      increasedGas = gasFee.mul(107).div(100);
+    }
+    return increasedGas ? increasedGas : gasFee;
+  };
+
+  const getEstimatedGas = async (toKeep, toBurn, gasFee) => {
+    let gasEstimation =
+      await contract.mekaApesContract.estimateGas.mergeMekaApes(
+        toKeep,
+        toBurn,
+        {
+          value: gasFee,
+        }
+      );
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {
@@ -293,11 +311,18 @@ const Merging = () => {
           setIsDisabled(true);
           let gasFee = await getGasFee();
           try {
+            // get Gas Estimation from the contract
+            let totalGasEstimation = getEstimatedGas(
+              keepMeka.id,
+              burnMeka.id,
+              gasFee
+            );
             // first one is saved, second one is burned
             let tsx = await contract.mergeMekaApes(
               keepMeka.id,
               burnMeka.id,
-              gasFee
+              gasFee,
+              totalGasEstimation
             );
             setActionLoading(true);
             tsx

@@ -5,8 +5,8 @@ import { gql } from "@apollo/client";
 export const GET_MEKA_MERGE_TOKENS_UNSTAKE = gql`
   query GetUnstakedMekaMergeTokens($owner: String!) {
     spaceOogas(
-      subgraphError: allow,
-      where: { owner: $owner, level: 0, oogaType: 1 },
+      subgraphError: allow
+      where: { owner: $owner, level: 0, oogaType: 1 }
       first: 900
     ) {
       id
@@ -20,8 +20,8 @@ export const GET_MEKA_MERGE_TOKENS_UNSTAKE = gql`
 export const GET_MEKA_MERGE_TOKENS_STAKED = gql`
   query GetStakedMekaMergeTokens($owner: String!) {
     spaceOogas(
-      subgraphError: allow,
-      where: { staker: $owner, level: 0, oogaType: 1 },
+      subgraphError: allow
+      where: { staker: $owner, level: 0, oogaType: 1 }
       first: 900
     ) {
       id
@@ -35,7 +35,11 @@ export const GET_MEKA_MERGE_TOKENS_STAKED = gql`
 // ******** Robo Upgrade ********
 export const GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS = gql`
   query GetUnstakedRoboOogasUpgrade($owner: String!) {
-    spaceOogas(subgraphError: allow, where: { owner: $owner, oogaType: 0 }, first: 900) {
+    spaceOogas(
+      subgraphError: allow
+      where: { owner: $owner, oogaType: 0 }
+      first: 900
+    ) {
       id
       level
       oogaType
@@ -46,7 +50,11 @@ export const GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS = gql`
 
 export const GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS = gql`
   query GetStakedRoboOogasUpgrade($owner: String!) {
-    spaceOogas(subgraphError: allow, where: { staker: $owner, oogaType: 0 }, first: 900) {
+    spaceOogas(
+      subgraphError: allow
+      where: { staker: $owner, oogaType: 0 }
+      first: 900
+    ) {
       id
       level
       oogaType
@@ -59,7 +67,11 @@ export const GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS = gql`
 // Missing all my staked apes
 export const GET_UNSTAKE_ROBO_OOGAS = gql`
   query GetUnstakeRoboOogas($owner: String!) {
-    spaceOogas(subgraphError: allow, where: { owner: $owner, oogaType: 0 }, first: 900) {
+    spaceOogas(
+      subgraphError: allow
+      where: { owner: $owner, oogaType: 0 }
+      first: 900
+    ) {
       id
       oogaType
       owner
@@ -70,7 +82,11 @@ export const GET_UNSTAKE_ROBO_OOGAS = gql`
 
 export const GET_UNSTAKE_MEKA_APES = gql`
   query GetUnstakeMekaApes($owner: String!) {
-    spaceOogas(subgraphError: allow, where: { owner: $owner, oogaType: 1 }, first: 900) {
+    spaceOogas(
+      subgraphError: allow
+      where: { owner: $owner, oogaType: 1 }
+      first: 900
+    ) {
       id
       oogaType
       owner
@@ -81,7 +97,13 @@ export const GET_UNSTAKE_MEKA_APES = gql`
 
 export const GET_STAKED_APE = gql`
   query GetStakedApe($owner: String!) {
-    spaceOogas(subgraphError: allow, where: { staker: $owner }, first: 900, orderBy: oogaType, orderDirection: desc) {
+    spaceOogas(
+      subgraphError: allow
+      where: { staker: $owner }
+      first: 900
+      orderBy: oogaType
+      orderDirection: desc
+    ) {
       id
       oogaType
       owner
@@ -123,6 +145,31 @@ export const GET_LEADERBOARD = gql`
       roboOogasStaked
       roboOogasGifted
       mekaApesGifted
+    }
+  }
+`;
+
+// ******** Gifted Page ********
+
+export const GET_GIFTED = gql`
+  query GetGifted($skip: Int) {
+    gifts(
+      subgraphError: allow
+      first: 10
+      skip: $skip
+      orderBy: id
+      orderDirection: desc
+    ) {
+      id
+      giftOogaType
+      tributeOogaId
+      tributeAccount
+      tributeOogaType
+      tributeOogaLevel
+    }
+    gameStatus(subgraphError: allow, id: "gamestatus") {
+      id
+      roboOogasGifted
     }
   }
 `;

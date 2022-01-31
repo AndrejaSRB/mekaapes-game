@@ -39,6 +39,7 @@ import {
   getApeName,
   getStakedRoboAmount,
   beautifyNumber,
+  getReducedEstimatedGas,
 } from "./helper";
 // ******** Queires ********
 import {
@@ -482,11 +483,36 @@ const Factory = () => {
       return 0;
     }
   };
+  const getEstimatedGas = async (list, type, gasFee) => {
+    let gasEstimation;
+    if (type === "stake") {
+      gasEstimation = await contract.mekaApesContract.estimateGas.stake(list);
+    } else if (type === "claim") {
+      gasEstimation = await contract.mekaApesContract.estimateGas.claimReward(
+        list
+      );
+    } else if (type === "unstake") {
+      gasEstimation = await contract.mekaApesContract.estimateGas.unstake(
+        list,
+        {
+          value: gasFee,
+        }
+      );
+    }
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
+  };
 
   const getGasFee = async (list) => {
     let amount = getStakedRoboAmount(list);
     let gasFee = await gas.getUnstakeRandomGas(amount);
-    return gasFee;
+
+    // increasing gasFee for 7%
+    let increasedGas = null;
+    if (BigNumber.isBigNumber(gasFee)) {
+      increasedGas = gasFee.mul(107).div(100);
+    }
+    return increasedGas ? increasedGas : gasFee;
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {
@@ -611,7 +637,8 @@ const Factory = () => {
     }
     if (tokenIds?.length > 0) {
       try {
-        let tsx = await contract.stake(tokenIds);
+        let totalGasEstimation = await getEstimatedGas(tokenIds, "stake");
+        let tsx = await contract.stake(tokenIds, totalGasEstimation);
         openActionLoading(1, getActionLoadingStakeMessage(tokenIds));
         tsx
           .wait()
@@ -661,7 +688,8 @@ const Factory = () => {
       });
       if (tokenIds?.length > 0) {
         try {
-          let tsx = await contract.claimReward(tokenIds);
+          let totalGasEstimation = await getEstimatedGas(tokenIds, "claim");
+          let tsx = await contract.claimReward(tokenIds, totalGasEstimation);
           openActionLoading(1, ACTION_LOADING_CLAIM);
           tsx
             .wait()
@@ -708,7 +736,16 @@ const Factory = () => {
       if (tokenIds?.length > 0) {
         let gasFee = await getGasFee(selectedStaked);
         try {
-          let tsx = await contract.unstake(tokenIds, gasFee);
+          let totalGasEstimation = await getEstimatedGas(
+            tokenIds,
+            "unstake",
+            gasFee
+          );
+          let tsx = await contract.unstake(
+            tokenIds,
+            gasFee,
+            totalGasEstimation
+          );
           openActionLoading(2, getActionLoadingUnstakeMessage(tokenIds));
           tsx
             .wait()

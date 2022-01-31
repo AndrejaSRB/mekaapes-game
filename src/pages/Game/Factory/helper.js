@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { BigNumber } from 'ethers';
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Services ********
@@ -148,7 +149,7 @@ export const getApeName = (ape) => {
 export const getCurrentGasFee = async () => {
   let gasFeeMainnet = await metamask.signer.getFeeData(); // mainnet
   let gasPriceMainnet = gasFeeMainnet.gasPrice;
-  let price = gasPriceMainnet.mul(115).div(100);
+  let price = gasPriceMainnet.mul(107).div(100);
   return price;
 };
 
@@ -180,4 +181,12 @@ export const beautifyPrice = (value) => {
 
 export const getRandomArbitrary = () => {
   return Math.random() * (100 * 10 ** 9 - 1) + 1;
+};
+
+export const getReducedEstimatedGas = (gasEstimation) => {
+  let totalGasEstimation = null;
+  if (BigNumber.isBigNumber(gasEstimation)) {
+    totalGasEstimation = gasEstimation.add(30000);
+  }
+  return totalGasEstimation;
 };

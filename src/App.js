@@ -16,6 +16,7 @@ import Crafting from "./pages/Game/Crafting/Crafting";
 import Merging from "./pages/Game/Merging/Merging";
 import Evolve from "./pages/Game/Evolve/Evolve";
 import Upgrade from "./pages/Game/Upgrade/Upgrade";
+import OogaAttacked from "./pages/Game/OogaAttacked/OogaAttacked";
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
 import { MintedContext } from "./store/minted-context";
@@ -81,6 +82,7 @@ const App = () => {
         {/* <Route path="/terms" element={<TermsOfUse />} /> */}
         <Route path="/whitepaper" element={<Whitepaper />} />
         {isMintSale && <Route path="/minting" element={<Minting />} />}
+        <Route path="/game/gifted" element={<OogaAttacked />} />
         <Route path="/game/factory" element={<Factory />} />
         <Route path="/game/statistics" element={<Statistics />} />
         <Route path="/game/crafting" element={<Crafting />} />

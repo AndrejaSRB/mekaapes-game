@@ -19,7 +19,7 @@ import { InfoOutlined } from "@ant-design/icons";
 import Placeholder from "../../../assets/placeholder.png";
 // ******** Functions ********
 import { getLevelText, convertBigNumberToPrice } from "./helpers";
-import { beautifyPrice } from "../Factory/helper";
+import { beautifyPrice, getReducedEstimatedGas } from "../Factory/helper";
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
@@ -321,6 +321,12 @@ const Upgrade = () => {
     setActionLoading(false);
     setIsResultsModalOpen(true);
   };
+  const getEstimatedGas = async (id) => {
+    let gasEstimation =
+      await contract.mekaApesContract.estimateGas.levelUpRoboOooga(id);
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
+  };
 
   const handleClickApproveDMT = async () => {
     setIsApprovedBtnDisabled(true);
@@ -362,7 +368,12 @@ const Upgrade = () => {
           setIsDisabled(true);
           setText(getActionLoadingUpgrade(selectedApe.id));
           try {
-            let tsx = await contract.levelUpRoboOooga(selectedApe.id);
+            // get Gas Estimation from the contract
+            let totalGasEstimation = getEstimatedGas(selectedApe.id);
+            let tsx = await contract.levelUpRoboOooga(
+              selectedApe.id,
+              totalGasEstimation
+            );
             setActionLoading(true);
             tsx
               .wait()

@@ -17,6 +17,8 @@ import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import EvolveAnimation from "../../../assets/level_up.gif";
+// ******** Functions ********
+import { getReducedEstimatedGas } from "../Factory/helper";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Store ********
@@ -247,6 +249,13 @@ const Evolve = () => {
     setIsResultsModalOpen(false);
   };
 
+  const getEstimatedGas = async (itemIds) => {
+    let gasEstimation =
+      await contract.mekaApesContract.estimateGas.evolveBabyOogas(itemIds);
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
+  };
+
   const getEvolveEvent = (receipt) => {
     let { mekaApesContract } = contract;
     let evolveEvent = getAllEvents(receipt, mekaApesContract, BABY_EVOLVE);
@@ -274,7 +283,12 @@ const Evolve = () => {
         const tokenIds = [];
         selected.forEach((token) => tokenIds.push(token.id));
         try {
-          let tsx = await contract.evolveBabyOogas(tokenIds);
+          // get Gas Estimation from the contract
+          let totalGasEstimation = getEstimatedGas(tokenIds);
+          let tsx = await contract.evolveBabyOogas(
+            tokenIds,
+            totalGasEstimation
+          );
           setActionLoading(true);
           setActionLoadingText(getActionLoadingEvolveMessage(selected));
 

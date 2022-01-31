@@ -40,7 +40,7 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { beautifyPrice, beautifyNumber } from "../Factory/helper";
+import { beautifyPrice, beautifyNumber, getReducedEstimatedGas } from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -327,7 +327,43 @@ const Crafting = () => {
 
   const getGasFee = async (amount, isStake) => {
     let gasFee = await gas.getMintRandomGas(amount, isStake);
-    return gasFee;
+
+    // increasing gasFee for 7%
+    let increasedGas = null;
+    if (BigNumber.isBigNumber(gasFee)) {
+      increasedGas = gasFee.mul(107).div(100);
+    }
+    return increasedGas ? increasedGas : gasFee;
+  };
+
+  const getEstimatedGas = async (counter, isStake, gasFee, type) => {
+    let gasEstimation;
+    if (type === "mint&stake") {
+      gasEstimation = await contract.mekaApesContract.estimateGas.mintWithOG(
+        +counter,
+        isStake,
+        {
+          value: gasFee,
+        }
+      );
+    } else if (type === "mint") {
+      gasEstimation = await contract.mekaApesContract.estimateGas.mintWithOG(
+        +counter,
+        isStake,
+        {
+          value: gasFee,
+        }
+      );
+    } else if (type === "mintDMT") {
+      gasEstimation = await contract.mekaApesContract.estimateGas.mintWithDMT(
+        +counter,
+        {
+          value: gasFee,
+        }
+      );
+    }
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
   };
 
   const onRandomsReceived = async (requestId, entropy, event) => {
@@ -407,7 +443,19 @@ const Crafting = () => {
         setCraftingType("mint");
         let gasFee = await getGasFee(+oogearCounter, false);
         try {
-          let tsx = await contract.mintWithOG(+oogearCounter, false, gasFee);
+          // get Gas Estimation from the contract
+          let totalGasEstimation = await getEstimatedGas(
+            +oogearCounter,
+            false,
+            gasFee,
+            "mint"
+          );
+          let tsx = await contract.mintWithOG(
+            +oogearCounter,
+            false,
+            gasFee,
+            totalGasEstimation
+          );
           setActionLoadingText(getActionLoadingMintMessage(+oogearCounter));
           setActionLoading(true);
           tsx
@@ -454,7 +502,19 @@ const Crafting = () => {
         setCraftingType("mint&stake");
         let gasFee = await getGasFee(+oogearCounter, true);
         try {
-          let tsx = await contract.mintWithOG(+oogearCounter, true, gasFee);
+          // get Gas Estimation from the contract
+          let totalGasEstimation = await getEstimatedGas(
+            +oogearCounter,
+            true,
+            gasFee,
+            "mint&stake"
+          );
+          let tsx = await contract.mintWithOG(
+            +oogearCounter,
+            true,
+            gasFee,
+            totalGasEstimation
+          );
           setActionLoadingText(getActionLoadingMintMessage(+oogearCounter));
           setActionLoading(true);
           tsx
@@ -499,7 +559,18 @@ const Crafting = () => {
         setCraftingType("mint&stake");
         let gasFee = await getGasFee(+dmtCounter, true);
         try {
-          let tsx = await contract.mintWithDMT(dmtCounter, gasFee);
+          // get Gas Estimation from the contract
+          let totalGasEstimation = await getEstimatedGas(
+            +dmtCounter,
+            true,
+            gasFee,
+            "mintDMT"
+          );
+          let tsx = await contract.mintWithDMT(
+            dmtCounter,
+            gasFee,
+            totalGasEstimation
+          );
           setActionLoadingText(getActionLoadingMintMessage(+dmtCounter));
           setActionLoading(true);
           tsx

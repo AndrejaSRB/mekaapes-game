@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
+import OogaAttacked from "../OogaAttacked/OogaAttacked";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
@@ -176,6 +177,7 @@ const Statistics = () => {
             <BoardWrapper>{renderLeaderboard()}</BoardWrapper>
           </LeaderboardsBox>
         </Holder>
+        <OogaAttacked setLoader={setLoader} reduceAddress={reduceAddress} />
       </Content>
       <Footer page="game" />
       {loader && <Loading open={loader} />}
