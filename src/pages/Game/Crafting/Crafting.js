@@ -328,10 +328,10 @@ const Crafting = () => {
   const getGasFee = async (amount, isStake) => {
     let gasFee = await gas.getMintRandomGas(amount, isStake);
 
-    // increasing gasFee for 7%
+    // increasing gasFee for 12%
     let increasedGas = null;
     if (BigNumber.isBigNumber(gasFee)) {
-      increasedGas = gasFee.mul(107).div(100);
+      increasedGas = gasFee.mul(112).div(100);
     }
     return increasedGas ? increasedGas : gasFee;
   };
