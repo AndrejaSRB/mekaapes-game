@@ -27,6 +27,7 @@ import usePrices from "../../../hooks/usePrices";
 import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
 import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
 import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
+import useMaxMintWithDMT from "../../../hooks/useMaxMintWithDMT";
 // ******** Services ********
 import gas from "../../../services/gas";
 // ******** Text ********
@@ -40,7 +41,11 @@ import {
 } from "../../../messages";
 // ******** Functions ********
 import { convertBigNumberToPrice } from "../Upgrade/helpers";
-import { beautifyPrice, beautifyNumber, getReducedEstimatedGas } from "../Factory/helper";
+import {
+  beautifyPrice,
+  beautifyNumber,
+  getReducedEstimatedGas,
+} from "../Factory/helper";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events Listeners ********
@@ -76,8 +81,7 @@ import {
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 4;
-const TOTAL_MINTED_AMOUNT = 55000;
-const TOTAL_MINTED_DMT_AMOUNT = 10000;
+const TOTAL_MINTED_AMOUNT = 100000;
 
 const Crafting = () => {
   const client = useApolloClient();
@@ -114,6 +118,11 @@ const Crafting = () => {
     isLoading: totalMintedDMTLoading,
     refetch: getTotalMintedDMTAmount,
   } = useTotalMintedDMTTokens();
+
+  const {
+    data: maxAmountMintWithDMT,
+    isLoading: maxAmountMintWithDMTIsLoading,
+  } = useMaxMintWithDMT();
   // Prices
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
@@ -140,7 +149,8 @@ const Crafting = () => {
       priceLoading ||
       totalMintedDMTLoading ||
       totalAmountLoading ||
-      isDMTpprovedLoading
+      isDMTpprovedLoading ||
+      maxAmountMintWithDMTIsLoading
     ) {
       setLoading(true);
     } else {
@@ -151,6 +161,7 @@ const Crafting = () => {
     totalMintedDMTLoading,
     totalAmountLoading,
     isDMTpprovedLoading,
+    maxAmountMintWithDMTIsLoading,
   ]);
 
   // Get prices
@@ -191,14 +202,20 @@ const Crafting = () => {
       setIsDisableDMTButton(true);
     } else if (totalMintedTokens === TOTAL_MINTED_AMOUNT) {
       setIsDisableDMTButton(true);
-    } else if (totalMintedDMTTokens === TOTAL_MINTED_DMT_AMOUNT) {
+    } else if (totalMintedDMTTokens === +maxAmountMintWithDMT) {
       setIsDisableDMTButton(true);
     } else if (dmtCounter < 1) {
       setIsDisableDMTButton(true);
     } else {
       setIsDisableDMTButton(false);
     }
-  }, [dmtCounter, totalMintedDMTTokens, totalMintedTokens, isMintSale]);
+  }, [
+    dmtCounter,
+    totalMintedDMTTokens,
+    totalMintedTokens,
+    isMintSale,
+    maxAmountMintWithDMT,
+  ]);
 
   useEffect(() => {
     if (isMintSale) {
@@ -729,17 +746,25 @@ const Crafting = () => {
                 <HelperText>
                   Price {beautifyPrice(convertBigNumberToPrice(mintDMTPrice))}{" "}
                   $DMT{" "}
-                  <span>{numberWithCommas(+totalMintedDMTTokens)}/10,000</span>
+                  <span>{`${numberWithCommas(
+                    totalMintedDMTTokens ? +totalMintedDMTTokens : 0
+                  )}/${
+                    maxAmountMintWithDMT
+                      ? numberWithCommas(maxAmountMintWithDMT)
+                      : "20,000"
+                  }`}</span>
                 </HelperText>
               </DmtBox>
             </DmtBoxWrapper>
           </CounterBox>
           <Text>
-            When minting Robo Oogas with $OG or $DMT there is a 10% chance that
+            {`When minting Robo Oogas with $OG or $DMT there is a 10% chance that
             you'll receive a MekaApe instead of a Robo Ooga! There is also a 10%
             risk that the Mint gets gifted to a random Mega Meka holder. Minting
             with $DMT reduces that risk to only 5%. $DMT Mint is limited to
-            10,000 mints and your NFTs will be staked automatically.
+            ${
+              maxAmountMintWithDMT ? maxAmountMintWithDMT : "20,000"
+            } mints and your NFTs will be staked automatically.`}
           </Text>
         </MainBox>
       </Content>

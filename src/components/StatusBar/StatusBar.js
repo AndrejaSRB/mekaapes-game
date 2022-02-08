@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Functions ********
-import { beautifyPrice } from '../../pages/Game/Factory/helper';
+import { beautifyPrice } from "../../pages/Game/Factory/helper";
 // ******** Styles ********
-import { Wrapper, Color, TotalBox } from "./StatusBar.styles";
+import {
+  Wrapper,
+  Color,
+  TotalBox,
+  NewColor,
+  StatusBarWrapper,
+  TextBox,
+  SmallBox,
+} from "./StatusBar.styles";
+
+const TOTAL_AMOUNT = 55000;
 
 const StatusBar = ({ totalNumber }) => {
   const [status, setStatus] = useState(0);
@@ -17,32 +27,59 @@ const StatusBar = ({ totalNumber }) => {
   }, [totalNumber]);
 
   const percentage = () => {
-    return (100 * status) / 55000;
+    let perc = (100 * status) / TOTAL_AMOUNT;
+    return perc > 100 ? 100 : perc;
+  };
+
+  const newPercentage = () => {
+    let currentNumber = 0;
+    if (currentNumber) {
+      currentNumber = totalNumber - TOTAL_AMOUNT;
+    }
+    let perc = (100 * currentNumber) / TOTAL_AMOUNT;
+    return perc > 100 ? 100 : perc;
+  };
+
+  const getCurrentStatus = () => {
+    let status = 0;
+    if (totalNumber) {
+      status = +totalNumber - TOTAL_AMOUNT;
+    }
+    return status > 0 ? beautifyPrice(status) : "";
+  };
+
+  const getExtraCurrentMintingStatus = () => {
+    let status = 0;
+    if (totalNumber) {
+      status = +totalNumber - TOTAL_AMOUNT;
+    }
+    return status;
   };
 
   return (
-    <Wrapper>
-      <Color width={percentage()} />
-      {/* <Box width="18.18" place="first">
-        10 <span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box>
-      <Box width="27.27">
-        25<span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box>
-      <Box width="27.27">
-        40<span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box>
-      <Box place="last" width="27.27">
-        55<span className="mobile">k</span>{" "}
-        <span className="desktop">,000</span>
-      </Box> */}
-      <TotalBox>
-          {beautifyPrice(status)} / 55,000
-      </TotalBox>
-    </Wrapper>
+    <StatusBarWrapper>
+      <Wrapper>
+        <Color width={percentage()} />
+        {/* <NewColor width={newPercentage()}>
+          <p>{getCurrentStatus()}</p>
+        </NewColor> */}
+        <SmallBox status={getExtraCurrentMintingStatus()}>
+          <NewColor width={newPercentage()} />
+          <p>{getCurrentStatus()}</p>
+        </SmallBox>
+        <TotalBox>
+          {beautifyPrice(status > TOTAL_AMOUNT ? TOTAL_AMOUNT : status)}
+        </TotalBox>
+      </Wrapper>
+      <TextBox>
+        <p>
+          <span className="orange"></span> Present the first 55k
+        </p>
+        <p>
+          <span className="green"></span> Present the amount after 55k
+        </p>
+      </TextBox>
+    </StatusBarWrapper>
   );
 };
 

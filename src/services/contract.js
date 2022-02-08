@@ -144,6 +144,12 @@ export class Contract {
     return total.toNumber();
   }
 
+  // total max mint with $DMT tokens
+  async getMaxMintWithDMTTokens() {
+    let total = await this.mekaApesContract.maxMintWithDMT();
+    return total.toNumber();
+  }
+
   // DMT_ERC20 Contract functions:
 
   async getDMTBalance(address) {
