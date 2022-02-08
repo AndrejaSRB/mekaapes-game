@@ -115,9 +115,11 @@ export const GET_STAKED_APE = gql`
 // ******** Evolve ********
 
 export const GET_BABY_OOGAS = gql`
-  query GetBabyOogas($owner: String!) {
+query GetBabyOogas($owner: String!) {
     babyOogas(where: { owner: $owner }, subgraphError: allow, first: 900) {
-      evolvedTo
+      evolvedTo {
+        id
+      }
       id
       owner
     }
