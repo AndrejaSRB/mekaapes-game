@@ -32,7 +32,7 @@ const StatusBar = ({ totalNumber }) => {
 
   const newPercentage = () => {
     let currentNumber = 0;
-    if (currentNumber) {
+    if (totalNumber) {
       currentNumber = totalNumber - TOTAL_AMOUNT;
     }
     let perc = (100 * currentNumber) / TOTAL_AMOUNT;
