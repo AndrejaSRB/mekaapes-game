@@ -139,6 +139,8 @@ export const SmallBox = styled.div`
     color: ${theme.color.white};
     text-align: center;
     font-size: 10px;
+    position: relative;
+    z-index: 1;
   }
   @media only screen and (min-width: 1024px) {
     height: 30px;

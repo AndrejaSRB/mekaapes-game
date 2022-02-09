@@ -14,7 +14,7 @@ import {
 
 const TOTAL_AMOUNT = 55000;
 
-const StatusBar = ({ totalNumber }) => {
+const StatusBar = ({totalNumber}) => {
   const [status, setStatus] = useState(0);
 
   useEffect(() => {
