@@ -24,7 +24,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span>Produce 1,000 $OG per day</span>
+              <span>Produce 200 $OG per day</span>
             </div>
             <div className="cell">
               <span className="self-align">+ Feature</span><span>/</span>
@@ -40,7 +40,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span><small>+ 25%</small> more $OG (1,250 $OG per day)</span>
+              <span><small>+ 25%</small> more $OG (250 $OG per day)</span>
             </div>
             <div className="cell">
               <span className="self-align">+ Feature</span><span>Decrease the risk of $OG getting stolen to 25% when unstaking</span>
@@ -56,7 +56,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span><small>+ 50%</small> more $OG (1,500 $OG per day)</span>
+              <span><small>+ 50%</small> more $OG (300 $OG per day)</span>
             </div>
             <div className="cell">
               <span className="self-align">+ Feature</span><span>Decrease the unstaking time by 25%</span>
@@ -72,7 +72,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span><small>+ 100%</small> more $OG (2,000 $OG per day)</span>
+              <span><small>+ 100%</small> more $OG (400 $OG per day)</span>
             </div>
             <div className="cell">
               <span className="self-align">+ Feature</span><span>/</span>

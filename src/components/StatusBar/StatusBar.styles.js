@@ -126,18 +126,6 @@ export const TotalBox = styled.div`
   }
 `;
 
-// export const NewColor = styled.div`
-//   position: absolute;
-//   right: 0;
-//   height: 46px;
-//   background: ${({ width }) => theme.color.green};
-//   z-index: 1;
-//   width: ${({ width }) => `${width}%`};
-//   @media only screen and (min-width: 1024px) {
-//     height: 87px;
-//   }
-// `;
-
 export const SmallBox = styled.div`
   position: absolute;
   left: 0;
@@ -150,10 +138,14 @@ export const SmallBox = styled.div`
   p {
     color: ${theme.color.white};
     text-align: center;
+    font-size: 10px;
   }
   @media only screen and (min-width: 1024px) {
     height: 30px;
     border-radius: 10px;
+    p {
+      font-size: 16px;
+    }
   }
 `;
 
@@ -166,56 +158,7 @@ export const NewColor = styled.div`
   width: ${({ width }) => `${width}%`};
   text-align: center;
   height: 18px;
-  p {
-    color: ${({ width }) => theme.color.white};
-    font-size: 10px;
-  }
   @media only screen and (min-width: 1024px) {
     height: 30px;
-    p {
-      font-size: 16px;
-    }
-  }
-`;
-
-export const TextBox = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  color: ${theme.color.white};
-  margin-top: 10px;
-  p {
-    font-size: 14px;
-    margin-bottom: 10px;
-    .orange {
-      width: 10px;
-      height: 10px;
-      background: #f5811b;
-      border-radius: 100%;
-      display: inline-block;
-      margin-right: 5px;
-    }
-    .green {
-      width: 10px;
-      height: 10px;
-      background: ${({ width }) => theme.color.green};
-      border-radius: 100%;
-      display: inline-block;
-      margin-right: 5px;
-    }
-    &:last-child {
-      margin-left: 15px;
-    }
-  }
-  @media only screen and (min-width: 600px) {
-    flex-direction: row;
-    justify-content: center;
-  }
-  @media only screen and (min-width: 1024px) {
-    p {
-      font-size: 15px;
-    }
   }
 `;

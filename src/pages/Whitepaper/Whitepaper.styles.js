@@ -390,3 +390,38 @@ export const LogoWrapper = styled.div`
     margin: 0 auto 64px auto;
   }
 `;
+
+export const Announcement = styled.div`
+  color: ${theme.color.whiteGrey};
+  border-bottom: 1px solid ${theme.color.whiteGrey};
+  margin-bottom: 16px;
+  h5 {
+    color: ${theme.color.white};
+    margin-bottom: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  p {
+    a {
+      color: ${theme.color.red};
+      transition: ${theme.transition};
+      cursor: pointer;
+      font-weight: 600;
+      &:visited {
+        color: ${theme.color.red};
+      }
+      &:hover {
+        color: ${theme.color.green};
+      }
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    h5 {
+      font-size: 20px;
+    }
+    p {
+      font-size: 18px;
+      line-height: 23px;
+    }
+  }
+`;

@@ -763,7 +763,7 @@ const Crafting = () => {
             risk that the Mint gets gifted to a random Mega Meka holder. Minting
             with $DMT reduces that risk to only 5%. $DMT Mint is limited to
             ${
-              maxAmountMintWithDMT ? maxAmountMintWithDMT : "20,000"
+              maxAmountMintWithDMT ? numberWithCommas(maxAmountMintWithDMT) : "20,000"
             } mints and your NFTs will be staked automatically.`}
           </Text>
         </MainBox>

@@ -9,7 +9,6 @@ import {
   TotalBox,
   NewColor,
   StatusBarWrapper,
-  TextBox,
   SmallBox,
 } from "./StatusBar.styles";
 
@@ -71,14 +70,6 @@ const StatusBar = ({ totalNumber }) => {
           {beautifyPrice(status > TOTAL_AMOUNT ? TOTAL_AMOUNT : status)}
         </TotalBox>
       </Wrapper>
-      <TextBox>
-        <p>
-          <span className="orange"></span> Present the first 55k
-        </p>
-        <p>
-          <span className="green"></span> Present the amount after 55k
-        </p>
-      </TextBox>
     </StatusBarWrapper>
   );
 };

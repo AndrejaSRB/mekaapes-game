@@ -32,7 +32,8 @@ import {
   SmallTable,
   Table,
   Headline,
-  LogoWrapper
+  LogoWrapper,
+  Announcement,
 } from "./Whitepaper.styles";
 
 const Whitepaper = () => (
@@ -41,8 +42,21 @@ const Whitepaper = () => (
     <Content>
       <Title>MekaApes Whitepaper</Title>
       <MainBox>
+        <Announcement>
+          <h5>Stage 1 ended</h5>
+          <p>
+            The whitepaper gets updated. Please check our{" "}
+            <a
+              href="http://discord.gg/oogaverse"
+              target="_blank"
+              rel="noreferrer">
+              Discord
+            </a>{" "}
+            announcements on the current Update of the Game.
+          </p>
+        </Announcement>
         <TitleBox>
-          <h4>MekaApes Game Phase 1</h4>
+          <h4>MekaApes Game Stage 1</h4>
         </TitleBox>
         <WhitepaperContent>
           <p>
@@ -337,7 +351,7 @@ const Whitepaper = () => (
             </Headline>
           </BoxContent>
           <LogoWrapper>
-              <img src={Logo} alt="Meka Apes Logo" />
+            <img src={Logo} alt="Meka Apes Logo" />
           </LogoWrapper>
         </WhitepaperContent>
       </MainBox>
