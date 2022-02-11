@@ -907,7 +907,7 @@ const Factory = () => {
                 </p>
                 <p>
                   A Robo Ooga can only be unstaked when it has claimable min.
-                  6,000 $OG
+                  2,000 $OG
                 </p>
               </StakedText>
             </Staked>
