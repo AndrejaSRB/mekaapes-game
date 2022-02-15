@@ -705,7 +705,8 @@ export const SelectedCounter = styled.div`
   align-items: center;
   color: ${theme.color.white};
   max-width: 332px;
-  margin: ${({staked}) => staked ? "24px auto 16px auto" : "0 auto 16px auto"};
+  margin: ${({ staked }) =>
+    staked ? "24px auto 16px auto" : "0 auto 16px auto"};
   .numbers {
     color: ${theme.color.green};
   }
@@ -714,5 +715,28 @@ export const SelectedCounter = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     max-width: 339px;
+  }
+`;
+
+export const Tabs = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const Tab = styled.div`
+  color: ${({active}) => active ? theme.color.red : theme.color.white};
+  cursor: pointer;
+  transition: all .4s;
+  font-size: 18px;
+  margin-bottom: 16px;
+  &:hover {
+      color: ${theme.color.red};
+  }
+  &:first-child {
+      margin-right: 16px;
+  }
+  @media only screen and (min-width: 1200px) {
+    font-size: 26px;
   }
 `;

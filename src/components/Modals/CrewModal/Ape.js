@@ -5,9 +5,9 @@ import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
 // ******** Styles ********
-import { Ape, ApeImage } from "./LevelRoboOogas.styles";
+import { Ape, ApeImage } from "./CrewModal.styles";
 
-const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
+const CrewApe = ({ ape, handleClickApe, getIfActive, type }) => {
   const { data, isLoading } = useApeMetadata(ape);
   const [image, setImage] = useState(null);
 
@@ -29,7 +29,7 @@ const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
     if (image && !isLoading) {
       return (
         <ApeImage
-          active={getIfActive(ape.id)}
+          active={getIfActive(ape.id, type)}
           currentLvl={ape.level}
           src={image}
           alt={ape.id}
@@ -38,7 +38,7 @@ const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
     } else {
       return (
         <ApeImage
-          active={getIfActive(ape.id)}
+          active={getIfActive(ape.id, type)}
           currentLvl={ape.level}
           src={PlaceholderImage}
           alt={ape.id}
@@ -48,10 +48,10 @@ const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
   };
 
   return (
-    <Ape key={ape.id} onClick={handleClickApe(ape, image)}>
+    <Ape key={ape.id} onClick={handleClickApe(ape, image, type)}>
       {ape.placeholder ? (
         <ApeImage
-          active={getIfActive(ape.id)}
+          active={getIfActive(ape.id, type)}
           currentLvl={ape.level}
           src={ape.img}
           alt={ape.id}
@@ -63,9 +63,9 @@ const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
   );
 };
 
-export default LevelRoboOogaApe;
+export default CrewApe;
 
-LevelRoboOogaApe.propTypes = {
+CrewApe.propTypes = {
   ape: PropTypes.object.isRequired,
   handleClickApe: PropTypes.func.isRequired,
   getIfActive: PropTypes.func.isRequired,

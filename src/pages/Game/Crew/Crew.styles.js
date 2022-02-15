@@ -1,0 +1,241 @@
+import styled from "styled-components";
+// ******** Theme ********
+import * as theme from "../../../theme";
+
+export const Wrapper = styled.div``;
+
+export const MainBox = styled.div`
+  background: ${theme.boxBackground};
+  border: 10px solid ${theme.color.borderColor};
+  border-radius: 50px;
+  padding: 54px 14px;
+  h4 {
+    color: ${theme.color.white};
+    margin: 0 0 16px 0;
+    font-size: 24px;
+    text-align: center;
+    line-height: 1;
+  }
+  h6 {
+    line-height: 1;
+    text-align: center;
+    color: ${theme.color.whiteGrey};
+    font-size: 16px;
+    margin-bottom: 27px;
+  }
+  @media only screen and (min-width: 900px) {
+    padding: 64px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    h4 {
+      color: ${theme.color.white};
+      margin-bottom: 16px;
+      font-size: 38px;
+      width: 100%;
+    }
+    h6 {
+      font-size: 18px;
+      width: 100%;
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    width: 772px;
+    margin: 0 auto;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: 100%;
+    margin: 0 auto;
+  }
+  @media only screen and (min-width: 1320px) {
+    width: 1300px;
+    margin: 0 auto;
+    padding: 54px;
+  }
+`;
+
+export const TitleBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Boxes = styled.div`
+  display: flex;
+  min-height: 630px;
+  max-height: 630px;
+  overflow-x: scroll;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+  @media only screen and (min-width: 900px) {
+    width: 660px;
+    margin: 32px auto 0 auto;
+    justify-content: flex-start;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: 996px;
+    margin: 32px auto 0 auto;
+  }
+`;
+
+export const Box = styled.div`
+  width: 200px;
+  height: 277px;
+  border: ${({ active }) =>
+    active ? `5px solid ${theme.color.green}` : "5px solid #3a4662"};
+  padding: 15px;
+  color: ${theme.color.white};
+  border-radius: 15px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  transition: all 0.4s;
+  margin-right: 16px;
+  &:hover {
+    border: 5px solid ${theme.color.green};
+  }
+  .placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  @media only screen and (min-width: 900px) {
+    width: 300px;
+    &:nth-child(odd) {
+      margin-right: 32px;
+    }
+    .placeholder {
+      img {
+        width: 103px;
+        height: 103px;
+      }
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    margin-right: 32px;
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+`;
+
+export const Meka = styled.div`
+  text-align: center;
+  img {
+    width: 80px;
+    border-radius: 15px;
+  }
+  @media only screen and (min-width: 900px) {
+    img {
+      width: 103px;
+      height: 103px;
+    }
+  }
+`;
+
+export const RoboList = styled.div`
+  display: flex;
+  justify-content: ${({ length }) => (length > 2 ? "flex-start" : "center")};
+  margin-top: 16px;
+  overflow-x: scroll;
+  padding-bottom: 5px;
+`;
+
+export const Robo = styled.div`
+  margin: 5px;
+  img {
+    width: 80px;
+    border-radius: 15px;
+  }
+  @media only screen and (min-width: 900px) {
+    img {
+      width: 103px;
+      height: 103px;
+    }
+  }
+`;
+
+export const CreateBox = styled.div`
+  width: 300px;
+  height: 277px;
+  border: 5px solid #3a4662;
+  padding: 15px;
+  color: ${theme.color.white};
+  border-radius: 15px;
+  margin-right: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Icon = styled.div`
+  font-size: 50px;
+  color: ${theme.color.green};
+  background: #292c45;
+  width: 80px;
+  height: 80px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.4s;
+  &:hover {
+    color: ${theme.color.white};
+  }
+  @media only screen and (min-width: 900px) {
+    width: 103px;
+    height: 103px;
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 32px;
+  @media only screen and (min-width: 1200px) {
+    flex-direction: row;
+  }
+`;
+export const Button = styled.button`
+  background: ${theme.color.red};
+  transition: ${theme.transition};
+  cursor: pointer;
+  border: none;
+  color: ${theme.color.white};
+  border-radius: 400px;
+  height: 80px;
+  width: 240px;
+  font-size: 21px;
+  &:hover {
+    background: ${theme.color.redHover};
+  }
+  &:disabled {
+    color: ${theme.color.white};
+    border: 1px solid #ffffff;
+    background: ${theme.color.secondButton};
+    cursor: not-allowed;
+  }
+  &:last-child {
+    margin-top: 32px;
+  }
+  @media only screen and (min-width: 600px) {
+    width: 380px;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: ${({ claim }) => (claim ? `300px` : `214px`)};
+    &:last-child {
+      margin-top: 0;
+      margin-left: 32px;
+    }
+  }
+`;
+
+export const HelperText = styled.div`
+  color: ${theme.color.whiteGrey};
+  text-align: center;
+  margin-top: 32px;
+  font-size: 18px;
+`;

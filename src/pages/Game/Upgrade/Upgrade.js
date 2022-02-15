@@ -65,6 +65,10 @@ import {
   InfoIcon,
   LevelBoxContainer,
   PlaceholderImage,
+  ApesWrapper,
+  ApeTitle,
+  ButtonWrapper,
+  Price,
 } from "./Upgrade.styles";
 
 const LevelBox = ({ level }) => (
@@ -83,7 +87,12 @@ const Upgrade = () => {
   const { getDmtBalance, DMTBalanceBigNumber } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [burnedApe, setBurnedApe] = useState(null);
+  const [keepApe, setKeepApe] = useState(null);
+  const [oppositeApe, setOpposite] = useState(null);
+  const [apeType, setApeType] = useState(null);
+  const [isDMTDisable, setIsDMTDisabled] = useState(true);
+  const [isOGDisabled, setIsOGDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
@@ -145,15 +154,15 @@ const Upgrade = () => {
   useEffect(() => {
     if (userMetaMaskToken && prices && !priceLoading) {
       let level = 1;
-      if (selectedApe) {
-        level = selectedApe.level;
+      if (keepApe) {
+        level = keepApe.level;
       }
       const levelUpPrice = prices?.["roboLevelupPrice"]?.[level]
         ? prices?.["roboLevelupPrice"]?.[level]
         : prices?.[priceOrder["roboLevelupPrice"]]?.[level];
       setPrice(levelUpPrice);
     }
-  }, [prices, userMetaMaskToken, priceLoading, selectedApe]);
+  }, [prices, userMetaMaskToken, priceLoading, keepApe]);
 
   useEffect(() => {
     if (
@@ -200,18 +209,39 @@ const Upgrade = () => {
   }, [isDMTApprovedStatus]);
 
   useEffect(() => {
-    if (selectedApe) {
-      setIsDisabled(false);
+    if (keepApe) {
+      setIsDMTDisabled(false);
     } else {
-      setIsDisabled(true);
+      setIsDMTDisabled(true);
     }
-  }, [selectedApe]);
+  }, [keepApe]);
+
+  useEffect(() => {
+    if (burnedApe) {
+      setIsOGDisabled(false);
+    } else {
+      setIsOGDisabled(true);
+    }
+  }, [burnedApe]);
 
   const handleSaveApe = (ape) => {
-    setSelectedApe(ape);
+    if (apeType === "keep") {
+      setKeepApe(ape);
+    } else {
+      setBurnedApe(ape);
+    }
+    setApeType(null);
   };
 
-  const handleOpenApeModal = () => {
+  const handleOpenApeModal = (type) => () => {
+    if (type === "keep") {
+      setSelectedApe(keepApe);
+      setOpposite(burnedApe);
+    } else {
+      setSelectedApe(burnedApe);
+      setOpposite(keepApe);
+    }
+    setApeType(type);
     setIsApeModalOpen(true);
   };
 
@@ -220,15 +250,15 @@ const Upgrade = () => {
   };
 
   const getLevel = (type) => {
-    if (selectedApe) {
+    if (keepApe) {
       let lvl = 0;
       if (type === "up") {
-        if (selectedApe && selectedApe.level !== undefined) {
-          lvl = +selectedApe.level + 1;
+        if (keepApe && keepApe.level !== undefined) {
+          lvl = +keepApe.level + 1;
         }
       } else if (type === "down") {
-        if (selectedApe && selectedApe.level !== undefined) {
-          return +selectedApe.level;
+        if (keepApe && keepApe.level !== undefined) {
+          return +keepApe.level;
         }
       }
       return lvl;
@@ -243,20 +273,51 @@ const Upgrade = () => {
     }
   };
 
-  const renderRoboOoga = () => {
-    if (selectedApe) {
+  const renderKeepRoboOoga = () => {
+    if (keepApe) {
       return (
         <ApeBox>
-          <Ape currentLvl={selectedApe.level} onClick={handleOpenApeModal}>
-            {renderRoboOogaImage(selectedApe)}
+          <ApeTitle>Keep</ApeTitle>
+          <Ape currentLvl={keepApe.level} onClick={handleOpenApeModal("keep")}>
+            {renderRoboOogaImage(keepApe)}
           </Ape>
-          <Name>Robo Ooga #{selectedApe.id}</Name>
+          <Name>Robo Ooga #{keepApe.id}</Name>
         </ApeBox>
       );
     } else {
       return (
         <ApeBox>
-          <Ape currentLvl={""} onClick={handleOpenApeModal}>
+          <ApeTitle>Keep</ApeTitle>
+          <Ape currentLvl={""} onClick={handleOpenApeModal("keep")}>
+            <img src={Placeholder} alt="ape" />
+            <p>
+              Select <span>Robo Ooga</span>
+            </p>
+          </Ape>
+          <Name>Robo Ooga</Name>
+        </ApeBox>
+      );
+    }
+  };
+
+  const renderBurnRoboOoga = () => {
+    if (burnedApe) {
+      return (
+        <ApeBox>
+          <ApeTitle>Burn</ApeTitle>
+          <Ape
+            currentLvl={burnedApe.level}
+            onClick={handleOpenApeModal("burn")}>
+            {renderRoboOogaImage(burnedApe)}
+          </Ape>
+          <Name>Robo Ooga #{burnedApe.id}</Name>
+        </ApeBox>
+      );
+    } else {
+      return (
+        <ApeBox>
+          <ApeTitle>Burn</ApeTitle>
+          <Ape currentLvl={""} onClick={handleOpenApeModal("burn")}>
             <img src={Placeholder} alt="ape" />
             <p>
               Select <span>Robo Ooga</span>
@@ -283,11 +344,23 @@ const Upgrade = () => {
     });
   };
 
-  const getIfItsDisabled = () => {
+  const getIfItsDMTDisabled = () => {
     let disabled = true;
-    if (isDisabled) {
+    if (isDMTDisable) {
       disabled = true;
-    } else if (selectedApe) {
+    } else if (keepApe) {
+      disabled = false;
+    } else {
+      disabled = true;
+    }
+    return disabled;
+  };
+
+  const getIfItsOGDisabled = () => {
+    let disabled = true;
+    if (isOGDisabled) {
+      disabled = true;
+    } else if (keepApe && burnedApe) {
       disabled = false;
     } else {
       disabled = true;
@@ -316,11 +389,13 @@ const Upgrade = () => {
       });
     }
     setTokens(allTokens);
-    setSelectedApe(null);
+    setKeepApe(null);
+    setBurnedApe(null);
     getFreshData();
     setActionLoading(false);
     setIsResultsModalOpen(true);
   };
+
   const getEstimatedGas = async (id) => {
     let gasEstimation =
       await contract.mekaApesContract.estimateGas.levelUpRoboOooga(id);
@@ -364,14 +439,15 @@ const Upgrade = () => {
   const handleClickButton = async () => {
     if (!isMintSale) {
       if (DMTBalanceBigNumber.gt(price) || DMTBalanceBigNumber.eq(price)) {
-        if (selectedApe) {
-          setIsDisabled(true);
-          setText(getActionLoadingUpgrade(selectedApe.id));
+        if (keepApe) {
+          setIsDMTDisabled(true);
+          setIsOGDisabled(true);
+          setText(getActionLoadingUpgrade(keepApe.id));
           try {
             // get Gas Estimation from the contract
-            let totalGasEstimation = getEstimatedGas(selectedApe.id);
+            let totalGasEstimation = getEstimatedGas(keepApe.id);
             let tsx = await contract.levelUpRoboOooga(
-              selectedApe.id,
+              keepApe.id,
               totalGasEstimation
             );
             setActionLoading(true);
@@ -400,7 +476,8 @@ const Upgrade = () => {
             });
             message.error(SOMETHING_WENT_WRONG);
           }
-          setIsDisabled(false);
+          setIsDMTDisabled(false);
+          setIsOGDisabled(false);
         }
       } else {
         message.error(DONT_ENOUGH_DMT);
@@ -431,7 +508,7 @@ const Upgrade = () => {
             </h6>
           </TitleBox>
           <LeftSide>
-            {selectedApe && (
+            {keepApe && (
               <>
                 <LevelBox level={getLevel("down")} />
                 <h6>Current Level:</h6>
@@ -440,14 +517,30 @@ const Upgrade = () => {
             )}
           </LeftSide>
           <Middle>
-            {renderRoboOoga()}
+            <ApesWrapper>
+              {renderBurnRoboOoga()}
+              {renderKeepRoboOoga()}
+            </ApesWrapper>
             <ButtonBox>
               {isApproved ? (
-                <button
-                  disabled={getIfItsDisabled()}
-                  onClick={handleClickButton}>
-                  Upgrade Robo Ooga!
-                </button>
+                <ButtonWrapper>
+                  <div>
+                    <button
+                      disabled={getIfItsOGDisabled()}
+                      onClick={handleClickButton}>
+                      Upgrade with $OG
+                    </button>
+                    <Price>4,000 $OG</Price>
+                  </div>
+                  <div>
+                    <button
+                      disabled={getIfItsDMTDisabled()}
+                      onClick={handleClickButton}>
+                      Upgrade with $DMT
+                    </button>
+                    <Price>300 $DMT</Price>
+                  </div>
+                </ButtonWrapper>
               ) : (
                 <button
                   disabled={isApprovedBtnDisabled}
@@ -469,7 +562,7 @@ const Upgrade = () => {
             </HelperText>
           </Middle>
           <RightSide>
-            {selectedApe && (
+            {keepApe && (
               <>
                 <LevelBox level={getLevel("up")} />
                 <h6>Next Level:</h6>
@@ -487,6 +580,7 @@ const Upgrade = () => {
           list={list}
           handleSaveApe={handleSaveApe}
           selectedApe={selectedApe}
+          oppositeApe={oppositeApe}
         />
       )}
       {loader && <Loading open={loader} />}

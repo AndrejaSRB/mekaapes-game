@@ -14,6 +14,7 @@ import StakedApe from "./StakedApe";
 import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
 import ActionLoading from "../../../components/Modals/ActionLoading/ActionLoading";
+import Crew from "../Crew/Crew";
 // ******** Messages ********
 import {
   SELECT_SOME_UNSTAKED_APE,
@@ -89,6 +90,8 @@ import {
   Subtitle,
   ButtonClaim,
   SelectedCounter,
+  Tabs,
+  Tab,
 } from "./Factory.styles";
 
 const NoItemFound = () => (
@@ -103,6 +106,8 @@ const Factory = () => {
   const { dmtBalance, oogearBalance, getOogearBalance } =
     useContext(BalanceContext);
   const { width } = useWindowDimenstions();
+  // Tabs
+  const [activeTab, setActiveTab] = useState("crew");
   const [selectAllStaked, setSelectAllStaked] = useState(false);
   const [selectAllUnstakedMeka, setSelectAllUnstakedMeka] = useState(false);
   const [selectAllUnstakedRobo, setSelectAllUnstakedRobo] = useState(false);
@@ -314,6 +319,10 @@ const Factory = () => {
       }
       setSelectAllUnstakedRobo(e.target.checked);
     }
+  };
+
+  const handleClickTab = tab => () => {
+      setActiveTab(tab);
   };
 
   const renderUnstakedRobo = () => {
@@ -786,77 +795,26 @@ const Factory = () => {
       <Header page="game" />
       <Content>
         <Title>Enter the Factory</Title>
-        <MainBox>
-          <TitleBox>
-            <h4>The Factory</h4>
-            <h6>Stake Robo Oogas and MekaApes to earn $OG</h6>
-          </TitleBox>
-          <MobileBoxHeader>
-            <div>
-              <img src={HeroImage} alt="Factory Robo" />
-            </div>
-            <p>
-              <span>$OG Balance:</span>{" "}
-              {oogearBalance && beautifyNumber(oogearBalance)}
-            </p>
-            <p>
-              <span>$DMT Balance:</span>{" "}
-              {dmtBalance && beautifyNumber(dmtBalance)}
-            </p>
-          </MobileBoxHeader>
-          <Boxes>
-            <Unstaked>
-              <h5>Unstaked</h5>
-              <Subtitle>
-                <h6 className="robo">Robo Oogas:</h6>
-                <CustomUnstakeCheckbox
-                  onChange={hadnleChangeUnstakedRoboCheckbox}
-                  checked={selectAllUnstakedRobo}>
-                  Select All:
-                </CustomUnstakeCheckbox>
-              </Subtitle>
-              <NftList length={getListLength(unstakedRoboList)}>
-                {renderUnstakedRobo()}
-              </NftList>
-              {unstakedRoboList?.length > 0 && (
-                <SelectedCounter>
-                  <span>Selected Robo Oogas:</span>
-                  <span className="numbers">
-                    {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/
-                    {unstakedRoboList?.length}
-                  </span>
-                </SelectedCounter>
-              )}
-              <Subtitle>
-                <h6 className="meka">MekaApes:</h6>
-                <CustomUnstakeCheckbox
-                  onChange={hadnleChangeUnstakedMekaCheckbox}
-                  checked={selectAllUnstakedMeka}>
-                  Select All:
-                </CustomUnstakeCheckbox>
-              </Subtitle>
-              <NftList meka length={getListLength(unstakedMekaList)}>
-                {renderUnstakedMeka()}
-              </NftList>
-              {unstakedMekaList?.length > 0 && (
-                <SelectedCounter>
-                  <span>Selected MekaApes:</span>
-                  <span className="numbers">
-                    {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/
-                    {unstakedMekaList?.length}
-                  </span>
-                </SelectedCounter>
-              )}
-              <Button
-                type="stake"
-                disabled={getIfItsStakeDisabled()}
-                onClick={handleClickStake}>
-                Stake in Factory!
-              </Button>
-              <HelperText>Select the NFTs you want to stake</HelperText>
-            </Unstaked>
-            <MiddleBox>
-              <img src={HeroImage} alt="hero ape" />
+        <Tabs>
+          <Tab
+            active={activeTab === "factory"}
+            onClick={handleClickTab("factory")}>
+            The Factory
+          </Tab>
+          <Tab active={activeTab === "crew"} onClick={handleClickTab("crew")}>
+            The Crew
+          </Tab>
+        </Tabs>
+        {activeTab === "factory" && (
+          <MainBox>
+            <TitleBox>
+              <h4>The Factory</h4>
+              <h6>Stake Robo Oogas and MekaApes to earn $OG</h6>
+            </TitleBox>
+            <MobileBoxHeader>
+              <div>
+                <img src={HeroImage} alt="Factory Robo" />
+              </div>
               <p>
                 <span>$OG Balance:</span>{" "}
                 {oogearBalance && beautifyNumber(oogearBalance)}
@@ -865,54 +823,118 @@ const Factory = () => {
                 <span>$DMT Balance:</span>{" "}
                 {dmtBalance && beautifyNumber(dmtBalance)}
               </p>
-            </MiddleBox>
-            <Staked>
-              <h5>Staked</h5>
-              <div className="subtitle">
-                <h6>In the Factory:</h6>
-                <CustomCheckbox
-                  onChange={hadnleChangeStakedCheckbox}
-                  checked={selectAllStaked}>
-                  Select All:
-                </CustomCheckbox>
-              </div>
-              <ApeList>{renderMobileStakedApes()}</ApeList>
-              <ApeListDesktop length={stakedData?.length}>
-                {renderDesktopStakedApes()}
-              </ApeListDesktop>
-              {stakedApesData?.spaceOogas?.length > 0 && (
-                <SelectedCounter staked>
-                  <span>Selected NFTs:</span>
-                  <span className="numbers">
-                    {selectedStaked ? getSelectedStakedNumber() : 0}/
-                    {stakedApesData?.spaceOogas?.length}
-                  </span>
-                </SelectedCounter>
-              )}
-              <ButtonClaim
-                disabled={getIfItsClaimDisabled()}
-                onClick={handleClickClaim}>
-                Claim {totalSelectedClaim && beautifyNumber(totalSelectedClaim)}{" "}
-                $OG
-              </ButtonClaim>
-              <ClaimAndUnstakeButton
-                disabled={getIfItsClaimDisabled()}
-                onClick={handleClickUnstake}>
-                Claim $OG and Unstake
-              </ClaimAndUnstakeButton>
-              <StakedText>
+            </MobileBoxHeader>
+            <Boxes>
+              <Unstaked>
+                <h5>Unstaked</h5>
+                <Subtitle>
+                  <h6 className="robo">Robo Oogas:</h6>
+                  <CustomUnstakeCheckbox
+                    onChange={hadnleChangeUnstakedRoboCheckbox}
+                    checked={selectAllUnstakedRobo}>
+                    Select All:
+                  </CustomUnstakeCheckbox>
+                </Subtitle>
+                <NftList length={getListLength(unstakedRoboList)}>
+                  {renderUnstakedRobo()}
+                </NftList>
+                {unstakedRoboList?.length > 0 && (
+                  <SelectedCounter>
+                    <span>Selected Robo Oogas:</span>
+                    <span className="numbers">
+                      {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/
+                      {unstakedRoboList?.length}
+                    </span>
+                  </SelectedCounter>
+                )}
+                <Subtitle>
+                  <h6 className="meka">MekaApes:</h6>
+                  <CustomUnstakeCheckbox
+                    onChange={hadnleChangeUnstakedMekaCheckbox}
+                    checked={selectAllUnstakedMeka}>
+                    Select All:
+                  </CustomUnstakeCheckbox>
+                </Subtitle>
+                <NftList meka length={getListLength(unstakedMekaList)}>
+                  {renderUnstakedMeka()}
+                </NftList>
+                {unstakedMekaList?.length > 0 && (
+                  <SelectedCounter>
+                    <span>Selected MekaApes:</span>
+                    <span className="numbers">
+                      {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/
+                      {unstakedMekaList?.length}
+                    </span>
+                  </SelectedCounter>
+                )}
+                <Button
+                  type="stake"
+                  disabled={getIfItsStakeDisabled()}
+                  onClick={handleClickStake}>
+                  Stake in Factory!
+                </Button>
+                <HelperText>Select the NFTs you want to stake</HelperText>
+              </Unstaked>
+              <MiddleBox>
+                <img src={HeroImage} alt="hero ape" />
                 <p>
-                  Unclaimed:{" "}
-                  <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
+                  <span>$OG Balance:</span>{" "}
+                  {oogearBalance && beautifyNumber(oogearBalance)}
                 </p>
                 <p>
-                  A Robo Ooga can only be unstaked when it has claimable min.
-                  2,000 $OG
+                  <span>$DMT Balance:</span>{" "}
+                  {dmtBalance && beautifyNumber(dmtBalance)}
                 </p>
-              </StakedText>
-            </Staked>
-          </Boxes>
-        </MainBox>
+              </MiddleBox>
+              <Staked>
+                <h5>Staked</h5>
+                <div className="subtitle">
+                  <h6>In the Factory:</h6>
+                  <CustomCheckbox
+                    onChange={hadnleChangeStakedCheckbox}
+                    checked={selectAllStaked}>
+                    Select All:
+                  </CustomCheckbox>
+                </div>
+                <ApeList>{renderMobileStakedApes()}</ApeList>
+                <ApeListDesktop length={stakedData?.length}>
+                  {renderDesktopStakedApes()}
+                </ApeListDesktop>
+                {stakedApesData?.spaceOogas?.length > 0 && (
+                  <SelectedCounter staked>
+                    <span>Selected NFTs:</span>
+                    <span className="numbers">
+                      {selectedStaked ? getSelectedStakedNumber() : 0}/
+                      {stakedApesData?.spaceOogas?.length}
+                    </span>
+                  </SelectedCounter>
+                )}
+                <ButtonClaim
+                  disabled={getIfItsClaimDisabled()}
+                  onClick={handleClickClaim}>
+                  Claim{" "}
+                  {totalSelectedClaim && beautifyNumber(totalSelectedClaim)} $OG
+                </ButtonClaim>
+                <ClaimAndUnstakeButton
+                  disabled={getIfItsClaimDisabled()}
+                  onClick={handleClickUnstake}>
+                  Claim $OG and Unstake
+                </ClaimAndUnstakeButton>
+                <StakedText>
+                  <p>
+                    Unclaimed:{" "}
+                    <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
+                  </p>
+                  <p>
+                    A Robo Ooga can only be unstaked when it has claimable min.
+                    2,000 $OG
+                  </p>
+                </StakedText>
+              </Staked>
+            </Boxes>
+          </MainBox>
+        )}
+        {activeTab === "crew" && <Crew />}
       </Content>
       <Footer page="game" />
       {loading && <Loading open={loading} />}

@@ -10,7 +10,7 @@ export const SELECT_SOME_UNSTAKED_APE = "You have to select some unstaked ape.";
 export const SELECT_SOME_STAKED_APE = "You have to select some staked ape.";
 export const SOMETHING_WENT_WRONG = "Transaction failed. :(";
 export const SOMETHING_WENT_WRONG_UNSTAKE =
-  "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 6000 $OG.";
+  "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 2000 $OG.";
 
 // ******** Actions loading messages ********
 export const ACTION_LOADING_CLAIM =

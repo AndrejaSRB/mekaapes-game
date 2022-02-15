@@ -14,22 +14,32 @@ export const getLevelText = (level) => {
         <>
           <li>Position: Garbage Compactor</li>
           <li>Produce 250 $OG per day</li>
-          <li>Decrease the risk of $OG getting stolen to 25% when unstaking</li>
         </>
       );
     case 3:
       return (
         <>
           <li>Position: Factory Worker</li>
-          <li>Produce 300 $OG per day</li>
-          <li>Decrease the unstaking time by 25%</li>
+          <li>Produce 700 $OG per day</li>
         </>
       );
     case 4:
       return (
         <>
           <li>Position: Executive Bot</li>
-          <li>Produce 400 $OG per day</li>
+          <li>Produce 1,200 $OG per day</li>
+        </>
+      );
+    case 5:
+      return (
+        <>
+          <li>Produce 2,500 $OG per day</li>
+        </>
+      );
+    case 6:
+      return (
+        <>
+          <li>Produce 4,000 $OG per day</li>
         </>
       );
     default:

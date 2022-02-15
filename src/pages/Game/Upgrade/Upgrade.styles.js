@@ -140,6 +140,51 @@ export const ButtonBox = styled.div`
   }
 `;
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  @media only screen and (min-width: 600px) {
+    div {
+      button {
+        width: 215px;
+        font-size: 21px;
+      }
+    }
+  }
+  @media only screen and (min-width: 789px) {
+    flex-direction: row;
+    div {
+      &:first-child {
+        margin-right: 64px;
+      }
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    div {
+      button {
+        width: 240px;
+      }
+    }
+  }
+`;
+
+export const Price = styled.span`
+  color: ${theme.color.white};
+  margin-bottom: 32px;
+  margin-top: 12px;
+  @media only screen and (min-width: 1024px) {
+    font-size: 18px;
+  }
+`;
+
 export const HelperText = styled.p`
   color: ${theme.color.whiteGrey};
   font-size: 16px;
@@ -208,8 +253,9 @@ export const LeftSide = styled.div`
   color: ${theme.color.white};
   display: none;
   @media only screen and (min-width: 1024px) {
+    padding-top: 48px;
     padding-right: 20px;
-    width: calc((100% - 380px) / 2);
+    width: calc((100% - 545px) / 2);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -221,16 +267,23 @@ export const LeftSide = styled.div`
   }
 `;
 export const Middle = styled.div`
+  @media only screen and (min-width: 789px) {
+    width: 450px;
+    margin: 0 auto;
+  }
   @media only screen and (min-width: 1024px) {
-    width: 380px;
+    width: 545px;
+    padding: 0 30px;
   }
 `;
+
 export const RightSide = styled.div`
   color: ${theme.color.white};
   display: none;
   @media only screen and (min-width: 1024px) {
+    padding-top: 48px;
     padding-left: 20px;
-    width: calc((100% - 380px) / 2);
+    width: calc((100% - 545px) / 2);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -242,13 +295,29 @@ export const RightSide = styled.div`
   }
 `;
 
+export const ApesWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  @media only screen and (min-width: 789px) {
+    justify-content: space-between;
+  }
+`;
+
 export const ApeBox = styled.div`
   text-align: center;
+  &:first-child {
+    margin-right: 32px;
+  }
+  @media only screen and (min-width: 789px) {
+    &:first-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 export const Ape = styled.div`
-  width: 160px;
-  height: 160px;
+  width: 80px;
+  height: 80px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -276,13 +345,21 @@ export const Ape = styled.div`
     width: 100%;
     text-align: center;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 15px;
     margin: 0;
     span {
       display: block;
       width: 100%;
       text-align: center;
     }
+  }
+  @media only screen and (min-width: 600px) {
+    width: 120px;
+    height: 120px;
+  }
+  @media only screen and (min-width: 780px) {
+    width: 160px;
+    height: 160px;
   }
   @media only screen and (min-width: 1024px) {
     width: 180px;
@@ -298,7 +375,19 @@ export const Ape = styled.div`
 `;
 
 export const PlaceholderImage = styled.div`
-  opacity: ${({ active }) => (active ? 1 : 0.3)};;
+  opacity: ${({ active }) => (active ? 1 : 0.3)}; ;
+`;
+
+export const ApeTitle = styled.div`
+  font-weight: 600;
+  color: ${theme.color.white};
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 12px;
+  @media only screen and (min-width: 1024px) {
+    font-size: 21px;
+    margin-bottom: 16px;
+  }
 `;
 
 export const Name = styled.div`
@@ -316,7 +405,7 @@ export const Name = styled.div`
 export const LevelList = styled.ul`
   li {
     color: ${theme.color.whiteGrey};
-    font-size: 18px;
+    font-size: 16px;
     line-height: 23px;
     padding-left: 15px;
     position: relative;
