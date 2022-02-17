@@ -61,7 +61,7 @@ export const TitleBox = styled.div`
 
 export const Boxes = styled.div`
   display: flex;
-  min-height: 630px;
+  /* min-height: 630px; */
   max-height: 630px;
   overflow-x: scroll;
   margin-top: 32px;
@@ -73,14 +73,14 @@ export const Boxes = styled.div`
     justify-content: flex-start;
   }
   @media only screen and (min-width: 1200px) {
-    width: 996px;
+    width: 1000px;
     margin: 32px auto 0 auto;
   }
 `;
 
 export const Box = styled.div`
-  width: 200px;
-  height: 277px;
+  width: 180px;
+  height: 200px;
   border: ${({ active }) =>
     active ? `5px solid ${theme.color.green}` : "5px solid #3a4662"};
   padding: 15px;
@@ -90,6 +90,7 @@ export const Box = styled.div`
   cursor: pointer;
   transition: all 0.4s;
   margin-right: 16px;
+  position: relative;
   &:hover {
     border: 5px solid ${theme.color.green};
   }
@@ -100,7 +101,7 @@ export const Box = styled.div`
     height: 100%;
   }
   @media only screen and (min-width: 900px) {
-    width: 300px;
+    width: 170px;
     &:nth-child(odd) {
       margin-right: 32px;
     }
@@ -113,9 +114,19 @@ export const Box = styled.div`
   }
   @media only screen and (min-width: 1200px) {
     margin-right: 32px;
-    &:nth-child(3n) {
+    &:nth-child(5n) {
       margin-right: 0;
     }
+  }
+`;
+
+export const BoxText = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 41px;
+  @media only screen and (min-width: 1024px) {
+    font-size: 18px;
+    left: 32px;
   }
 `;
 
@@ -238,4 +249,14 @@ export const HelperText = styled.div`
   text-align: center;
   margin-top: 32px;
   font-size: 18px;
+`;
+
+export const RewardAmount = styled.div`
+  color: ${theme.color.white};
+  text-align: center;
+  margin-top: 16px;
+  span {
+    color: ${theme.color.whiteGrey};
+    display: block;
+  }
 `;

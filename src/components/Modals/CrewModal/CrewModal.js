@@ -33,7 +33,6 @@ const NoItemFound = () => (
 const SPOTS = 8;
 
 // TODO get SPOTS from the contract
-
 const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
   const [data, setData] = useState(null);
   const [clickedMeka, setClickedMeka] = useState(null);

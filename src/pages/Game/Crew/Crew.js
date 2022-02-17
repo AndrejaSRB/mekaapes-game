@@ -23,11 +23,12 @@ import {
   TitleBox,
   Boxes,
   Box,
-  RoboList,
   Icon,
   Actions,
   Button,
   HelperText,
+  RewardAmount,
+  BoxText,
 } from "./Crew.styles";
 
 const fakeData = [
@@ -111,10 +112,148 @@ const fakeData = [
       },
     ],
   },
+  {
+    id: 5,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 6,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 7,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 8,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 9,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 10,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 11,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
+  {
+    id: 12,
+    tokenIds: [
+      {
+        img: MekaImage,
+        oogaType: 1,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+      {
+        img: RoboImage,
+        oogaType: 0,
+      },
+    ],
+  },
 ];
 
 // TODO replace fake data
-// Todo add event listener and loading message
+// TODO add event listener and loading message
+// TODO check update version and forbid editing meka
+
 const Crew = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [clickedCrews, setClickedCrews] = useState([]);
@@ -214,13 +353,11 @@ const Crew = () => {
   const handleRenderCrews = () => {
     if (fakeData?.length > 0) {
       return fakeData.map((crew, index) => {
-      let length = crew.tokenIds?.length && crew.tokenIds?.length > 0 ? crew.tokenIds?.length - 1 : 0;
         return (
           <Box
             key={crew.id}
             onClick={handleClickCrew(crew)}
-            active={getIfItsSelected(crew.id)}
-            >
+            active={getIfItsSelected(crew.id)}>
             {crew.tokenIds.map(
               (token, index) =>
                 index === 0 &&
@@ -232,19 +369,10 @@ const Crew = () => {
                   />
                 )
             )}
-            <RoboList length={length}>
-              {crew.tokenIds.map(
-                (token, index) =>
-                  index > 0 &&
-                  token.oogaType === 0 && (
-                    <Ape
-                      key={`Robo #${crew.id} #${index}`}
-                      ape={token}
-                      type="robo"
-                    />
-                  )
-              )}
-            </RoboList>
+            <RewardAmount>
+              <span>Crew reward:</span>
+              99,999,123,00
+            </RewardAmount>
           </Box>
         );
       });
@@ -266,10 +394,10 @@ const Crew = () => {
                 <PlusOutlined />
               </Icon>
             </div>
+            <BoxText>Create Crew</BoxText>
           </Box>
         </Boxes>
         <Actions>
-          <Button disabled={clickedCrews?.length === 0}>Unstake</Button>
           <Button disabled={clickedCrews?.length === 0} claim>
             Claim 99,999,123,00 $OG
           </Button>
