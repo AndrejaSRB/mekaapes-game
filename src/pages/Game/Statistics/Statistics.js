@@ -6,7 +6,7 @@ import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
 import OogaAttacked from "../OogaAttacked/OogaAttacked";
-// import ClaimReward from "../../../components/ClaimReward/ClaimReward";
+import ClaimReward from "../../../components/ClaimReward/ClaimReward";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
@@ -165,7 +165,7 @@ const Statistics = () => {
         <Title>
           Game <span>Statistics</span>
         </Title>
-        {/* <ClaimReward /> */}
+        <ClaimReward />
         <Holder>
           <Box>
             <h4>Game Status</h4>

@@ -7,6 +7,7 @@ const pricesOrder = {
     mintDMTstakePrice: 4,
     roboLevelupPrice: 5,
     mekaMergePrice: 6,
+    roboLevelupPriceOG: 7,
 }
 
 export default pricesOrder;

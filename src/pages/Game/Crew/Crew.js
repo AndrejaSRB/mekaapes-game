@@ -113,6 +113,8 @@ const fakeData = [
   },
 ];
 
+// TODO replace fake data
+// Todo add event listener and loading message
 const Crew = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [clickedCrews, setClickedCrews] = useState([]);
@@ -254,7 +256,7 @@ const Crew = () => {
       <MainBox>
         <TitleBox>
           <h4>The Crew</h4>
-          <h6>Pick your Meka and make your crew!</h6>
+          <h6>Pick your Meka and make your Meka crew!</h6>
         </TitleBox>
         <Boxes>
           {handleRenderCrews()}

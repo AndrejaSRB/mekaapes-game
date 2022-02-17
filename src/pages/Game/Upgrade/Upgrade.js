@@ -11,6 +11,8 @@ import UpgradeInfo from "../../../components/Modals/UpgradeInfo/UpgradeInfo";
 import Loading from "../../../components/Modals/Loading/Loading";
 import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 import ActionsLoading from "../../../components/Modals/ActionLoading/ActionLoading";
+import LevelCounter from "./LevelCounter";
+import BurnRoboModal from "../../../components/Modals/BurnRoboModal/BurnRoboModal";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Icons ********
@@ -18,7 +20,7 @@ import { InfoOutlined } from "@ant-design/icons";
 // ******** Images ********
 import Placeholder from "../../../assets/placeholder.png";
 // ******** Functions ********
-import { getLevelText, convertBigNumberToPrice } from "./helpers";
+import { getLevelText, convertBigNumberToPrice, getAllPrices } from "./helpers";
 import { beautifyPrice, getReducedEstimatedGas } from "../Factory/helper";
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
@@ -41,6 +43,7 @@ import { LEVELUP_ROBO, getEvent } from "../../../eventsListeners";
 // ******** Text ********
 import {
   DONT_ENOUGH_DMT,
+  DONT_ENOUGH_OG,
   PRE_SALE_IS_ONGOING,
   SOMETHING_WENT_WRONG,
   getActionLoadingUpgrade,
@@ -66,7 +69,6 @@ import {
   LevelBoxContainer,
   PlaceholderImage,
   ApesWrapper,
-  ApeTitle,
   ButtonWrapper,
   Price,
 } from "./Upgrade.styles";
@@ -80,19 +82,25 @@ const LevelBox = ({ level }) => (
   </LevelBoxContainer>
 );
 
+// TODO add level names (mobile and desktop) and colors
+// TODO check with them about text on the page and modals
+
 const Upgrade = () => {
   const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const { isMintSale } = useContext(MintedContext);
-  const { getDmtBalance, DMTBalanceBigNumber } = useContext(BalanceContext);
+  const {
+    getDmtBalance,
+    DMTBalanceBigNumber,
+    getOogearBalance,
+    OGBalanceBigNumber,
+  } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
-  const [burnedApe, setBurnedApe] = useState(null);
+  const [, setBurnedApe] = useState([]);
   const [keepApe, setKeepApe] = useState(null);
-  const [oppositeApe, setOpposite] = useState(null);
   const [apeType, setApeType] = useState(null);
-  const [isDMTDisable, setIsDMTDisabled] = useState(true);
-  const [isOGDisabled, setIsOGDisabled] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(true);
   const [loader, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [isApproved, setIsApproved] = useState(true);
@@ -100,6 +108,13 @@ const Upgrade = () => {
   const [isOpenUpgradeInfoModal, setIsOpenUpgradeInfoModal] = useState(false);
   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [list, setList] = useState(null);
+  // Levels
+  const [level, setLevel] = useState(1);
+  const [levelCounter, setLevelCounter] = useState(1);
+  const [nextLevel, setNextLevel] = useState(1);
+
+  const [isRoboBurnModalOpen, setIsRoboBurnModalOpen] = useState(false);
+
   const [
     getUnstakedRoboOogas,
     { loading: unstakedRoboLoading, data: unstakedRoboData },
@@ -115,13 +130,30 @@ const Upgrade = () => {
   // Prices
   const { data: prices, isLoading: priceLoading } =
     usePrices(userMetaMaskToken);
-  const [price, setPrice] = useState(BigNumber.from(0));
+  const [dmtPrice, setDMTPrice] = useState(BigNumber.from(0));
+  const [ogPrice, setOGPrice] = useState(BigNumber.from(0));
+  const [allDMTPrices, setDMTPrices] = useState([
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+  ]);
+  const [allOGPrices, setOGPrices] = useState([
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+    BigNumber.from(0),
+  ]);
   // $DMT Transaction approve
   const {
     data: isDMTApprovedStatus,
     isLoading: isDMTpprovedLoading,
     refetch: getIfDMTIsApproved,
-  } = useIsDMTTransactionApproved(userMetaMaskToken, price);
+  } = useIsDMTTransactionApproved(userMetaMaskToken, dmtPrice);
   // Events
   const [tokens, setTokens] = useState(null);
   const [text, setText] = useState("");
@@ -147,22 +179,9 @@ const Upgrade = () => {
   useEffect(() => {
     if (userMetaMaskToken) {
       getDmtBalance();
+      getOogearBalance();
     }
-  }, [getDmtBalance, userMetaMaskToken]);
-
-  // Set Price
-  useEffect(() => {
-    if (userMetaMaskToken && prices && !priceLoading) {
-      let level = 1;
-      if (keepApe) {
-        level = keepApe.level;
-      }
-      const levelUpPrice = prices?.["roboLevelupPrice"]?.[level]
-        ? prices?.["roboLevelupPrice"]?.[level]
-        : prices?.[priceOrder["roboLevelupPrice"]]?.[level];
-      setPrice(levelUpPrice);
-    }
-  }, [prices, userMetaMaskToken, priceLoading, keepApe]);
+  }, [getDmtBalance, userMetaMaskToken, getOogearBalance]);
 
   useEffect(() => {
     if (
@@ -201,6 +220,66 @@ const Upgrade = () => {
     getStakedRoboOogas,
   ]);
 
+  // Set Price
+  useEffect(() => {
+    if (userMetaMaskToken && prices && !priceLoading) {
+      // DMT Prices
+      const levelUpDMTPrice = prices?.["roboLevelupPrice"]
+        ? prices?.["roboLevelupPrice"]
+        : prices?.[priceOrder["roboLevelupPrice"]];
+
+      // OG Prices
+      const levelUpOGPrice = prices?.["roboLevelupPriceOG"]
+        ? prices?.["roboLevelupPriceOG"]
+        : prices?.[priceOrder["roboLevelupPriceOG"]];
+
+      if (levelUpDMTPrice) {
+        setDMTPrices([...levelUpDMTPrice]);
+      }
+
+      if (levelUpOGPrice) {
+        setOGPrices([...levelUpOGPrice]);
+      }
+    }
+  }, [prices, userMetaMaskToken, priceLoading, keepApe]);
+
+  // SUM current $DMT price based on level
+  useEffect(() => {
+    let level = 1;
+    if (keepApe) {
+      level = keepApe.level;
+    }
+    if (keepApe) {
+      let all_dmt_prices = [...allDMTPrices];
+      const totalDMTPrice = getAllPrices(all_dmt_prices, level, levelCounter);
+      setDMTPrice(totalDMTPrice);
+    } else {
+      setDMTPrice(allDMTPrices[level]);
+    }
+  }, [levelCounter, keepApe, allDMTPrices]);
+
+  // SUM current $OG price based on level
+  useEffect(() => {
+    let level = 1;
+    if (keepApe) {
+      level = keepApe.level;
+    }
+    if (keepApe) {
+      let all_og_prices = [...allOGPrices];
+      const totalOGPrice = getAllPrices(all_og_prices, level, levelCounter);
+      setOGPrice(totalOGPrice);
+    } else {
+      setOGPrice(allOGPrices[level]);
+    }
+  }, [levelCounter, keepApe, allOGPrices]);
+
+  // Set Next Level
+  useEffect(() => {
+    if (levelCounter) {
+      setNextLevel(levelCounter + level);
+    }
+  }, [levelCounter, level]);
+
   // Check if $DMT transaction is approved
   useEffect(() => {
     if (isDMTApprovedStatus !== null && isDMTApprovedStatus !== undefined) {
@@ -210,25 +289,18 @@ const Upgrade = () => {
 
   useEffect(() => {
     if (keepApe) {
-      setIsDMTDisabled(false);
+      setIsDisabled(false);
     } else {
-      setIsDMTDisabled(true);
+      setIsDisabled(true);
     }
   }, [keepApe]);
-
-  useEffect(() => {
-    if (burnedApe) {
-      setIsOGDisabled(false);
-    } else {
-      setIsOGDisabled(true);
-    }
-  }, [burnedApe]);
 
   const handleSaveApe = (ape) => {
     if (apeType === "keep") {
       setKeepApe(ape);
-    } else {
-      setBurnedApe(ape);
+      setLevel(ape.level);
+      setLevelCounter(1);
+      setNextLevel(ape.level + 1);
     }
     setApeType(null);
   };
@@ -236,10 +308,6 @@ const Upgrade = () => {
   const handleOpenApeModal = (type) => () => {
     if (type === "keep") {
       setSelectedApe(keepApe);
-      setOpposite(burnedApe);
-    } else {
-      setSelectedApe(burnedApe);
-      setOpposite(keepApe);
     }
     setApeType(type);
     setIsApeModalOpen(true);
@@ -247,6 +315,18 @@ const Upgrade = () => {
 
   const handleCloseApeModal = () => {
     setIsApeModalOpen(false);
+  };
+
+  const handleOpenOGBurnModal = () => {
+    if (OGBalanceBigNumber.gt(ogPrice) || OGBalanceBigNumber.eq(ogPrice)) {
+      setIsRoboBurnModalOpen(true);
+    } else {
+      message.error(DONT_ENOUGH_OG);
+    }
+  };
+
+  const handleCloseOGBurnModal = () => {
+    setIsRoboBurnModalOpen(false);
   };
 
   const getLevel = (type) => {
@@ -277,7 +357,6 @@ const Upgrade = () => {
     if (keepApe) {
       return (
         <ApeBox>
-          <ApeTitle>Keep</ApeTitle>
           <Ape currentLvl={keepApe.level} onClick={handleOpenApeModal("keep")}>
             {renderRoboOogaImage(keepApe)}
           </Ape>
@@ -287,37 +366,7 @@ const Upgrade = () => {
     } else {
       return (
         <ApeBox>
-          <ApeTitle>Keep</ApeTitle>
           <Ape currentLvl={""} onClick={handleOpenApeModal("keep")}>
-            <img src={Placeholder} alt="ape" />
-            <p>
-              Select <span>Robo Ooga</span>
-            </p>
-          </Ape>
-          <Name>Robo Ooga</Name>
-        </ApeBox>
-      );
-    }
-  };
-
-  const renderBurnRoboOoga = () => {
-    if (burnedApe) {
-      return (
-        <ApeBox>
-          <ApeTitle>Burn</ApeTitle>
-          <Ape
-            currentLvl={burnedApe.level}
-            onClick={handleOpenApeModal("burn")}>
-            {renderRoboOogaImage(burnedApe)}
-          </Ape>
-          <Name>Robo Ooga #{burnedApe.id}</Name>
-        </ApeBox>
-      );
-    } else {
-      return (
-        <ApeBox>
-          <ApeTitle>Burn</ApeTitle>
-          <Ape currentLvl={""} onClick={handleOpenApeModal("burn")}>
             <img src={Placeholder} alt="ape" />
             <p>
               Select <span>Robo Ooga</span>
@@ -344,23 +393,11 @@ const Upgrade = () => {
     });
   };
 
-  const getIfItsDMTDisabled = () => {
+  const getIfItsDisabled = () => {
     let disabled = true;
-    if (isDMTDisable) {
+    if (isDisabled) {
       disabled = true;
     } else if (keepApe) {
-      disabled = false;
-    } else {
-      disabled = true;
-    }
-    return disabled;
-  };
-
-  const getIfItsOGDisabled = () => {
-    let disabled = true;
-    if (isOGDisabled) {
-      disabled = true;
-    } else if (keepApe && burnedApe) {
       disabled = false;
     } else {
       disabled = true;
@@ -436,12 +473,14 @@ const Upgrade = () => {
     setIsApprovedBtnDisabled(false);
   };
 
-  const handleClickButton = async () => {
+  const handleClickDMTButton = async () => {
     if (!isMintSale) {
-      if (DMTBalanceBigNumber.gt(price) || DMTBalanceBigNumber.eq(price)) {
+      if (
+        DMTBalanceBigNumber.gt(dmtPrice) ||
+        DMTBalanceBigNumber.eq(dmtPrice)
+      ) {
         if (keepApe) {
-          setIsDMTDisabled(true);
-          setIsOGDisabled(true);
+          setIsDisabled(true);
           setText(getActionLoadingUpgrade(keepApe.id));
           try {
             // get Gas Estimation from the contract
@@ -476,8 +515,7 @@ const Upgrade = () => {
             });
             message.error(SOMETHING_WENT_WRONG);
           }
-          setIsDMTDisabled(false);
-          setIsOGDisabled(false);
+          setIsDisabled(false);
         }
       } else {
         message.error(DONT_ENOUGH_DMT);
@@ -517,42 +555,59 @@ const Upgrade = () => {
             )}
           </LeftSide>
           <Middle>
-            <ApesWrapper>
-              {renderBurnRoboOoga()}
-              {renderKeepRoboOoga()}
-            </ApesWrapper>
+            <ApesWrapper>{renderKeepRoboOoga()}</ApesWrapper>
+            {keepApe && (
+              <LevelCounter
+                level={level}
+                setLevelCounter={setLevelCounter}
+                levelCounter={levelCounter}
+                keepApe={keepApe}
+              />
+            )}
             <ButtonBox>
-              {isApproved ? (
-                <ButtonWrapper>
+              <ButtonWrapper>
+                <div>
+                  <button
+                    className="noselect"
+                    disabled={getIfItsDisabled()}
+                    onClick={handleOpenOGBurnModal}>
+                    Upgrade with $OG
+                  </button>
+                  {keepApe && (
+                    <Price className="noselect">
+                      {beautifyPrice(convertBigNumberToPrice(ogPrice))} $OG
+                    </Price>
+                  )}
+                </div>
+                {isApproved ? (
                   <div>
                     <button
-                      disabled={getIfItsOGDisabled()}
-                      onClick={handleClickButton}>
-                      Upgrade with $OG
-                    </button>
-                    <Price>4,000 $OG</Price>
-                  </div>
-                  <div>
-                    <button
-                      disabled={getIfItsDMTDisabled()}
-                      onClick={handleClickButton}>
+                      className="noselect"
+                      disabled={getIfItsDisabled()}
+                      onClick={handleClickDMTButton}>
                       Upgrade with $DMT
                     </button>
-                    <Price>300 $DMT</Price>
+                    {keepApe && (
+                      <Price className="noselect">
+                        {beautifyPrice(convertBigNumberToPrice(dmtPrice))} $DMT
+                      </Price>
+                    )}
                   </div>
-                </ButtonWrapper>
-              ) : (
-                <button
-                  disabled={isApprovedBtnDisabled}
-                  onClick={handleClickApproveDMT}>
-                  Approve $DMT Transaction
-                </button>
-              )}
+                ) : (
+                  <div>
+                    <button
+                      className="noselect"
+                      disabled={isApprovedBtnDisabled}
+                      onClick={handleClickApproveDMT}>
+                      Approve $DMT Transaction
+                    </button>
+                    {keepApe && <Price />}
+                  </div>
+                )}
+              </ButtonWrapper>
             </ButtonBox>
             <HelperText>
-              Each Level-Up costs{" "}
-              {beautifyPrice(convertBigNumberToPrice(price))} $DMT. You can
-              convert $OG to $DMT here:
+              You can convert $OG to $DMT here:
               <a
                 href="https://app.sushi.com/swap?inputCurrency=0xE89C20096b636fFec9fd26d1a623F42A33eaD309&outputCurrency=0x5b1d655c93185b06b00f7925791106132cb3ad75"
                 target="_blank"
@@ -564,9 +619,9 @@ const Upgrade = () => {
           <RightSide>
             {keepApe && (
               <>
-                <LevelBox level={getLevel("up")} />
+                <LevelBox level={nextLevel} />
                 <h6>Next Level:</h6>
-                <LevelList>{getLevelText(getLevel("up"))}</LevelList>
+                <LevelList>{getLevelText(nextLevel)}</LevelList>
               </>
             )}
           </RightSide>
@@ -580,7 +635,6 @@ const Upgrade = () => {
           list={list}
           handleSaveApe={handleSaveApe}
           selectedApe={selectedApe}
-          oppositeApe={oppositeApe}
         />
       )}
       {loader && <Loading open={loader} />}
@@ -603,6 +657,16 @@ const Upgrade = () => {
           text={text}
           tsxNumber={1}
           tsxTotalNumber={1}
+        />
+      )}
+      {isRoboBurnModalOpen && (
+        <BurnRoboModal
+          open={isRoboBurnModalOpen}
+          levels={levelCounter}
+          roboList={list}
+          tokenUpgrade={keepApe}
+          type="upgrade"
+          handleCloseModal={handleCloseOGBurnModal}
         />
       )}
     </Wrapper>

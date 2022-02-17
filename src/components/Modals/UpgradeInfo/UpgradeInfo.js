@@ -26,9 +26,9 @@ const UpgradeInfo = ({ open, handleClose }) => {
               <span>Productivity</span>
               <span>Produce 200 $OG per day</span>
             </div>
-            <div className="cell">
+            {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>/</span>
-            </div>
+            </div> */}
           </Box>
 
           <Box>
@@ -40,11 +40,11 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span><small>+ 25%</small> more $OG (250 $OG per day)</span>
+              <span>Produce 400 $OG per day</span>
             </div>
-            <div className="cell">
+            {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>Decrease the risk of $OG getting stolen to 25% when unstaking</span>
-            </div>
+            </div> */}
           </Box>
 
           <Box>
@@ -56,11 +56,12 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span><small>+ 50%</small> more $OG (300 $OG per day)</span>
+              {/* <span><small>+ 50%</small> more $OG (300 $OG per day)</span> */}
+              <span>Produce 700 $OG per day</span>
             </div>
-            <div className="cell">
+            {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>Decrease the unstaking time by 25%</span>
-            </div>
+            </div> */}
           </Box>
 
           <Box>
@@ -72,10 +73,34 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span><small>+ 100%</small> more $OG (400 $OG per day)</span>
+              <span>Produce 1,200 $OG per day</span>
+            </div>
+            {/* <div className="cell">
+              <span className="self-align">+ Feature</span><span>/</span>
+            </div> */}
+          </Box>
+          <Box>
+            <div className="cell">
+              <span>Level</span><span>5</span>
             </div>
             <div className="cell">
-              <span className="self-align">+ Feature</span><span>/</span>
+              <span>Position</span><span>/</span>
+            </div>
+            <div className="cell">
+              <span>Productivity</span>
+              <span>Produce 2,500 $OG per day</span>
+            </div>
+          </Box>
+          <Box>
+            <div className="cell">
+              <span>Level</span><span>6</span>
+            </div>
+            <div className="cell">
+              <span>Position</span><span>/</span>
+            </div>
+            <div className="cell">
+              <span>Productivity</span>
+              <span>Produce 4,000 $OG per day</span>
             </div>
           </Box>
         </MobileTable>

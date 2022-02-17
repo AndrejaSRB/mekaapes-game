@@ -58,3 +58,17 @@ export const convertBigNumberToPrice = (price) => {
     return price;
   }
 };
+
+export const getAllPrices = (allPrices, level, counter) => {
+  if (allPrices?.length > 0) {
+    let totalPrice = BigNumber.from(0);
+    let prices = [...allPrices];
+    const slicedPrices = prices.slice(level, +level + +counter);
+    slicedPrices.forEach((price) => {
+      if (BigNumber.isBigNumber(price)) {
+        totalPrice = totalPrice.add(price);
+      }
+    });
+    return totalPrice;
+  }
+};

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Components ********
+import { Steps } from "antd";
 import Ape from "./Ape";
 import CrewStep from "./CrewStep";
 // ******** Images ********
@@ -18,6 +19,8 @@ import {
   NotFoundItem,
   HelperText,
   SelectedText,
+  CustomStep,
+  StepsWrapper,
 } from "./CrewModal.styles";
 
 const NoItemFound = () => (
@@ -29,8 +32,7 @@ const NoItemFound = () => (
 
 const SPOTS = 8;
 
-// TODO get Stops from the contract
-// TODO check Meka height?
+// TODO get SPOTS from the contract
 
 const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
   const [data, setData] = useState(null);
@@ -265,6 +267,13 @@ const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
           )}
         </ButtonWrapper>
         <Text>{renderText()}</Text>
+        <StepsWrapper>
+          <Steps current={step - 1} progressDot>
+            <CustomStep title="Pick MekaApe" description="" />
+            <CustomStep title="Pick Robo Oogas" description="" />
+            <CustomStep title="Overview" description="" />
+          </Steps>
+        </StepsWrapper>
         <HelperText>Step: {step}/3</HelperText>
       </div>
     </ModalWrapper>

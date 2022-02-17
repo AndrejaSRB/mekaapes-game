@@ -2,9 +2,7 @@ import styled from "styled-components";
 // ******** Theme ********
 import * as theme from "../../../theme";
 // ******** Components ********
-import { Modal, Steps } from "antd";
-
-const { Step } = Steps;
+import { Modal } from "antd";
 
 export const ModalWrapper = styled(Modal)`
   & > .ant-modal-content {
@@ -101,7 +99,6 @@ export const Title = styled.h2`
     margin-bottom: 24px;
   }
 `;
-
 export const Subtitle = styled.h3`
   font-size: 16px;
   line-height: 21px;
@@ -115,7 +112,7 @@ export const Subtitle = styled.h3`
   }
 `;
 
-export const ApesBox = styled.div`
+export const RoboApesBox = styled.div`
   margin-top: 24px;
   margin-bottom: 32px;
   display: flex;
@@ -127,7 +124,7 @@ export const ApesBox = styled.div`
   @media only screen and (min-width: 789px) {
     margin-top: 32px;
     max-width: 616px;
-    height: ${({ length }) => (length <= 2 ? "160px" : "235px")};
+    height: ${({ length }) => (length < 1 ? "160px" : "235px")};
     justify-content: flex-start;
   }
 `;
@@ -144,9 +141,15 @@ export const ApeImage = styled.img`
   height: 100px;
   -webkit-filter: drop-shadow(0px 0px 40px #11051b);
   filter: drop-shadow(0px 0px 10px #11051b);
-  border: ${({ active }) =>
-    active ? `5px solid ${theme.color.green}` : `5px solid transparent`};
+  /* border: ${({ currentLvl }) => {
+    if (currentLvl) {
+      return `5px solid ${theme.color.level[currentLvl]}`;
+    } else {
+      return `none`;
+    }
+  }}; */
   border-radius: 15px;
+  opacity: ${({ active }) => (active ? 1 : 0.3)};
 `;
 
 export const PlaceholderImage = styled.div`
@@ -155,7 +158,7 @@ export const PlaceholderImage = styled.div`
 
 export const Text = styled.span`
   color: ${theme.color.grey};
-  margin: 24px 0 16px 0;
+  margin: 24px 0 32px 0;
   font-size: 15px;
   text-align: center;
   line-height: 1.5;
@@ -187,106 +190,11 @@ export const NotFoundItem = styled.div`
   }
 `;
 
-export const SelectedText = styled.span`
-  color: ${theme.color.grey};
+export const HelperText = styled.div`
+  text-align: center;
   margin-bottom: 16px;
-  font-size: 15px;
-  text-align: center;
-  line-height: 1.5;
-  @media only screen and (min-width: 789px) {
+  font-size: 16px;
+  @media only screen and (min-width: 1024px) {
     font-size: 18px;
-  }
-`;
-
-export const Crew = styled.div`
-  margin-top: 16px;
-  margin-bottom: 32px;
-`;
-
-export const Meka = styled.div`
-  text-align: center;
-  img {
-    width: 80px;
-    border-radius: 15px;
-  }
-  @media only screen and (min-width: 900px) {
-    img {
-      width: 103px;
-      height: 103px;
-    }
-  }
-`;
-
-export const RoboList = styled.div`
-  display: flex;
-  justify-content: ${({ length }) => (length > 3 ? "flex-start" : "center")};
-  margin-top: 16px;
-  padding-bottom: 5px;
-  flex-wrap: wrap;
-  max-width: 414px;
-  @media only screen and (min-width: 789px) {
-    max-width: 616px;
-  }
-`;
-
-export const Robo = styled.div`
-  margin: 5px;
-  img {
-    width: 80px;
-    border-radius: 15px;
-  }
-  @media only screen and (min-width: 900px) {
-    img {
-      width: 103px;
-      height: 103px;
-    }
-  }
-`;
-
-export const HelperText = styled.span`
-  color: ${theme.color.grey};
-  margin-bottom: 32px;
-  font-size: 15px;
-  text-align: center;
-  line-height: 1.5;
-  display: block;
-  @media only screen and (min-width: 789px) {
-    font-size: 18px;
-  }
-  @media only screen and (min-width: 900px) {
-    display: none;
-  }
-`;
-
-export const StepsWrapper = styled.div`
-  display: none;
-  @media only screen and (min-width: 900px) {
-    display: block;
-    padding-bottom: 32px;
-    padding-top: 16px;
-    width: 90%;
-  }
-`;
-
-export const CustomStep = styled(Step)`
-  & > .ant-steps-item-container {
-    .ant-steps-item-icon > .ant-steps-icon > .ant-steps-icon-dot {
-      background: ${theme.color.green};
-    }
-    .ant-steps-item-content > .ant-steps-item-title {
-      color: ${theme.color.white};
-    }
-  }
-
-  &.ant-steps-item-wait > .ant-steps-item-container {
-    .ant-steps-item-icon > .ant-steps-icon > .ant-steps-icon-dot {
-      background: grey;
-    }
-  }
-
-  &.ant-steps-item-finish
-    > .ant-steps-item-container
-    > .ant-steps-item-tail::after {
-    background: ${theme.color.green};
   }
 `;

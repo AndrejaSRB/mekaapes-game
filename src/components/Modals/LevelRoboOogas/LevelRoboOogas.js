@@ -30,7 +30,6 @@ const LevelRoboOogas = ({
   list,
   handleSaveApe,
   selectedApe,
-  oppositeApe,
 }) => {
   const [clickedApe, setClickedApe] = useState(null);
   const [data, setData] = useState(null);
@@ -44,21 +43,11 @@ const LevelRoboOogas = ({
 
   useEffect(() => {
     if (list && list.length > 0) {
-      if (oppositeApe) {
-        console.log("oppositeApe", oppositeApe);
-        let uniqueApes = list.filter((ape) => ape.id !== oppositeApe.id);
-        console.log("uniqueApes", uniqueApes);
-        let apes = uniqueApes.filter((ape) => ape.level < 6);
-        console.log("apes", apes);
-        setListLength(apes.length);
-        setData(apes);
-      } else {
-        let apes = list.filter((ape) => ape.level < 6);
-        setData(apes);
-        setListLength(apes.length);
-      }
+      let apes = list.filter((ape) => ape.level < 6);
+      setData(apes);
+      setListLength(apes.length);
     }
-  }, [list, oppositeApe]);
+  }, [list]);
 
   const handleClickButton = () => {
     if (clickedApe) {
