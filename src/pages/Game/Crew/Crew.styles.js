@@ -1,6 +1,8 @@
 import styled from "styled-components";
 // ******** Theme ********
 import * as theme from "../../../theme";
+// ******** Components ********
+import { Checkbox } from "antd";
 
 export const Wrapper = styled.div``;
 
@@ -258,5 +260,43 @@ export const RewardAmount = styled.div`
   span {
     color: ${theme.color.whiteGrey};
     display: block;
+  }
+`;
+
+export const CustomCheckbox = styled(Checkbox)`
+  color: ${theme.color.white};
+  flex-direction: row-reverse;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  width: 180px;
+  justify-content: flex-end;
+  align-items: flex-start;
+  span:first-child {
+    border-radius: 5px;
+    background: transparent;
+  }
+  span:first-child.ant-checkbox-checked {
+    span.ant-checkbox-inner {
+      background-color: ${theme.color.green};
+      border-color: ${theme.color.green};
+    }
+  }
+  margin: 0 auto;
+  @media only screen and (min-width: 492px) {
+    width: 400px;
+  }
+  @media only screen and (min-width: 688px) {
+    width: 604px;
+  }
+  @media only screen and (min-width: 844px) {
+    width: 832px;
+  }
+  @media only screen and (min-width: 900px) {
+    width: 664px;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: 1000px;
+    justify-content: flex-start;
   }
 `;

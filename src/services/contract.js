@@ -79,7 +79,7 @@ export class Contract {
   // stake multiple items
   async stake(itemList, gasLimit) {
     return await this.mekaApesContract.stake(itemList, {
-        gasLimit: gasLimit
+      gasLimit: gasLimit,
     });
   }
 
@@ -94,7 +94,7 @@ export class Contract {
   // claim reward for multiple items
   async claimReward(itemList, gasLimit) {
     return await this.mekaApesContract.claimReward(itemList, {
-        gasLimit: gasLimit
+      gasLimit: gasLimit,
     });
   }
 
@@ -148,6 +148,11 @@ export class Contract {
   async getMaxMintWithDMTTokens() {
     let total = await this.mekaApesContract.maxMintWithDMT();
     return total.toNumber();
+  }
+
+  async getMaxCrewForMekaLevel(level) {
+    let spots = await this.mekaApesContract.maxCrewForMekaLevel(level);
+    return spots.toNumber();
   }
 
   // DMT_ERC20 Contract functions:

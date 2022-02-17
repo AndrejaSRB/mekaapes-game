@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { Steps } from "antd";
 import Ape from "./Ape";
 import CrewStep from "./CrewStep";
+// ******** Service ********
+import contract from "../../../services/contract";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Styles ********
@@ -30,16 +32,27 @@ const NoItemFound = () => (
   </NotFoundItem>
 );
 
-const SPOTS = 8;
-
-// TODO get SPOTS from the contract
 const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
   const [data, setData] = useState(null);
   const [clickedMeka, setClickedMeka] = useState(null);
   const [clickedRobos, setClickedRobos] = useState([]);
+  const [spots, setSpots] = useState(3);
   const [mekaListLength, setMekaListLength] = useState(0);
   const [roboListLength, setRoboListLength] = useState(0);
   const [step, setStep] = useState(1);
+
+  // Get spots for MekaApe Level
+  useEffect(() => {
+    if (step === 2 && clickedMeka) {
+      const getSpots = async () => {
+        let crewSpots = await contract.getMaxCrewForMekaLevel(
+          clickedMeka.level
+        );
+        setSpots(crewSpots);
+      };
+      getSpots();
+    }
+  }, [step, clickedMeka]);
 
   useEffect(() => {
     if (step === 1) {
@@ -81,7 +94,7 @@ const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
   };
 
   const handleClickRobo = (ape) => {
-    if (clickedRobos?.length !== SPOTS) {
+    if (clickedRobos?.length !== spots) {
       let elementPos = clickedRobos
         .map((robo) => {
           return robo.id;
@@ -248,7 +261,7 @@ const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
         )}
         {step === 2 && (
           <SelectedText>
-            Selected: {clickedRobos?.length ? clickedRobos.length : 0}/{SPOTS}
+            Selected: {clickedRobos?.length ? clickedRobos.length : 0}/{spots}
           </SelectedText>
         )}
         <ButtonWrapper>

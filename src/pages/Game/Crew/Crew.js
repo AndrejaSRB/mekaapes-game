@@ -29,6 +29,7 @@ import {
   HelperText,
   RewardAmount,
   BoxText,
+  CustomCheckbox,
 } from "./Crew.styles";
 
 const fakeData = [
@@ -257,6 +258,7 @@ const fakeData = [
 const Crew = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [clickedCrews, setClickedCrews] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   // Lists
@@ -320,6 +322,17 @@ const Crew = () => {
 
   const handleCloseCreateModal = () => {
     setIsCreateModalOpen(false);
+  };
+
+  const handleChangeSelectAll = (e) => {
+    if (fakeData && fakeData.length > 0) {
+      if (!e.target.checked) {
+        setClickedCrews([]);
+      } else {
+        setClickedCrews([...fakeData]);
+      }
+    }
+    setSelectAll(e.target.checked);
   };
 
   const handleClickCrew = (item) => () => {
@@ -386,6 +399,11 @@ const Crew = () => {
           <h4>The Crew</h4>
           <h6>Pick your Meka and make your Meka crew!</h6>
         </TitleBox>
+          <CustomCheckbox
+            onChange={handleChangeSelectAll}
+            checked={selectAll}>
+            Select All:
+          </CustomCheckbox>
         <Boxes>
           {handleRenderCrews()}
           <Box onClick={handleOpenCreateModal}>
