@@ -85,7 +85,7 @@ export const Box = styled.div`
   height: 200px;
   border: ${({ active }) =>
     active ? `5px solid ${theme.color.green}` : "5px solid #3a4662"};
-  padding: 15px;
+  padding: 15px 0 0 0;
   color: ${theme.color.white};
   border-radius: 15px;
   margin-bottom: 32px;
@@ -93,31 +93,55 @@ export const Box = styled.div`
   transition: all 0.4s;
   margin-right: 16px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
   &:hover {
     border: 5px solid ${theme.color.green};
   }
-  .placeholder {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
+
   @media only screen and (min-width: 900px) {
     width: 170px;
     &:nth-child(odd) {
       margin-right: 32px;
-    }
-    .placeholder {
-      img {
-        width: 103px;
-        height: 103px;
-      }
     }
   }
   @media only screen and (min-width: 1200px) {
     margin-right: 32px;
     &:nth-child(5n) {
       margin-right: 0;
+    }
+  }
+`;
+
+export const PlaceholderBox = styled.div`
+  width: 180px;
+  height: 200px;
+  border: 5px solid #3a4662;
+  padding: 15px 0 0 0;
+  color: ${theme.color.white};
+  border-radius: 15px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  transition: all 0.4s;
+  margin-right: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  &:hover {
+    border: 5px solid ${theme.color.green};
+  }
+  @media only screen and (min-width: 900px) {
+    div {
+      img {
+        width: 103px;
+        height: 103px;
+      }
     }
   }
 `;
@@ -166,19 +190,6 @@ export const Robo = styled.div`
       height: 103px;
     }
   }
-`;
-
-export const CreateBox = styled.div`
-  width: 300px;
-  height: 277px;
-  border: 5px solid #3a4662;
-  padding: 15px;
-  color: ${theme.color.white};
-  border-radius: 15px;
-  margin-right: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 export const Icon = styled.div`
@@ -255,11 +266,17 @@ export const HelperText = styled.div`
 
 export const RewardAmount = styled.div`
   color: ${theme.color.white};
+  background: rgba(41, 44, 69, 0.8);
   text-align: center;
   margin-top: 16px;
+  width: 100%;
+  padding: 4px 0;
   span {
     color: ${theme.color.whiteGrey};
     display: block;
+  }
+  @media only screen and (min-width: 1200px) {
+    margin-top: 8px;
   }
 `;
 
@@ -296,7 +313,48 @@ export const CustomCheckbox = styled(Checkbox)`
     width: 664px;
   }
   @media only screen and (min-width: 1200px) {
-    width: 1000px;
+    width: 150px;
+    margin: 0;
     justify-content: flex-start;
+  }
+`;
+
+export const Headline = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  @media only screen and (min-width: 492px) {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 400px;
+  }
+  @media only screen and (min-width: 688px) {
+    width: 604px;
+  }
+  @media only screen and (min-width: 844px) {
+    width: 832px;
+  }
+  @media only screen and (min-width: 900px) {
+    width: 664px;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: 1000px;
+    flex-direction: row-reverse;
+  }
+`;
+
+export const AddCrewButton = styled.button`
+  background-color: ${theme.color.red};
+  color: ${theme.color.white};
+  border: none;
+  cursor: pointer;
+  width: 150px;
+  height: 40px;
+  border-radius: 400px;
+  transition: ${theme.transition};
+  &:hover {
+    background-color: ${theme.color.redHover};
   }
 `;

@@ -30,6 +30,9 @@ import {
   RewardAmount,
   BoxText,
   CustomCheckbox,
+  PlaceholderBox,
+  Headline,
+  AddCrewButton,
 } from "./Crew.styles";
 
 const fakeData = [
@@ -399,21 +402,22 @@ const Crew = () => {
           <h4>The Crew</h4>
           <h6>Pick your Meka and make your Meka crew!</h6>
         </TitleBox>
-          <CustomCheckbox
-            onChange={handleChangeSelectAll}
-            checked={selectAll}>
+        <Headline>
+          <CustomCheckbox onChange={handleChangeSelectAll} checked={selectAll}>
             Select All:
           </CustomCheckbox>
+          <AddCrewButton onClick={handleOpenCreateModal}>
+            Add Crew
+          </AddCrewButton>
+        </Headline>
         <Boxes>
           {handleRenderCrews()}
-          <Box onClick={handleOpenCreateModal}>
-            <div className="placeholder">
-              <Icon>
-                <PlusOutlined />
-              </Icon>
-            </div>
+          <PlaceholderBox onClick={handleOpenCreateModal} placeholder>
+            <Icon>
+              <PlusOutlined />
+            </Icon>
             <BoxText>Create Crew</BoxText>
-          </Box>
+          </PlaceholderBox>
         </Boxes>
         <Actions>
           <Button disabled={clickedCrews?.length === 0} claim>
