@@ -33,6 +33,8 @@ import {
   PlaceholderBox,
   Headline,
   AddCrewButton,
+  EditButton,
+  BoxWrapper,
 } from "./Crew.styles";
 
 const fakeData = [
@@ -370,26 +372,30 @@ const Crew = () => {
     if (fakeData?.length > 0) {
       return fakeData.map((crew, index) => {
         return (
-          <Box
-            key={crew.id}
-            onClick={handleClickCrew(crew)}
-            active={getIfItsSelected(crew.id)}>
-            {crew.tokenIds.map(
-              (token, index) =>
-                index === 0 &&
-                token.oogaType === 1 && (
-                  <Ape
-                    key={`Meka #${crew.id} #${index}`}
-                    ape={token}
-                    type="meka"
-                  />
-                )
-            )}
-            <RewardAmount>
-              <span>Crew reward:</span>
-              99,999,123,00
-            </RewardAmount>
-          </Box>
+          <BoxWrapper key={crew.id}>
+            <Box
+              onClick={handleClickCrew(crew)}
+              active={getIfItsSelected(crew.id)}>
+              {crew.tokenIds.map(
+                (token, index) =>
+                  index === 0 &&
+                  token.oogaType === 1 && (
+                    <Ape
+                      key={`Meka #${crew.id} #${index}`}
+                      ape={token}
+                      type="meka"
+                    />
+                  )
+              )}
+              <RewardAmount>
+                <span>Crew reward:</span>
+                99,999,123,00
+              </RewardAmount>
+            </Box>
+            <EditButton>
+              <button>Edit Crew</button>
+            </EditButton>
+          </BoxWrapper>
         );
       });
     }
@@ -412,7 +418,7 @@ const Crew = () => {
         </Headline>
         <Boxes>
           {handleRenderCrews()}
-          <PlaceholderBox onClick={handleOpenCreateModal} placeholder>
+          <PlaceholderBox onClick={handleOpenCreateModal}>
             <Icon>
               <PlusOutlined />
             </Icon>

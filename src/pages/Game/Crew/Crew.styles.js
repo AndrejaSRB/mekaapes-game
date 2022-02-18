@@ -88,10 +88,10 @@ export const Box = styled.div`
   padding: 15px 0 0 0;
   color: ${theme.color.white};
   border-radius: 15px;
-  margin-bottom: 32px;
+  /* margin-bottom: 32px;
+  margin-right: 16px; */
   cursor: pointer;
   transition: all 0.4s;
-  margin-right: 16px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -105,13 +105,13 @@ export const Box = styled.div`
   @media only screen and (min-width: 900px) {
     width: 170px;
     &:nth-child(odd) {
-      margin-right: 32px;
+      /* margin-right: 32px; */
     }
   }
   @media only screen and (min-width: 1200px) {
-    margin-right: 32px;
+    /* margin-right: 32px; */
     &:nth-child(5n) {
-      margin-right: 0;
+      /* margin-right: 0; */
     }
   }
 `;
@@ -223,6 +223,7 @@ export const Actions = styled.div`
     flex-direction: row;
   }
 `;
+
 export const Button = styled.button`
   background: ${theme.color.red};
   transition: ${theme.transition};
@@ -356,5 +357,34 @@ export const AddCrewButton = styled.button`
   transition: ${theme.transition};
   &:hover {
     background-color: ${theme.color.redHover};
+  }
+`;
+
+export const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* margin-bottom: 32px; */
+  margin-bottom: 32px;
+  margin-right: 32px;
+  &:nth-child(5n) {
+    margin-right: 0;
+  }
+`;
+
+export const EditButton = styled.div`
+  text-align: center;
+  margin-top: 8px;
+  button {
+  background-color: transparent;
+  border: 2px solid ${theme.color.red};
+  color: ${theme.color.white};
+  cursor: pointer;
+  width: 150px;
+  height: 40px;
+  border-radius: 400px;
+  transition: ${theme.transition};
+  &:hover {
+    background-color: ${theme.color.red};
+  }
   }
 `;

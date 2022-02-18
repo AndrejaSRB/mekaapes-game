@@ -719,24 +719,76 @@ export const SelectedCounter = styled.div`
 `;
 
 export const Tabs = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Tab = styled.div`
-  color: ${({active}) => active ? theme.color.red : theme.color.white};
+  color: ${({ active }) => (active ? theme.color.red : theme.color.white)};
   cursor: pointer;
-  transition: all .4s;
+  transition: all 0.4s;
   font-size: 18px;
   margin-bottom: 16px;
   &:hover {
-      color: ${theme.color.red};
+    color: ${theme.color.red};
   }
   &:first-child {
-      margin-right: 16px;
+    margin-right: 16px;
   }
   @media only screen and (min-width: 1200px) {
     font-size: 26px;
+  }
+`;
+
+export const BurnSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: ${theme.color.white};
+  max-width: 332px;
+  margin: 12px auto 0 auto;
+  .text {
+    margin-top: 8px;
+    .numbers {
+      margin-left: 8px;
+      color: ${theme.color.red};
+      display: block;
+    }
+  }
+  @media only screen and (min-width: 410px) {
+    flex-direction: row;
+    .text {
+      margin-top: 0;
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    max-width: 564px;
+    .text {
+        .numbers {
+            display: inline-block;
+        }
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    max-width: 339px;
+    .text {
+        font-size: 15px;
+    }
+  }
+`;
+
+export const BurnButton = styled.button`
+  background-color: ${theme.color.red};
+  color: ${theme.color.white};
+  border: none;
+  cursor: pointer;
+  width: 130px;
+  height: 40px;
+  border-radius: 400px;
+  transition: ${theme.transition};
+  &:hover {
+    background-color: ${theme.color.redHover};
   }
 `;

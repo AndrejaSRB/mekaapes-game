@@ -92,6 +92,8 @@ import {
   SelectedCounter,
   Tabs,
   Tab,
+  BurnSection,
+  BurnButton,
 } from "./Factory.styles";
 
 const NoItemFound = () => (
@@ -321,8 +323,8 @@ const Factory = () => {
     }
   };
 
-  const handleClickTab = tab => () => {
-      setActiveTab(tab);
+  const handleClickTab = (tab) => () => {
+    setActiveTab(tab);
   };
 
   const renderUnstakedRobo = () => {
@@ -909,6 +911,13 @@ const Factory = () => {
                     </span>
                   </SelectedCounter>
                 )}
+                <BurnSection>
+                  <BurnButton>Get Credits</BurnButton>
+                  <div className="text">
+                    <span>Unstaking Credits:</span>
+                    <span className="numbers">100/500</span>
+                  </div>
+                </BurnSection>
                 <ButtonClaim
                   disabled={getIfItsClaimDisabled()}
                   onClick={handleClickClaim}>
