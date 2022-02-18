@@ -149,10 +149,10 @@ export const PlaceholderBox = styled.div`
 export const BoxText = styled.div`
   position: absolute;
   bottom: 10px;
-  left: 41px;
+  width: 100%;
+  text-align: center;
   @media only screen and (min-width: 1024px) {
     font-size: 18px;
-    left: 32px;
   }
 `;
 

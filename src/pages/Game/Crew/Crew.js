@@ -407,7 +407,7 @@ const Crew = () => {
             Select All:
           </CustomCheckbox>
           <AddCrewButton onClick={handleOpenCreateModal}>
-            Add Crew
+            Create Crew
           </AddCrewButton>
         </Headline>
         <Boxes>
