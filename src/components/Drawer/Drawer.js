@@ -27,6 +27,13 @@ const MobileMenu = ({
           Whitepaper
         </NavLink>
       </div>
+      <div>
+        <NavLink
+          to="/whitepaper-1-5"
+          className={({ isActive }) => (isActive ? "active" : "")}>
+          Whitepaper 1.5
+        </NavLink>
+      </div>
       {/* <div>
         <NavLink
           to="/terms"
