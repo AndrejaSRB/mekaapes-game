@@ -915,7 +915,7 @@ const Factory = () => {
                   <BurnButton>Get Credits</BurnButton>
                   <div className="text">
                     <span>Unstaking Credits:</span>
-                    <span className="numbers">100/500</span>
+                    <span className="numbers">0/0</span>
                   </div>
                 </BurnSection>
                 <ButtonClaim

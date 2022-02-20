@@ -63,12 +63,16 @@ export const TitleBox = styled.div`
 
 export const Boxes = styled.div`
   display: flex;
-  /* min-height: 630px; */
   max-height: 630px;
   overflow-x: scroll;
   margin-top: 32px;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  @media only screen and (min-width: 540px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
   @media only screen and (min-width: 900px) {
     width: 660px;
     margin: 32px auto 0 auto;
@@ -111,7 +115,6 @@ export const Box = styled.div`
   @media only screen and (min-width: 1200px) {
     /* margin-right: 32px; */
     &:nth-child(5n) {
-      /* margin-right: 0; */
     }
   }
 `;
@@ -288,7 +291,7 @@ export const CustomCheckbox = styled(Checkbox)`
   font-weight: 600;
   margin-bottom: 32px;
   width: 180px;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: flex-start;
   span:first-child {
     border-radius: 5px;
@@ -301,8 +304,9 @@ export const CustomCheckbox = styled(Checkbox)`
     }
   }
   margin: 0 auto;
-  @media only screen and (min-width: 492px) {
+  @media only screen and (min-width: 540px) {
     width: 400px;
+    justify-content: flex-end;
   }
   @media only screen and (min-width: 688px) {
     width: 604px;
@@ -326,16 +330,13 @@ export const Headline = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  @media only screen and (min-width: 492px) {
+  @media only screen and (min-width: 540px) {
     flex-direction: row;
     justify-content: space-between;
     width: 400px;
   }
   @media only screen and (min-width: 688px) {
     width: 604px;
-  }
-  @media only screen and (min-width: 844px) {
-    width: 832px;
   }
   @media only screen and (min-width: 900px) {
     width: 664px;
@@ -351,7 +352,7 @@ export const AddCrewButton = styled.button`
   color: ${theme.color.white};
   border: none;
   cursor: pointer;
-  width: 150px;
+  width: 180px;
   height: 40px;
   border-radius: 400px;
   transition: ${theme.transition};
@@ -363,11 +364,36 @@ export const AddCrewButton = styled.button`
 export const BoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  /* margin-bottom: 32px; */
   margin-bottom: 32px;
-  margin-right: 32px;
-  &:nth-child(5n) {
-    margin-right: 0;
+  @media only screen and (min-width: 540px) {
+    margin-right: 32px;
+    &:nth-child(even) {
+      margin-right: 0;
+    }
+  }
+  @media only screen and (min-width: 704px) {
+    margin-right: 32px;
+    &:nth-child(even) {
+      margin-right: 32px;
+    }
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+  @media only screen and (min-width: 900px) {
+    margin-right: 32px;
+
+    &:nth-child(odd) {
+      margin-right: 32px;
+    }
+    &:nth-child(even) {
+      margin-right: 32px;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    &:nth-child(5n) {
+      margin-right: 0;
+    }
   }
 `;
 
@@ -375,16 +401,21 @@ export const EditButton = styled.div`
   text-align: center;
   margin-top: 8px;
   button {
-  background-color: transparent;
-  border: 2px solid ${theme.color.red};
-  color: ${theme.color.white};
-  cursor: pointer;
-  width: 150px;
-  height: 40px;
-  border-radius: 400px;
-  transition: ${theme.transition};
-  &:hover {
-    background-color: ${theme.color.red};
+    background-color: transparent;
+    border: 2px solid ${theme.color.red};
+    color: ${theme.color.white};
+    cursor: pointer;
+    width: 140px;
+    height: 40px;
+    border-radius: 400px;
+    transition: ${theme.transition};
+    &:hover {
+      background-color: ${theme.color.red};
+    }
   }
-  }
+`;
+
+export const ButtonPlaceholder = styled.div`
+    height: 18px;
+    width: 150px;
 `;

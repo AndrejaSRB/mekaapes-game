@@ -758,7 +758,7 @@ export const BurnSection = styled.div`
     }
   }
   @media only screen and (min-width: 410px) {
-    flex-direction: row;
+    flex-direction: row-reverse;
     .text {
       margin-top: 0;
     }
@@ -784,7 +784,7 @@ export const BurnButton = styled.button`
   color: ${theme.color.white};
   border: none;
   cursor: pointer;
-  width: 130px;
+  width: 125px;
   height: 40px;
   border-radius: 400px;
   transition: ${theme.transition};

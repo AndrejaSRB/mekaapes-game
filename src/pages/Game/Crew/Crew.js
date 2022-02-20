@@ -35,6 +35,7 @@ import {
   AddCrewButton,
   EditButton,
   BoxWrapper,
+  ButtonPlaceholder,
 } from "./Crew.styles";
 
 const fakeData = [
@@ -418,12 +419,15 @@ const Crew = () => {
         </Headline>
         <Boxes>
           {handleRenderCrews()}
-          <PlaceholderBox onClick={handleOpenCreateModal}>
-            <Icon>
-              <PlusOutlined />
-            </Icon>
-            <BoxText>Create Crew</BoxText>
-          </PlaceholderBox>
+          <BoxWrapper>
+            <PlaceholderBox onClick={handleOpenCreateModal}>
+              <Icon>
+                <PlusOutlined />
+              </Icon>
+              <BoxText>Create Crew</BoxText>
+            </PlaceholderBox>
+            <ButtonPlaceholder />
+          </BoxWrapper>
         </Boxes>
         <Actions>
           <Button disabled={clickedCrews?.length === 0} claim>
