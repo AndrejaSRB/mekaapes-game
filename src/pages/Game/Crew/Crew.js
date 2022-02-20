@@ -4,6 +4,7 @@ import { useLazyQuery } from "@apollo/client";
 import Ape from "./Ape";
 import CrewModal from "../../../components/Modals/CrewModal/CrewModal";
 import Loading from "../../../components/Modals/Loading/Loading";
+import ActionsLoading from '../../../components/Modals/ActionLoading/ActionLoading';
 // ******** Stores ********
 import { UserContext } from "../../../store/user-context";
 // ******** Queires ********
@@ -37,6 +38,12 @@ import {
   BoxWrapper,
   ButtonPlaceholder,
 } from "./Crew.styles";
+
+// TODO replace fake data
+// TODO add event listener and loading message
+// TODO check update version and forbid editing meka
+// TODO Claim logic
+// TODO Remove logic
 
 const fakeData = [
   {
@@ -257,15 +264,13 @@ const fakeData = [
   },
 ];
 
-// TODO replace fake data
-// TODO add event listener and loading message
-// TODO check update version and forbid editing meka
-
 const Crew = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [clickedCrews, setClickedCrews] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
   const [loader, setLoader] = useState(false);
   // Lists
   const [mekaList, setMekaList] = useState(null);
@@ -430,6 +435,7 @@ const Crew = () => {
           </BoxWrapper>
         </Boxes>
         <Actions>
+          <Button disabled={clickedCrews?.length === 0}>Remove</Button>
           <Button disabled={clickedCrews?.length === 0} claim>
             Claim 99,999,123,00 $OG
           </Button>
@@ -447,9 +453,19 @@ const Crew = () => {
           handleCloseModal={handleCloseCreateModal}
           roboList={roboList}
           mekaList={mekaList}
+          setActionLoading={setActionLoading}
+          setLoadingText={setLoadingText}
         />
       )}
       {loader && <Loading open={loader} />}
+      {actionLoading && (
+        <ActionsLoading
+          open={actionLoading}
+          text={loadingText}
+          tsxNumber={1}
+          tsxTotalNumber={1}
+        />
+      )}
     </Wrapper>
   );
 };

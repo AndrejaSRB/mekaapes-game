@@ -105,9 +105,28 @@ export class Contract {
     );
   }
 
-  // level up Robo Ooga
-  async levelUpRoboOooga(item, gasLimit) {
-    return await this.mekaApesContract.levelUpRoboOooga(item, {
+  // level up Robo Ooga with $DMT
+  async levelUpRoboOoga(item, levels, gasLimit) {
+    return await this.mekaApesContract.levelUpRoboOoga(item, levels, {
+      gasLimit: gasLimit,
+    });
+  }
+
+  // level up Robo Ooga with $OG
+  async levelUpRoboOogaWithOG(item, levels, burnTokenIds, gasLimit) {
+    return await this.mekaApesContract.levelUpRoboOogaWithOG(
+      item,
+      levels,
+      burnTokenIds,
+      {
+        gasLimit: gasLimit,
+      }
+    );
+  }
+
+  // create Crew
+  async createCrew(tokenIds, gasLimit) {
+    return await this.mekaApesContract.createCrew(tokenIds, {
       gasLimit: gasLimit,
     });
   }

@@ -433,9 +433,9 @@ const Upgrade = () => {
     setIsResultsModalOpen(true);
   };
 
-  const getEstimatedGas = async (id) => {
+  const getEstimatedGas = async (id, levels) => {
     let gasEstimation =
-      await contract.mekaApesContract.estimateGas.levelUpRoboOooga(id);
+      await contract.mekaApesContract.estimateGas.levelUpRoboOoga(id, levels);
     let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
     return totalGasEstimation;
   };
@@ -484,9 +484,10 @@ const Upgrade = () => {
           setText(getActionLoadingUpgrade(keepApe.id));
           try {
             // get Gas Estimation from the contract
-            let totalGasEstimation = getEstimatedGas(keepApe.id);
-            let tsx = await contract.levelUpRoboOooga(
+            let totalGasEstimation = getEstimatedGas(keepApe.id, levelCounter);
+            let tsx = await contract.levelUpRoboOoga(
               keepApe.id,
+              levelCounter,
               totalGasEstimation
             );
             setActionLoading(true);

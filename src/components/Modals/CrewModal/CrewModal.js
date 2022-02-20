@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
-import { Steps } from "antd";
+import { Steps, message } from "antd";
 import Ape from "./Ape";
 import CrewStep from "./CrewStep";
+// ******** Functions ********
+import { getReducedEstimatedGas } from "../../../pages/Game/Factory/helper";
+// ******** TEXT ********
+import {
+  SOMETHING_WENT_WRONG,
+  ACTION_LOADING_CREW_CREATION,
+} from "../../../messages";
 // ******** Service ********
 import contract from "../../../services/contract";
 // ******** Images ********
@@ -32,7 +40,17 @@ const NoItemFound = () => (
   </NotFoundItem>
 );
 
-const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
+// TODO: Edit Mode
+// TODO: Events
+// TODO: Pulling fresh data
+const CrewModal = ({
+  open,
+  handleCloseModal,
+  roboList,
+  mekaList,
+  setActionLoading,
+  setLoadingText,
+}) => {
   const [data, setData] = useState(null);
   const [clickedMeka, setClickedMeka] = useState(null);
   const [clickedRobos, setClickedRobos] = useState([]);
@@ -40,6 +58,8 @@ const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
   const [mekaListLength, setMekaListLength] = useState(0);
   const [roboListLength, setRoboListLength] = useState(0);
   const [step, setStep] = useState(1);
+  const [isDisable, setIsDisable] = useState(false);
+  //   const [isEditMode, setIsEditMode] = useState(false);
 
   // Get spots for MekaApe Level
   useEffect(() => {
@@ -165,7 +185,9 @@ const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
   };
 
   const getIfItsDisabled = () => {
-    if (step === 1) {
+    if (isDisable) {
+      return true;
+    } else if (step === 1) {
       if (!clickedMeka) {
         return true;
       } else {
@@ -234,14 +256,60 @@ const CrewModal = ({ open, handleCloseModal, roboList, mekaList }) => {
     }
   };
 
-  const handleClickCreate = () => {
-    let crew = [clickedMeka.id];
-    if (clickedRobos?.length > 0) {
-      clickedRobos.forEach((robo) => crew.push(robo.id));
+  const getEstimatedGas = async (tokenIds) => {
+    let gasEstimation = await contract.mekaApesContract.estimateGas.createCrew(
+      tokenIds
+    );
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
+  };
+
+  const handleClickCreate = async () => {
+    setIsDisable(true);
+    if (clickedMeka?.id) {
+      let crewTokenIds = [clickedMeka.id];
+      if (clickedRobos?.length > 0) {
+        clickedRobos.forEach((robo) => crewTokenIds.push(robo.id));
+        console.log("CREATED", crewTokenIds);
+      }
+      setLoadingText(ACTION_LOADING_CREW_CREATION);
+      try {
+        // get Gas Estimation from the contract
+        let totalGasEstimation = getEstimatedGas(crewTokenIds);
+        let tsx = await contract.createCrew(crewTokenIds, totalGasEstimation);
+        setActionLoading(true);
+        //TODO: add Loading Text for Creating
+        tsx
+          .wait()
+          .then(async (receipt) => {
+            //TODO: Listen to some Event
+            //TODO: Pull fresh crews data
+          })
+          .catch((error) => {
+            console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "Crew Create tsx.wait",
+              },
+            });
+            message.error(SOMETHING_WENT_WRONG);
+            setActionLoading(false);
+          });
+      } catch (error) {
+        console.log(error);
+        Sentry.captureException(new Error(error), {
+          tags: {
+            section: "Crew Create 1st tsx",
+          },
+        });
+        message.error(SOMETHING_WENT_WRONG);
+      }
     }
-    console.log("CREATED", crew);
+    setIsDisable(false);
     handleCloseModal();
   };
+
+  //   const handleClickUpdate = () => {}
 
   return (
     <ModalWrapper
@@ -299,4 +367,6 @@ CrewModal.propTypes = {
   roboList: PropTypes.array,
   mekaList: PropTypes.array,
   handleCloseModal: PropTypes.func.isRequired,
+  setLoadingText: PropTypes.func.isRequired,
+  setActionLoading: PropTypes.func.isRequired,
 };

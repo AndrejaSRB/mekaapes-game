@@ -1,9 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
+import * as Sentry from "@sentry/react";
 // ******** Components ********
+import { message } from "antd";
 import Ape from "./Ape";
+import ActionsLoading from "../ActionLoading/ActionLoading";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
+// ******** Functions ********
+import { getReducedEstimatedGas } from "../../../pages/Game/Factory/helper";
+// ******** Store ********
+import { BalanceContext } from "../../../store/balance-context";
+// ******** Services ********
+import contract from "../../../services/contract";
+// ******** Text ********
+import {
+  SOMETHING_WENT_WRONG,
+  getActionLoadingUpgrade,
+} from "../../../messages";
 // ******** Styles ********
 import {
   ModalWrapper,
@@ -25,6 +39,8 @@ const NoItemFound = () => (
   </NotFoundItem>
 );
 
+// TODO Add Events for $OG Upgrade
+// TODO Work on Burn from the Facotry
 
 const BurnRoboModal = ({
   open,
@@ -34,10 +50,14 @@ const BurnRoboModal = ({
   tokenUpgrade,
   levels,
 }) => {
+  const { getOogearBalance } = useContext(BalanceContext);
   const [data, setData] = useState(null);
   const [clickedRobos, setClickedRobos] = useState([]);
   const [listLength, setListLength] = useState(0);
   const [spots, setSpots] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
 
   useEffect(() => {
     if (type === "upgrade") {
@@ -142,7 +162,9 @@ const BurnRoboModal = ({
   };
 
   const getIfBtnIsUpgradeDisabled = () => {
-    if (listLength < 1) {
+    if (isDisabled) {
+      return true;
+    } else if (listLength < 1) {
       return true;
     } else if (+clickedRobos?.length !== +spots) {
       return true;
@@ -152,7 +174,9 @@ const BurnRoboModal = ({
   };
 
   const getIfBtnIsBurnDisabled = () => {
-    if (listLength < 1) {
+    if (isDisabled) {
+      return true;
+    } else if (listLength < 1) {
       return true;
     } else if (clickedRobos?.length < 0) {
       return true;
@@ -161,13 +185,70 @@ const BurnRoboModal = ({
     }
   };
 
-  const handleUpgrade = () => {
+  const getEstimatedUpgradeGas = async (id, levels, roboIds) => {
+    let gasEstimation =
+      await contract.mekaApesContract.estimateGas.levelUpRoboOogaWithOG(
+        id,
+        levels,
+        roboIds
+      );
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
+  };
+
+  const handleUpgrade = async () => {
     if (tokenUpgrade && levels >= 1 && clickedRobos?.length > 0) {
       const roboIds = clickedRobos.map((robo) => robo.id);
       if (+roboIds.length === +levels) {
         console.log("Results robo upgrade", tokenUpgrade);
         console.log("Resultslevels", levels);
         console.log("Results Burns roboIds", roboIds);
+        setIsDisabled(true);
+        setLoadingText(getActionLoadingUpgrade(tokenUpgrade.id));
+        // set Loading text
+
+        try {
+          // get Gas Estimation from the contract
+          let totalGasEstimation = getEstimatedUpgradeGas(
+            tokenUpgrade.id,
+            levels,
+            roboIds
+          );
+          let tsx = await contract.levelUpRoboOogaWithOG(
+            tokenUpgrade.id,
+            levels,
+            roboIds,
+            totalGasEstimation
+          );
+          setActionLoading(true);
+          tsx
+            .wait()
+            .then(async (receipt) => {
+              // TODO: Event
+              // TODO: In event pull the Robo Oogas fresh
+              getOogearBalance();
+            })
+            .catch((error) => {
+              console.log(error);
+              Sentry.captureException(new Error(error), {
+                tags: {
+                  section: "Robo Upgrade with $OG tsx.wait",
+                },
+              });
+              message.error(SOMETHING_WENT_WRONG);
+              setActionLoading(false);
+            });
+        } catch (error) {
+          console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Robo Upgrade with $OG 1st tsx",
+            },
+          });
+          message.error(SOMETHING_WENT_WRONG);
+        }
+
+        // Enabled button
       }
     }
 
@@ -214,6 +295,14 @@ const BurnRoboModal = ({
           previously selected Robo Ooga will be upgraded.
         </Text>
       </div>
+      {actionLoading && (
+        <ActionsLoading
+          open={actionLoading}
+          text={loadingText}
+          tsxNumber={1}
+          tsxTotalNumber={1}
+        />
+      )}
     </ModalWrapper>
   );
 };
