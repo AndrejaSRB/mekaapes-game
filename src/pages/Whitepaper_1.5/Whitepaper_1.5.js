@@ -261,7 +261,8 @@ const Whitepaper1_5 = () => {
                     Factory. To increase their ability to guard the factory,
                     MekaApes can merge to become Mega Mekas. Mega Mekas get a
                     proportionally bigger share of the $OG produced in the
-                    factory. Additionally, Mega Mekas are gifted newly crafted
+                    factory. Additionally, Mega Mekas that are staked in the
+                    factory, but not in a Meka Crew, are gifted newly crafted
                     Robo Oogas and MekaApes.
                   </p>
                   <p>
