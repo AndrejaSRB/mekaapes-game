@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import { useApolloClient } from "@apollo/client";
 import PropTypes from "prop-types";
 import * as Sentry from "@sentry/react";
 // ******** Components ********
@@ -11,8 +12,11 @@ import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import { getReducedEstimatedGas } from "../../../pages/Game/Factory/helper";
 // ******** Store ********
 import { BalanceContext } from "../../../store/balance-context";
+import { UserContext } from "../../../store/user-context";
 // ******** Services ********
 import contract from "../../../services/contract";
+// ******** Events ********
+import { LEVELUP_ROBO, getAllEvents } from "../../../eventsListeners";
 // ******** Text ********
 import {
   SOMETHING_WENT_WRONG,
@@ -49,14 +53,21 @@ const BurnRoboModal = ({
   type,
   tokenUpgrade,
   levels,
+  setIsResultsModalOpen,
+  setTokens,
 }) => {
+  const client = useApolloClient();
   const { getOogearBalance } = useContext(BalanceContext);
+  const { userMetaMaskToken } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [clickedRobos, setClickedRobos] = useState([]);
   const [listLength, setListLength] = useState(0);
   const [spots, setSpots] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+//   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
+  // Events
+//   const [tokens, setTokens] = useState(null);
   const [loadingText, setLoadingText] = useState("");
 
   useEffect(() => {
@@ -185,6 +196,38 @@ const BurnRoboModal = ({
     }
   };
 
+  const getFreshUpgradeData = async () => {
+    await client.cache.reset().then(async () => {
+      await client.refetchQueries({
+        include: ["GetUnstakedRoboOogasUpgrade", "GetStakedRoboOogasUpgrade"],
+      });
+    });
+  };
+
+  const getUpgradeEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let upgradeEvent = getAllEvents(receipt, mekaApesContract, LEVELUP_ROBO);
+    let allTokens = [];
+    if (upgradeEvent?.length > 0) {
+      let event = upgradeEvent[upgradeEvent.length - 1];
+      if (
+        event.args.account.toLowerCase() === userMetaMaskToken.toLowerCase()
+      ) {
+        let id = event.args.oogaId.toNumber();
+        let level = event.args.newLevel.toNumber();
+        allTokens.push({
+          type: "upgrade",
+          id: id,
+          level: level,
+        });
+      }
+    }
+    setTokens(allTokens);
+    getFreshUpgradeData();
+    setActionLoading(false);
+    setIsResultsModalOpen(true);
+  };
+
   const getEstimatedUpgradeGas = async (id, levels, roboIds) => {
     let gasEstimation =
       await contract.mekaApesContract.estimateGas.levelUpRoboOogaWithOG(
@@ -224,8 +267,7 @@ const BurnRoboModal = ({
           tsx
             .wait()
             .then(async (receipt) => {
-              // TODO: Event
-              // TODO: In event pull the Robo Oogas fresh
+              getUpgradeEvent(receipt);
               getOogearBalance();
             })
             .catch((error) => {
@@ -254,7 +296,6 @@ const BurnRoboModal = ({
 
     setClickedRobos([]);
     setListLength(0);
-    handleCloseModal();
   };
 
   const handleBurn = () => {};

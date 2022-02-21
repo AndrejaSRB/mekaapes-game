@@ -84,7 +84,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
               <span>Level</span><span>5</span>
             </div>
             <div className="cell">
-              <span>Position</span><span>/</span>
+              <span>Position</span><span>Degen</span>
             </div>
             <div className="cell">
               <span>Productivity</span>
@@ -96,7 +96,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
               <span>Level</span><span>6</span>
             </div>
             <div className="cell">
-              <span>Position</span><span>/</span>
+              <span>Position</span><span>Super Elite</span>
             </div>
             <div className="cell">
               <span>Productivity</span>

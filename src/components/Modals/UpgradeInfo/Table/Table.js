@@ -40,12 +40,12 @@ const UpgradeTable = () => (
       </Cell>
       <Cell>
         <div className="smaller">5</div>
-        <div className="medium">/</div>
+        <div className="medium">Degen</div>
         <div className="bigger">2,500 $OG per day</div>
       </Cell>
       <Cell>
         <div className="smaller">6</div>
-        <div className="medium">/</div>
+        <div className="medium">Super Elite</div>
         <div className="bigger">4,000 $OG per day</div>
       </Cell>
     </Body>

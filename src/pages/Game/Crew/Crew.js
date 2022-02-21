@@ -411,7 +411,7 @@ const Crew = () => {
     <Wrapper>
       <MainBox>
         <TitleBox>
-          <h4>The Crew</h4>
+          <h4>Meka Crews</h4>
           <h6>Pick your Meka and make your Meka crew!</h6>
         </TitleBox>
         <Headline>

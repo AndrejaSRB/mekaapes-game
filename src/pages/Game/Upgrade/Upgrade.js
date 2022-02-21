@@ -39,7 +39,7 @@ import contract from "../../../services/contract";
 // ******** Config ********
 import priceOrder from "../../../config/pricesOrder";
 // ******** Events ********
-import { LEVELUP_ROBO, getEvent } from "../../../eventsListeners";
+import { LEVELUP_ROBO, getAllEvents } from "../../../eventsListeners";
 // ******** Text ********
 import {
   DONT_ENOUGH_DMT,
@@ -97,7 +97,6 @@ const Upgrade = () => {
   } = useContext(BalanceContext);
   const [isApeModalOpen, setIsApeModalOpen] = useState(false);
   const [selectedApe, setSelectedApe] = useState(null);
-  const [, setBurnedApe] = useState([]);
   const [keepApe, setKeepApe] = useState(null);
   const [apeType, setApeType] = useState(null);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -414,20 +413,24 @@ const Upgrade = () => {
 
   const getUpgradeEvent = (receipt) => {
     let { mekaApesContract } = contract;
-    let upgradeEvent = getEvent(receipt, mekaApesContract, LEVELUP_ROBO);
+    let upgradeEvent = getAllEvents(receipt, mekaApesContract, LEVELUP_ROBO);
     let allTokens = [];
-    if (upgradeEvent) {
-      let id = upgradeEvent.args.oogaId.toNumber();
-      let level = upgradeEvent.args.newLevel.toNumber();
-      allTokens.push({
-        type: "upgrade",
-        id: id,
-        level: level,
-      });
+    if (upgradeEvent?.length > 0) {
+      let event = upgradeEvent[upgradeEvent.length - 1];
+      if (
+        event.args.account.toLowerCase() === userMetaMaskToken.toLowerCase()
+      ) {
+        let id = event.args.oogaId.toNumber();
+        let level = event.args.newLevel.toNumber();
+        allTokens.push({
+          type: "upgrade",
+          id: id,
+          level: level,
+        });
+      }
     }
     setTokens(allTokens);
     setKeepApe(null);
-    setBurnedApe(null);
     getFreshData();
     setActionLoading(false);
     setIsResultsModalOpen(true);
@@ -668,6 +671,8 @@ const Upgrade = () => {
           tokenUpgrade={keepApe}
           type="upgrade"
           handleCloseModal={handleCloseOGBurnModal}
+          setIsResultsModalOpen={setIsResultsModalOpen}
+          setTokens={setTokens}
         />
       )}
     </Wrapper>
