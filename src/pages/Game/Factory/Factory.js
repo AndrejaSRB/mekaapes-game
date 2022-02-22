@@ -140,6 +140,8 @@ const Factory = () => {
   const [unstakedRoboList, setUnstakedRoboList] = useState(null);
   const [unstakedMekaList, setUnstakedMekaList] = useState(null);
   const [stakedList, setStakedList] = useState(null);
+  const [stakedApesListWithoutCrew, setStakedApesListWithoutCrew] =
+    useState(null);
 
   const [getStakedApe, { loading: stakeLoading, data: stakedApesData }] =
     useLazyQuery(GET_STAKED_APE);
@@ -155,7 +157,7 @@ const Factory = () => {
 
   // Get Total CLaim Reward
   const { data: claimAvaliableRewardList, refetch: getAvaliableRewards } =
-    useListClaimAvaliableReward(stakedList, stakedApesData?.spaceOogas);
+    useListClaimAvaliableReward(stakedList, stakedApesListWithoutCrew);
   // Transaction Events
   const unstakeTokensAmount = useRef(null);
 
@@ -191,7 +193,14 @@ const Factory = () => {
 
   useEffect(() => {
     if (stakedApesData && stakedApesData.spaceOogas) {
-      setStakedList(stakedApesData.spaceOogas);
+      let list = [];
+      stakedApesData.spaceOogas.forEach((ape) => {
+        if (ape?.crewId === null || ape?.crewId === undefined) {
+          list.push(ape);
+        }
+        setStakedApesListWithoutCrew(list);
+        setStakedList(list);
+      });
     } else {
       setStakedList(null);
     }
@@ -199,10 +208,9 @@ const Factory = () => {
 
   // Set placeholder in the staked list
   useEffect(() => {
-    if (stakedApesData && stakedApesData.spaceOogas) {
-      let stakedOogas = stakedApesData.spaceOogas;
-      let length = stakedOogas.length;
-      let array = [...stakedOogas];
+    if (stakedApesListWithoutCrew) {
+      let length = stakedApesListWithoutCrew.length;
+      let array = [...stakedApesListWithoutCrew];
       if (length < minStakedElementNo) {
         let placeholderArray = Array.from(
           { length: minStakedElementNo - length },
@@ -213,13 +221,13 @@ const Factory = () => {
             id: uuidv4(),
           })
         );
-        array = [...stakedOogas, ...placeholderArray];
+        array = [...stakedApesListWithoutCrew, ...placeholderArray];
       }
       setStakedList(array);
     } else {
       setStakedList(null);
     }
-  }, [minStakedElementNo, stakedApesData]);
+  }, [minStakedElementNo, stakedApesListWithoutCrew]);
 
   // Sum Total Claim Reward
   useEffect(() => {
@@ -902,12 +910,12 @@ const Factory = () => {
                 <ApeListDesktop length={stakedData?.length}>
                   {renderDesktopStakedApes()}
                 </ApeListDesktop>
-                {stakedApesData?.spaceOogas?.length > 0 && (
+                {stakedApesListWithoutCrew.length > 0 && (
                   <SelectedCounter staked>
                     <span>Selected NFTs:</span>
                     <span className="numbers">
                       {selectedStaked ? getSelectedStakedNumber() : 0}/
-                      {stakedApesData?.spaceOogas?.length}
+                      {stakedApesListWithoutCrew.length}
                     </span>
                   </SelectedCounter>
                 )}
@@ -943,7 +951,13 @@ const Factory = () => {
             </Boxes>
           </MainBox>
         )}
-        {activeTab === "crew" && <Crew />}
+        {activeTab === "crew" && (
+          <Crew
+            getStakedApe={getStakedApe}
+            getUnstakedRoboOogas={getUnstakedRoboOogas}
+            getUnstakeMekaApes={getUnstakeMekaApes}
+          />
+        )}
       </Content>
       <Footer page="game" />
       {loading && <Loading open={loading} />}

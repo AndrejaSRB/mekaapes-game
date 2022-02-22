@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import * as Sentry from "@sentry/react";
 import { useLazyQuery } from "@apollo/client";
 import { BigNumber, ethers } from "ethers";
+import PropTypes from "prop-types";
 // ******** Components ********
 import { message } from "antd";
 import Ape from "./Ape";
@@ -62,7 +63,7 @@ import {
 // TODO Claim logic
 // TODO Remove logic
 
-const Crew = () => {
+const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [clickedCrews, setClickedCrews] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -304,6 +305,21 @@ const Crew = () => {
         owner: userMetaMaskToken,
       },
     });
+    getStakedApe({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    getUnstakedRoboOogas({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    getUnstakeMekaApes({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
     getCrewAvaliableRewards();
   };
 
@@ -540,3 +556,9 @@ const Crew = () => {
 };
 
 export default Crew;
+
+Crew.propTypes = {
+    getStakedApe: PropTypes.func.isRequired,
+    getUnstakedRoboOogas: PropTypes.func.isRequired,
+    getUnstakeMekaApes: PropTypes.func.isRequired,
+  };

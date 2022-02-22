@@ -118,7 +118,15 @@ const Merging = () => {
       stakedMekaData &&
       stakedMekaData.spaceOogas
     ) {
-      setList([...unstakedMekaData.spaceOogas, ...stakedMekaData.spaceOogas]);
+      let stakedWithoutCrew = [];
+      if (stakedMekaData?.spaceOogas?.length > 0) {
+        stakedMekaData.spaceOogas.forEach((meka) => {
+          if (meka.crewId === null || meka.crewId === undefined) {
+            stakedWithoutCrew.push(meka);
+          }
+        });
+      }
+      setList([...unstakedMekaData.spaceOogas, ...stakedWithoutCrew]);
     } else {
       setList(null);
     }
