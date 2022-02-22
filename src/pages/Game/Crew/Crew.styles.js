@@ -62,26 +62,38 @@ export const TitleBox = styled.div`
 `;
 
 export const Boxes = styled.div`
-  display: flex;
+  /* display: flex; */
+  display: grid;
   max-height: 630px;
   overflow-x: scroll;
   margin-top: 32px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  @media only screen and (min-width: 540px) {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  @media only screen and (min-width: 900px) {
-    width: 660px;
+  width: 221px;
+  margin: 32px auto 0 auto;
+  /* justify-content: flex-start;
+  align-items: center; */
+  /* flex-direction: column; */
+  @media only screen and (min-width: 500px) {
+    /* flex-direction: row;
+    flex-wrap: wrap; */
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 16px;
+    width: 405px;
     margin: 32px auto 0 auto;
-    justify-content: flex-start;
+  }
+  @media only screen and (min-width: 688px) {
+    width: 584px;
+    grid-template-columns: repeat(3, 1fr);
   }
   @media only screen and (min-width: 1200px) {
     width: 1000px;
-    margin: 32px auto 0 auto;
+    grid-template-columns: repeat(5, 1fr);
   }
+`;
+
+export const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
 `;
 
 export const Box = styled.div`
@@ -92,8 +104,6 @@ export const Box = styled.div`
   padding: 15px 0 0 0;
   color: ${theme.color.white};
   border-radius: 15px;
-  /* margin-bottom: 32px;
-  margin-right: 16px; */
   cursor: pointer;
   transition: all 0.4s;
   position: relative;
@@ -102,19 +112,10 @@ export const Box = styled.div`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  &:hover {
-    border: 5px solid ${theme.color.green};
-  }
-
-  @media only screen and (min-width: 900px) {
-    width: 170px;
-    &:nth-child(odd) {
-      /* margin-right: 32px; */
-    }
-  }
-  @media only screen and (min-width: 1200px) {
-    /* margin-right: 32px; */
-    &:nth-child(5n) {
+  margin: 0 auto;
+  @media only screen and (min-width: 1024px) {
+    &:hover {
+      border: 5px solid ${theme.color.green};
     }
   }
 `;
@@ -136,6 +137,7 @@ export const PlaceholderBox = styled.div`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  margin: 0 auto;
   &:hover {
     border: 5px solid ${theme.color.green};
   }
@@ -303,13 +305,14 @@ export const CustomCheckbox = styled(Checkbox)`
       border-color: ${theme.color.green};
     }
   }
-  margin: 0 auto;
+  margin: 0 auto 16px auto;
   @media only screen and (min-width: 540px) {
+    margin-bottom: 0;
     width: 400px;
     justify-content: flex-end;
   }
   @media only screen and (min-width: 688px) {
-    width: 604px;
+    width: 584px;
   }
   @media only screen and (min-width: 844px) {
     width: 832px;
@@ -320,7 +323,7 @@ export const CustomCheckbox = styled(Checkbox)`
   @media only screen and (min-width: 1200px) {
     width: 150px;
     margin: 0;
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 `;
 
@@ -338,12 +341,8 @@ export const Headline = styled.div`
   @media only screen and (min-width: 688px) {
     width: 604px;
   }
-  @media only screen and (min-width: 900px) {
-    width: 664px;
-  }
   @media only screen and (min-width: 1200px) {
     width: 1000px;
-    flex-direction: row-reverse;
   }
 `;
 
@@ -358,42 +357,6 @@ export const AddCrewButton = styled.button`
   transition: ${theme.transition};
   &:hover {
     background-color: ${theme.color.redHover};
-  }
-`;
-
-export const BoxWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 32px;
-  @media only screen and (min-width: 540px) {
-    margin-right: 32px;
-    &:nth-child(even) {
-      margin-right: 0;
-    }
-  }
-  @media only screen and (min-width: 704px) {
-    margin-right: 32px;
-    &:nth-child(even) {
-      margin-right: 32px;
-    }
-    &:nth-child(3n) {
-      margin-right: 0;
-    }
-  }
-  @media only screen and (min-width: 900px) {
-    margin-right: 32px;
-
-    &:nth-child(odd) {
-      margin-right: 32px;
-    }
-    &:nth-child(even) {
-      margin-right: 32px;
-    }
-  }
-  @media only screen and (min-width: 1200px) {
-    &:nth-child(5n) {
-      margin-right: 0;
-    }
   }
 `;
 
@@ -416,6 +379,6 @@ export const EditButton = styled.div`
 `;
 
 export const ButtonPlaceholder = styled.div`
-    height: 18px;
-    width: 150px;
+  height: 18px;
+  width: 150px;
 `;

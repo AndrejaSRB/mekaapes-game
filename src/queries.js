@@ -13,6 +13,7 @@ export const GET_MEKA_MERGE_TOKENS_UNSTAKE = gql`
       level
       oogaType
       owner
+      crewId
     }
   }
 `;
@@ -28,6 +29,7 @@ export const GET_MEKA_MERGE_TOKENS_STAKED = gql`
       level
       oogaType
       owner
+      crewId
     }
   }
 `;
@@ -44,6 +46,7 @@ export const GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS = gql`
       level
       oogaType
       owner
+      crewId
     }
   }
 `;
@@ -59,6 +62,7 @@ export const GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS = gql`
       level
       oogaType
       owner
+      crewId
     }
   }
 `;
@@ -76,6 +80,7 @@ export const GET_UNSTAKE_ROBO_OOGAS = gql`
       oogaType
       owner
       level
+      crewId
     }
   }
 `;
@@ -91,6 +96,7 @@ export const GET_UNSTAKE_MEKA_APES = gql`
       oogaType
       owner
       level
+      crewId
     }
   }
 `;
@@ -108,6 +114,7 @@ export const GET_STAKED_APE = gql`
       oogaType
       owner
       level
+      crewId
     }
   }
 `;
@@ -172,6 +179,33 @@ export const GET_GIFTED = gql`
     gameStatus(subgraphError: allow, id: "gamestatus") {
       id
       roboOogasGifted
+    }
+  }
+`;
+
+// ******** Crews ********
+export const GET_CREWS = gql`
+  query GetCrews($owner: String!) {
+    oogaCrews(subgraphError: allow, where: { owner: $owner }, first: 900) {
+      id
+      owner
+      tokens
+    }
+  }
+`;
+
+export const GET_STAKED_MEKA = gql`
+  query GetStakedApe($owner: String!) {
+    spaceOogas(
+      subgraphError: allow
+      where: { staker: $owner, oogaType: 1 }
+      first: 900
+    ) {
+      id
+      oogaType
+      owner
+      level
+      crewId
     }
   }
 `;

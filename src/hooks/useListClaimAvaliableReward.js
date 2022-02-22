@@ -12,6 +12,7 @@ const getAmount = async (tokenList, listWithoutPlaceholders) => {
       tokenIds.push(token.id);
     });
   }
+
   let list = await contract.claimAvailableAmountMultipleTokens(tokenIds);
   let tokens = [];
   if (tokenList?.length > 0) {

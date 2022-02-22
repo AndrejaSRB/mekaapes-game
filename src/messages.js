@@ -11,6 +11,7 @@ export const SELECT_SOME_STAKED_APE = "You have to select some staked ape.";
 export const SOMETHING_WENT_WRONG = "Transaction failed. :(";
 export const SOMETHING_WENT_WRONG_UNSTAKE =
   "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 2000 $OG.";
+export const SELECT_CREW = "Please select some crew.";
 
 // ******** Actions loading messages ********
 export const ACTION_LOADING_CLAIM =
@@ -19,6 +20,7 @@ export const ACTION_LOADING_MERGE =
   "Merging your MekaApes is in the progress. Your new Mega Meka will come soon. It could take a couple of minutes.";
 
 export const ACTION_LOADING_CREW_CREATION = "Crew creations in progress. This process might take a couple of minutes.";
+export const ACTION_LOADING_UPGRADE_CREATION = "Crew updating in progress. This process might take a couple of minutes.";
 
 export const getActionLoadingUpgrade = (id) =>
   `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;

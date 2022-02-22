@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import * as Sentry from "@sentry/react";
 // ******** Components ********
 import { Steps, message } from "antd";
 import Ape from "./Ape";
 import CrewStep from "./CrewStep";
+// ******** Stores ********
+import { UserContext } from "../../../store/user-context";
 // ******** Functions ********
 import { getReducedEstimatedGas } from "../../../pages/Game/Factory/helper";
+import { getAddedRobos, getDeletedRobos, getListIds } from "./helper";
 // ******** TEXT ********
 import {
   SOMETHING_WENT_WRONG,
   ACTION_LOADING_CREW_CREATION,
+  ACTION_LOADING_UPGRADE_CREATION,
 } from "../../../messages";
+// ******** Events ********
+import { MAKE_CREW, getEvent, ADD_TO_CREW } from "../../../eventsListeners";
 // ******** Service ********
 import contract from "../../../services/contract";
 // ******** Images ********
@@ -49,8 +55,14 @@ const CrewModal = ({
   roboList,
   mekaList,
   setActionLoading,
-  setLoadingText,
+  setActionLoadingText,
+  setTokens,
+  getFreshData,
+  setIsResultsModalOpen,
+  actionType,
+  clickedEditCrew,
 }) => {
+  const { userMetaMaskToken } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [clickedMeka, setClickedMeka] = useState(null);
   const [clickedRobos, setClickedRobos] = useState([]);
@@ -59,7 +71,21 @@ const CrewModal = ({
   const [roboListLength, setRoboListLength] = useState(0);
   const [step, setStep] = useState(1);
   const [isDisable, setIsDisable] = useState(false);
-  //   const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  useEffect(() => {
+    if (clickedEditCrew) {
+      setClickedMeka(clickedEditCrew.mekaApe);
+      if (clickedEditCrew?.roboOogas?.length > 0) {
+        setClickedRobos([...clickedEditCrew?.roboOogas]);
+        setRoboListLength(clickedEditCrew?.roboOogas?.length);
+      }
+      setIsEditMode(true);
+      setStep(2);
+    } else {
+      setIsEditMode(false);
+    }
+  }, [clickedEditCrew]);
 
   // Get spots for MekaApe Level
   useEffect(() => {
@@ -76,13 +102,33 @@ const CrewModal = ({
 
   useEffect(() => {
     if (step === 1) {
-      setData(mekaList);
-      setMekaListLength(mekaList.length);
+      let avaliableMekaList = mekaList.filter(
+        (meka) => meka.crewId === null || meka.crewId === undefined
+      );
+      setData(avaliableMekaList);
+      setMekaListLength(avaliableMekaList.length);
     } else if (step === 2) {
-      setData(roboList);
-      setRoboListLength(roboList.length);
+      if (actionType === "edit") {
+        let avaliableRoboList = roboList.filter(
+          (robo) => robo.crewId === null || robo.crewId === undefined
+        );
+        if (clickedEditCrew?.roboOogas?.length > 0) {
+          let allRobos = [...clickedEditCrew?.roboOogas, ...avaliableRoboList];
+          setData(allRobos);
+          setRoboListLength(allRobos.length);
+        } else {
+          setData(roboList);
+          setRoboListLength(roboList.length);
+        }
+      } else {
+        let avaliableRoboList = roboList.filter(
+          (robo) => robo.crewId === null || robo.crewId === undefined
+        );
+        setData(avaliableRoboList);
+        setRoboListLength(avaliableRoboList.length);
+      }
     }
-  }, [step, mekaList, roboList]);
+  }, [step, mekaList, roboList, actionType, clickedEditCrew]);
 
   const handleClickMeka = (ape) => {
     if (clickedMeka) {
@@ -256,9 +302,65 @@ const CrewModal = ({
     }
   };
 
-  const getEstimatedGas = async (tokenIds) => {
+  const getChangeEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let changeEvent = getEvent(receipt, mekaApesContract, ADD_TO_CREW);
+    let allTokens = [];
+    console.log('changeEvent', changeEvent);
+    if (changeEvent) {
+      let id = changeEvent.args.crewId.toNumber();
+      allTokens.push({
+        type: "crew-change",
+        id: id,
+      });
+    }
+    setTokens(allTokens);
+    getFreshData();
+    setActionLoadingText("");
+    setActionLoading(false);
+    setIsResultsModalOpen(true);
+  };
+
+  const getCreateEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let createEvent = getEvent(receipt, mekaApesContract, MAKE_CREW);
+    let allTokens = [];
+    if (createEvent) {
+      if (
+        createEvent.args.account.toLowerCase() ===
+        userMetaMaskToken.toLowerCase()
+      ) {
+        let id = createEvent.args.crewId.toNumber();
+        allTokens.push({
+          type: "crew-create",
+          id: id,
+        });
+      }
+    }
+    setTokens(allTokens);
+    getFreshData();
+    setActionLoadingText("");
+    setActionLoading(false);
+    setIsResultsModalOpen(true);
+  };
+
+  const getCreateEstimatedGas = async (tokenIds) => {
     let gasEstimation = await contract.mekaApesContract.estimateGas.createCrew(
       tokenIds
+    );
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
+  };
+
+  const getUpgradeEstimatedGas = async (
+    crewIds,
+    addedTokensIds,
+    removedTokenIds
+  ) => {
+    let gasEstimation = await contract.mekaApesContract.estimateGas.changeCrew(
+      crewIds,
+      addedTokensIds,
+      removedTokenIds
     );
     let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
     return totalGasEstimation;
@@ -270,20 +372,18 @@ const CrewModal = ({
       let crewTokenIds = [clickedMeka.id];
       if (clickedRobos?.length > 0) {
         clickedRobos.forEach((robo) => crewTokenIds.push(robo.id));
-        console.log("CREATED", crewTokenIds);
       }
-      setLoadingText(ACTION_LOADING_CREW_CREATION);
+      setActionLoadingText(ACTION_LOADING_CREW_CREATION);
       try {
         // get Gas Estimation from the contract
-        let totalGasEstimation = getEstimatedGas(crewTokenIds);
+        let totalGasEstimation = getCreateEstimatedGas(crewTokenIds);
         let tsx = await contract.createCrew(crewTokenIds, totalGasEstimation);
         setActionLoading(true);
-        //TODO: add Loading Text for Creating
+        setActionLoadingText("Create Crew");
         tsx
           .wait()
           .then(async (receipt) => {
-            //TODO: Listen to some Event
-            //TODO: Pull fresh crews data
+            getCreateEvent(receipt);
           })
           .catch((error) => {
             console.log(error);
@@ -309,7 +409,75 @@ const CrewModal = ({
     handleCloseModal();
   };
 
-  //   const handleClickUpdate = () => {}
+  const handleClickUpdate = async () => {
+    setIsDisable(true);
+
+    let originalRobos = [];
+    if (clickedEditCrew.roboOogas?.length > 0) {
+      originalRobos = [...clickedEditCrew.roboOogas];
+    }
+
+    let newRobos = [];
+    if (clickedRobos?.length > 0) {
+      newRobos = [...clickedRobos];
+    }
+
+    let added = getAddedRobos(newRobos, originalRobos);
+    let removed = getDeletedRobos(clickedRobos, originalRobos);
+
+    let removedTokenIds = getListIds(removed);
+    let addedTokenIds = getListIds(added);
+
+    let crewId = clickedEditCrew.id;
+
+    console.log("original", clickedEditCrew);
+    console.log("crewId", crewId);
+    console.log("added", added);
+    console.log("removed", removed);
+    console.log("*****************************");
+    console.log("removedTokenIds", removedTokenIds);
+    console.log("addedTokenIds", addedTokenIds);
+
+    setActionLoadingText(ACTION_LOADING_UPGRADE_CREATION);
+    try {
+      let totalGasEstimation = getUpgradeEstimatedGas(
+        crewId,
+        addedTokenIds,
+        removedTokenIds
+      );
+      let tsx = await contract.changeCrew(
+        crewId,
+        addedTokenIds,
+        removedTokenIds,
+        totalGasEstimation
+      );
+      setActionLoading(true);
+      setActionLoadingText("Change Crew");
+      tsx
+        .wait()
+        .then(async (receipt) => {
+          getChangeEvent(receipt);
+        })
+        .catch((error) => {
+          console.log(error);
+          Sentry.captureException(new Error(error), {
+            tags: {
+              section: "Crew Change tsx.wait",
+            },
+          });
+          message.error(SOMETHING_WENT_WRONG);
+          setActionLoading(false);
+        });
+    } catch (error) {
+      console.log(error);
+      Sentry.captureException(new Error(error), {
+        tags: {
+          section: "Crew Create 1st tsx",
+        },
+      });
+      message.error(SOMETHING_WENT_WRONG);
+    }
+  };
 
   return (
     <ModalWrapper
@@ -334,7 +502,11 @@ const CrewModal = ({
         )}
         <ButtonWrapper>
           {step === 3 ? (
-            <Button onClick={handleClickCreate}>Create</Button>
+            isEditMode ? (
+              <Button onClick={handleClickUpdate}>Update</Button>
+            ) : (
+              <Button onClick={handleClickCreate}>Create</Button>
+            )
           ) : (
             <Button onClick={handleClickNext} disabled={getIfItsDisabled()}>
               Next
@@ -342,6 +514,8 @@ const CrewModal = ({
           )}
           {step === 1 ? (
             <CancelBtn onClick={handleCloseModal}>Close</CancelBtn>
+          ) : isEditMode && step === 2 ? (
+            <div />
           ) : (
             <CancelBtn onClick={handleClickBack}>Back</CancelBtn>
           )}
@@ -367,6 +541,6 @@ CrewModal.propTypes = {
   roboList: PropTypes.array,
   mekaList: PropTypes.array,
   handleCloseModal: PropTypes.func.isRequired,
-  setLoadingText: PropTypes.func.isRequired,
+  setActionLoadingText: PropTypes.func.isRequired,
   setActionLoading: PropTypes.func.isRequired,
 };

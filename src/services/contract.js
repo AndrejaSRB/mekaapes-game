@@ -131,6 +131,40 @@ export class Contract {
     });
   }
 
+  // remove Crew
+  async removeCrew(crewId, gasLimit) {
+    return await this.mekaApesContract.removeCrew(crewId, {
+      gasLimit: gasLimit,
+    });
+  }
+
+  // change Crew
+  async changeCrew(crewId, addTokenIds, removeTokenIds, gasLimit) {
+    return await this.mekaApesContract.changeCrew(
+      crewId,
+      addTokenIds,
+      removeTokenIds,
+      {
+        gasLimit: gasLimit,
+      }
+    );
+  }
+
+  // claim Crews reward
+  async claimCrewReward(crewIds, gasLimit) {
+    return await this.mekaApesContract.claimCrewReward(
+      crewIds,
+      {
+        gasLimit: gasLimit,
+      }
+    );
+  }
+
+  // Crew claim avaliable reward
+  async claimAvailableAmountMultipleCrews(crewIds) {
+    return await this.mekaApesContract.claimAvailableAmountMultipleCrews(crewIds);
+  }
+
   // merge two Meka Apes, one will be burned, and another will be kept
   // the burned one will give Mega Meka Ape
   // the first argument is saved token

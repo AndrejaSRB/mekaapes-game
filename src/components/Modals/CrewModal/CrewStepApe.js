@@ -1,49 +1,41 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 // ******** Images ********
 import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/useApeMetadata";
-// ******** Styles ********
-import { Meka } from "./Crew.styles";
 
-const CrewApe = ({ ape }) => {
-  const [image, setImage] = useState(null);
+const CrewStepApe = ({ ape, handleClickApe, getIfActive, type }) => {
   const { data, isLoading } = useApeMetadata(ape);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
     if (isMounted) {
-      if (data) {
-        setImage(data.image);
+      if (data && ape) {
+        let level = ape?.level;
+        let type = ape?.oogaType;
+        setImage(`${data.image}?level=${level}&type=${type}`);
       }
     }
     return () => {
       isMounted = false;
     };
-  }, [data]);
+  }, [data, ape]);
 
   const renderApeImage = () => {
     if (image && !isLoading) {
-      return (
-        <Meka>
-          <img src={image} alt={ape.id} />
-        </Meka>
-      );
+      return <img src={image} alt={ape.id} />;
     } else {
-      return (
-        <Meka>
-          <img src={PlaceholderImage} alt={ape.id} />
-        </Meka>
-      );
+      return <img src={PlaceholderImage} alt={ape.id} />;
     }
   };
 
   return <>{renderApeImage()}</>;
 };
 
-export default CrewApe;
+export default CrewStepApe;
 
-CrewApe.propTypes = {
+CrewStepApe.propTypes = {
   ape: PropTypes.object.isRequired,
 };

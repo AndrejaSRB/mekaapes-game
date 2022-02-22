@@ -109,7 +109,7 @@ const Factory = () => {
     useContext(BalanceContext);
   const { width } = useWindowDimenstions();
   // Tabs
-  const [activeTab, setActiveTab] = useState("factory");
+  const [activeTab, setActiveTab] = useState("crew");
   const [selectAllStaked, setSelectAllStaked] = useState(false);
   const [selectAllUnstakedMeka, setSelectAllUnstakedMeka] = useState(false);
   const [selectAllUnstakedRobo, setSelectAllUnstakedRobo] = useState(false);
