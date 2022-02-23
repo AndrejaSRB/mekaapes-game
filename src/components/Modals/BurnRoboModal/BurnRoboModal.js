@@ -243,13 +243,8 @@ const BurnRoboModal = ({
     if (tokenUpgrade && levels >= 1 && clickedRobos?.length > 0) {
       const roboIds = clickedRobos.map((robo) => robo.id);
       if (+roboIds.length === +levels) {
-        console.log("Results robo upgrade", tokenUpgrade);
-        console.log("Resultslevels", levels);
-        console.log("Results Burns roboIds", roboIds);
         setIsDisabled(true);
         setLoadingText(getActionLoadingUpgrade(tokenUpgrade.id));
-        // set Loading text
-
         try {
           // get Gas Estimation from the contract
           let totalGasEstimation = getEstimatedUpgradeGas(
@@ -289,8 +284,7 @@ const BurnRoboModal = ({
           });
           message.error(SOMETHING_WENT_WRONG);
         }
-
-        // Enabled button
+        setIsDisabled(false);
       }
     }
 
@@ -298,7 +292,9 @@ const BurnRoboModal = ({
     setListLength(0);
   };
 
-  const handleBurn = () => {};
+  const handleBurn = async () => {
+
+  };
 
   return (
     <ModalWrapper

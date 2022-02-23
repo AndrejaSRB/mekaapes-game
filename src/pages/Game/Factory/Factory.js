@@ -15,6 +15,7 @@ import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
 import ActionLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 import Crew from "../Crew/Crew";
+import BurnRoboModal from "../../../components/Modals/BurnRoboModal/BurnRoboModal";
 // ******** Messages ********
 import {
   SELECT_SOME_UNSTAKED_APE,
@@ -49,6 +50,7 @@ import {
   GET_STAKED_APE,
   GET_UNSTAKE_MEKA_APES,
   GET_UNSTAKE_ROBO_OOGAS,
+  GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS,
 } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
@@ -162,6 +164,7 @@ const Factory = () => {
     useListClaimAvaliableReward(stakedList, stakedApesListWithoutCrew);
 
   //Get Burn Credits
+  const [isRoboBurnModalOpen, setIsRoboBurnModalOpen] = useState(false);
   const { data: burnCreditsData, refetch: getBurnCredits } =
     useBurnCredits(userMetaMaskToken);
   const [burnCredits, setBurnCredits] = useState(0);
@@ -349,6 +352,14 @@ const Factory = () => {
       }
       setSelectAllUnstakedRobo(e.target.checked);
     }
+  };
+
+  const handleOpenBurnModal = () => {
+    setIsRoboBurnModalOpen(true);
+  };
+
+  const handleCloseBurnModal = () => {
+    setIsRoboBurnModalOpen(false);
   };
 
   const handleClickTab = (tab) => () => {
@@ -973,7 +984,10 @@ const Factory = () => {
                   <div className="text">
                     <span>Unstaking Credits:</span>
                     <span
-                      className={getBurnCreditsClassName(burnCredits, selectedBurnCreditsRobo)}>
+                      className={getBurnCreditsClassName(
+                        burnCredits,
+                        selectedBurnCreditsRobo
+                      )}>
                       {selectedStaked ? getSelectedStakedRoboNumber() : 0}/
                       {burnCredits}
                     </span>
@@ -1037,6 +1051,16 @@ const Factory = () => {
           tsxTotalNumber={tsxTotalNumber}
         />
       )}
+      {/* {isRoboBurnModalOpen && (
+        <BurnRoboModal
+          open={isRoboBurnModalOpen}
+          roboList={list}
+          type="burn"
+          handleCloseModal={handleOpenBurnModal}
+          setIsResultsModalOpen={setIsResultsModalOpen}
+          setTokens={setTokens}
+        />
+      )} */}
     </Wrapper>
   );
 };

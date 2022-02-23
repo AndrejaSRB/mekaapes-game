@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import * as Sentry from "@sentry/react";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useApolloClient } from "@apollo/client";
 import { BigNumber, ethers } from "ethers";
 import PropTypes from "prop-types";
 // ******** Components ********
@@ -30,7 +30,6 @@ import {
 // ******** Events ********
 import {
   REMOVE_CREW,
-  getEvent,
   CLAIM_CREW_REWARD,
   getAllEvents,
 } from "../../../eventsListeners";
@@ -64,6 +63,7 @@ import {
 // TODO Remove logic
 
 const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const [clickedCrews, setClickedCrews] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -81,8 +81,12 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
   const [roboList, setRoboList] = useState(null);
   const [crewList, setCrewList] = useState(null);
   // Meka Apes
-  const [getMekas, { loading: mekaLoading, data: mekaApesData }] =
-    useLazyQuery(GET_STAKED_MEKA);
+  const [getMekas, { loading: mekaLoading, data: mekaApesData }] = useLazyQuery(
+    GET_STAKED_MEKA,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
   // Robo Oogas
   const [getRobos, { loading: roboLoading, data: roboOogasData }] =
     useLazyQuery(GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS, {
@@ -283,54 +287,56 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
     return totalGasEstimation;
   };
 
-  const getFreshData = () => {
-    getMekas({
-      variables: {
-        owner: userMetaMaskToken,
-      },
+  const getFreshData = async () => {
+    await client.cache.reset().then(async () => {
+      getMekas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getRobos({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getCrews({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getStakedApe({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getUnstakedRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getUnstakeMekaApes({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
+      getCrewAvaliableRewards();
     });
-    getRobos({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getCrews({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getStakedApe({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getUnstakedRoboOogas({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getUnstakeMekaApes({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getCrewAvaliableRewards();
   };
 
-  const handleCloseCreateModal = () => {
+  const handleCloseCreateModal = async () => {
     setActionType("");
-    getFreshData();
+    await getFreshData();
     setClickedEditCrew(null);
     setIsCreateModalOpen(false);
   };
 
   const handleCloseResultsModal = async () => {
-    handleCloseCreateModal()
+    await getFreshData();
+    handleCloseCreateModal();
     setIsResultsModalOpen(false);
-    getFreshData();
   };
 
-  const getClaimEvent = (receipt) => {
+  const getClaimEvent = async (receipt) => {
     let { mekaApesContract } = contract;
     let claimEvents = getAllEvents(
       receipt,
@@ -353,25 +359,27 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
       }
     }
     setTokens(allTokens);
-    getFreshData();
+    await getFreshData();
     setActionLoadingText("");
     setActionLoading(false);
     setIsResultsModalOpen(true);
   };
 
-  const getRemoveEvent = (receipt) => {
+  const getRemoveEvent = async (receipt) => {
     let { mekaApesContract } = contract;
-    let removeEvent = getEvent(receipt, mekaApesContract, REMOVE_CREW);
+    let removeEvent = getAllEvents(receipt, mekaApesContract, REMOVE_CREW);
     let allTokens = [];
-    if (removeEvent) {
-      let id = removeEvent.args.crewId.toNumber();
-      allTokens.push({
-        type: "crew-remove",
-        id: id,
+    if (removeEvent?.length > 0) {
+      removeEvent.forEach((event) => {
+        let id = event.args.crewId.toNumber();
+        allTokens.push({
+          type: "crew-remove",
+          id: id,
+        });
       });
     }
     setTokens(allTokens);
-    getFreshData();
+    await getFreshData();
     setActionLoadingText("");
     setActionLoading(false);
     setIsResultsModalOpen(true);
@@ -517,7 +525,6 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
           setActionLoading={setActionLoading}
           setActionLoadingText={setActionLoadingText}
           setTokens={setTokens}
-          getFreshData={getFreshData}
           setIsResultsModalOpen={setIsResultsModalOpen}
           actionType={actionType}
           clickedEditCrew={clickedEditCrew}
@@ -546,7 +553,7 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
 export default Crew;
 
 Crew.propTypes = {
-    getStakedApe: PropTypes.func.isRequired,
-    getUnstakedRoboOogas: PropTypes.func.isRequired,
-    getUnstakeMekaApes: PropTypes.func.isRequired,
-  };
+  getStakedApe: PropTypes.func.isRequired,
+  getUnstakedRoboOogas: PropTypes.func.isRequired,
+  getUnstakeMekaApes: PropTypes.func.isRequired,
+};

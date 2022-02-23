@@ -33,12 +33,14 @@ export const getLevelText = (level) => {
     case 5:
       return (
         <>
+          <li>Position: Degen</li>
           <li>Produce 2,500 $OG per day</li>
         </>
       );
     case 6:
       return (
         <>
+          <li>Position: Super Elite</li>
           <li>Produce 4,000 $OG per day</li>
         </>
       );

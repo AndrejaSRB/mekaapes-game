@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import * as Sentry from "@sentry/react";
+import { useApolloClient } from "@apollo/client";
 // ******** Components ********
 import { Steps, message } from "antd";
 import Ape from "./Ape";
@@ -62,11 +63,11 @@ const CrewModal = ({
   setActionLoading,
   setActionLoadingText,
   setTokens,
-  getFreshData,
   setIsResultsModalOpen,
   actionType,
   clickedEditCrew,
 }) => {
+  const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [clickedMeka, setClickedMeka] = useState(null);
@@ -307,7 +308,16 @@ const CrewModal = ({
     }
   };
 
-  const getChangeEvent = (receipt, removedTokenIds, addedTokenIds) => {
+  const getFreshTokens = async () => {
+    await client.cache.reset().then(async () => {
+      await client.refetchQueries({
+        include: ["GetCrews","GetStakedApe","GetStakedRoboOogasUpgrade"],
+      });
+    });
+  };
+
+
+  const getChangeEvent = async (receipt, removedTokenIds, addedTokenIds) => {
     let { mekaApesContract } = contract;
     let addToEvent = null;
     if (addedTokenIds?.length > 0) {
@@ -332,13 +342,13 @@ const CrewModal = ({
       });
     }
     setTokens(allTokens);
-    getFreshData();
+    await getFreshTokens();
     setActionLoadingText("");
     setActionLoading(false);
     setIsResultsModalOpen(true);
   };
 
-  const getCreateEvent = (receipt) => {
+  const getCreateEvent = async (receipt) => {
     let { mekaApesContract } = contract;
     let createEvent = getEvent(receipt, mekaApesContract, MAKE_CREW);
     let allTokens = [];
@@ -355,7 +365,7 @@ const CrewModal = ({
       }
     }
     setTokens(allTokens);
-    getFreshData();
+    await getFreshTokens();
     setActionLoadingText("");
     setActionLoading(false);
     setIsResultsModalOpen(true);

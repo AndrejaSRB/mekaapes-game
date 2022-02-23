@@ -162,6 +162,7 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
   };
 
   const getRemoveCrewMessage = () => {
+      console.log('getRemoveCrewMessage', tokens);
     if (tokens?.length > 1) {
       return (
         <>
