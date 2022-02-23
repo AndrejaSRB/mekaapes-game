@@ -21,6 +21,7 @@ export const ACTION_LOADING_MERGE =
 
 export const ACTION_LOADING_CREW_CREATION = "Crew creations in progress. This process might take a couple of minutes.";
 export const ACTION_LOADING_UPGRADE_CREATION = "Crew updating in progress. This process might take a couple of minutes.";
+export const ACTION_BRUNING_ROBO = "Making credits in progress. This process might take a couple of minutes.";
 
 export const getActionLoadingUpgrade = (id) =>
   `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;

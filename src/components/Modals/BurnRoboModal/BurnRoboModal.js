@@ -21,6 +21,7 @@ import { LEVELUP_ROBO, getAllEvents } from "../../../eventsListeners";
 import {
   SOMETHING_WENT_WRONG,
   getActionLoadingUpgrade,
+  ACTION_BRUNING_ROBO,
 } from "../../../messages";
 // ******** Styles ********
 import {
@@ -43,9 +44,6 @@ const NoItemFound = () => (
   </NotFoundItem>
 );
 
-// TODO Add Events for $OG Upgrade
-// TODO Work on Burn from the Facotry
-
 const BurnRoboModal = ({
   open,
   handleCloseModal,
@@ -65,16 +63,22 @@ const BurnRoboModal = ({
   const [spots, setSpots] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-//   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
+  //   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   // Events
-//   const [tokens, setTokens] = useState(null);
+  //   const [tokens, setTokens] = useState(null);
   const [loadingText, setLoadingText] = useState("");
 
   useEffect(() => {
     if (type === "upgrade") {
       setSpots(levels);
+    } else {
+      if (roboList?.length > 0) {
+        setSpots(roboList?.length);
+      } else {
+        setSpots(900);
+      }
     }
-  }, [levels, type]);
+  }, [levels, type, roboList]);
 
   useEffect(() => {
     if (type === "upgrade") {
@@ -189,7 +193,7 @@ const BurnRoboModal = ({
       return true;
     } else if (listLength < 1) {
       return true;
-    } else if (clickedRobos?.length < 0) {
+    } else if (clickedRobos?.length < 1) {
       return true;
     } else {
       return false;
@@ -226,6 +230,15 @@ const BurnRoboModal = ({
     getFreshUpgradeData();
     setActionLoading(false);
     setIsResultsModalOpen(true);
+  };
+
+  const getEstimatedBurnGas = async (roboIds) => {
+    let gasEstimation =
+      await contract.mekaApesContract.estimateGas.burnOogaForUnstakeCredits(
+        roboIds
+      );
+    let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
+    return totalGasEstimation;
   };
 
   const getEstimatedUpgradeGas = async (id, levels, roboIds) => {
@@ -293,7 +306,44 @@ const BurnRoboModal = ({
   };
 
   const handleBurn = async () => {
-
+    if (clickedRobos?.length > 0) {
+      const roboIds = clickedRobos.map((robo) => robo.id);
+      setIsDisabled(true);
+      setLoadingText(ACTION_BRUNING_ROBO);
+      try {
+        let totalGasEstimation = getEstimatedBurnGas(roboIds);
+        let tsx = await contract.burnOogaForUnstakeCredits(
+          roboIds,
+          totalGasEstimation
+        );
+        setActionLoading(true);
+        tsx
+          .wait()
+          .then(async (receipt) => {
+            // TODO: Add Event for results of Burning
+            // TODO: Handle results modal for burning
+            // getUpgradeEvent(receipt);
+          })
+          .catch((error) => {
+            console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "Burning Robo tsx.wait",
+              },
+            });
+            message.error(SOMETHING_WENT_WRONG);
+            setActionLoading(false);
+          });
+      } catch (error) {
+        console.log(error);
+        Sentry.captureException(new Error(error), {
+          tags: {
+            section: "Burning Robo 1st tsx",
+          },
+        });
+        message.error(SOMETHING_WENT_WRONG);
+      }
+    }
   };
 
   return (
@@ -305,14 +355,25 @@ const BurnRoboModal = ({
       maskClosable={false}>
       <div className="content">
         <Title>Robo Oogas</Title>
-        <Subtitle>
-          Select the Robo Ooga you want to burn for each level.
-        </Subtitle>
+        {type === "upgrade" ? (
+          <Subtitle>
+            Select the Robo Ooga you want to burn for each level.
+          </Subtitle>
+        ) : (
+          <Subtitle>
+            Select the Robo Ooga you want to burn for unstake credits. <br />
+            Each level brings a larger number of credits.
+          </Subtitle>
+        )}
         <RoboApesBox length={listLength}>{handleRenderElements()}</RoboApesBox>
-        {type === "upgrade" && (
+        {type === "upgrade" ? (
           <HelperText>
             You have to select {spots}. Selected{" "}
             {clickedRobos?.length ? clickedRobos?.length : 0}/{spots}
+          </HelperText>
+        ) : (
+          <HelperText>
+            You have selected {clickedRobos?.length ? clickedRobos?.length : 0}.
           </HelperText>
         )}
         <ButtonWrapper>
@@ -327,10 +388,17 @@ const BurnRoboModal = ({
           </Button>
           <CancelBtn onClick={handleCloseModal}>Cancel</CancelBtn>
         </ButtonWrapper>
-        <Text>
-          By clicking "Upgrade" you will burn selected Robo Oogas, and your
-          previously selected Robo Ooga will be upgraded.
-        </Text>
+        {type === "upgrade" ? (
+          <Text>
+            By clicking "Upgrade" you will burn selected Robo Oogas, and your
+            previously selected Robo Ooga will be upgraded.
+          </Text>
+        ) : (
+          <Text>
+            By clicking "Burn" you will burn selected Robo Oogas, and you will
+            get new amount of unstake credits.
+          </Text>
+        )}
       </div>
       {actionLoading && (
         <ActionsLoading

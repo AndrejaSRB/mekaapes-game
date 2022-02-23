@@ -68,7 +68,6 @@ export const GET_ROBO_OOGAS_STAKED_UPGRADE_TOKENS = gql`
 `;
 
 // ******** Factory ********
-// Missing all my staked apes
 export const GET_UNSTAKE_ROBO_OOGAS = gql`
   query GetUnstakeRoboOogas($owner: String!) {
     spaceOogas(
@@ -109,6 +108,33 @@ export const GET_STAKED_APE = gql`
       first: 900
       orderBy: oogaType
       orderDirection: desc
+    ) {
+      id
+      oogaType
+      owner
+      level
+      crewId
+    }
+  }
+`;
+
+export const GET_ALL_MY_ROBO_OOGAS = gql`
+  query GetAllRoboOogas($owner: String!) {
+    unstaked: spaceOogas(
+      subgraphError: allow
+      where: { owner: $owner, oogaType: 0 }
+      first: 900
+    ) {
+      id
+      oogaType
+      owner
+      level
+      crewId
+    },
+    staked: spaceOogas(
+      subgraphError: allow
+      where: { staker: $owner, oogaType: 0 }
+      first: 900
     ) {
       id
       oogaType

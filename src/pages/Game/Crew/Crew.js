@@ -57,11 +57,6 @@ import {
   ButtonPlaceholder,
 } from "./Crew.styles";
 
-// TODO add event listener and loading message
-// TODO check update version and forbid editing meka
-// TODO Claim logic
-// TODO Remove logic
-
 const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
   const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);

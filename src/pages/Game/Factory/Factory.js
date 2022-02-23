@@ -50,7 +50,7 @@ import {
   GET_STAKED_APE,
   GET_UNSTAKE_MEKA_APES,
   GET_UNSTAKE_ROBO_OOGAS,
-  GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS,
+  GET_ALL_MY_ROBO_OOGAS,
 } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
@@ -164,15 +164,20 @@ const Factory = () => {
     useListClaimAvaliableReward(stakedList, stakedApesListWithoutCrew);
 
   //Get Burn Credits
+  const [
+    getAllMyRoboOogas,
+    { loading: allMyRoboOogasLoading, data: allMyRoboOogasData },
+  ] = useLazyQuery(GET_ALL_MY_ROBO_OOGAS);
   const [isRoboBurnModalOpen, setIsRoboBurnModalOpen] = useState(false);
   const { data: burnCreditsData, refetch: getBurnCredits } =
     useBurnCredits(userMetaMaskToken);
   const [burnCredits, setBurnCredits] = useState(0);
+  const [burnRoboList, setBurnRoboList] = useState(null);
   const [selectedBurnCreditsRobo, setSelectedBurnCreditsRobo] = useState(0);
   // Transaction Events
   const unstakeTokensAmount = useRef(null);
 
-  // Get all dat
+  // Get all data
   useEffect(() => {
     let isMounted = true;
     if (userMetaMaskToken && isMounted) {
@@ -191,6 +196,11 @@ const Factory = () => {
           owner: userMetaMaskToken,
         },
       });
+      getAllMyRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
     }
     return () => {
       isMounted = false;
@@ -199,6 +209,7 @@ const Factory = () => {
     userMetaMaskToken,
     getStakedApe,
     getUnstakedRoboOogas,
+    getAllMyRoboOogas,
     getUnstakeMekaApes,
   ]);
 
@@ -216,6 +227,24 @@ const Factory = () => {
       setStakedList(null);
     }
   }, [stakedApesData]);
+
+  // Set Robo Ooga list avaliable for burning
+  useEffect(() => {
+    let allRobos = [];
+    if (allMyRoboOogasData?.unstaked?.length > 0) {
+      allRobos = [...allRobos, ...allMyRoboOogasData?.unstaked];
+    }
+    if (allMyRoboOogasData?.staked?.length > 0) {
+      let roboWithoutCrew = [];
+      allMyRoboOogasData?.staked.forEach((robo) => {
+        if (robo.crewId === null || robo.crewId === undefined) {
+          roboWithoutCrew.push(robo);
+        }
+      });
+      allRobos = [...allRobos, ...roboWithoutCrew];
+    }
+    setBurnRoboList(allRobos);
+  }, [allMyRoboOogasData]);
 
   // Set placeholder in the staked list
   useEffect(() => {
@@ -304,12 +333,22 @@ const Factory = () => {
   }, [selectedStaked, claimAvaliableRewardList]);
 
   useEffect(() => {
-    if (stakeLoading || unstakedRoboLoading || unstakedMekaApeLoading) {
+    if (
+      stakeLoading ||
+      unstakedRoboLoading ||
+      unstakedMekaApeLoading ||
+      allMyRoboOogasLoading
+    ) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [stakeLoading, unstakedRoboLoading, unstakedMekaApeLoading]);
+  }, [
+    stakeLoading,
+    unstakedRoboLoading,
+    unstakedMekaApeLoading,
+    allMyRoboOogasLoading,
+  ]);
 
   useEffect(() => {
     if (width < 388) {
@@ -359,6 +398,7 @@ const Factory = () => {
   };
 
   const handleCloseBurnModal = () => {
+    getBurnCredits();
     setIsRoboBurnModalOpen(false);
   };
 
@@ -980,7 +1020,7 @@ const Factory = () => {
                   </SelectedCounter>
                 )}
                 <BurnSection>
-                  <BurnButton>Get Credits</BurnButton>
+                  <BurnButton onClick={handleOpenBurnModal}>Get Credits</BurnButton>
                   <div className="text">
                     <span>Unstaking Credits:</span>
                     <span
@@ -1051,16 +1091,16 @@ const Factory = () => {
           tsxTotalNumber={tsxTotalNumber}
         />
       )}
-      {/* {isRoboBurnModalOpen && (
+      {isRoboBurnModalOpen && (
         <BurnRoboModal
           open={isRoboBurnModalOpen}
-          roboList={list}
+          roboList={burnRoboList}
           type="burn"
-          handleCloseModal={handleOpenBurnModal}
+          handleCloseModal={handleCloseBurnModal}
           setIsResultsModalOpen={setIsResultsModalOpen}
           setTokens={setTokens}
         />
-      )} */}
+      )}
     </Wrapper>
   );
 };

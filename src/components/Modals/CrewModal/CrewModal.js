@@ -52,9 +52,6 @@ const NoItemFound = () => (
   </NotFoundItem>
 );
 
-// TODO: Edit Mode
-// TODO: Events
-// TODO: Pulling fresh data
 const CrewModal = ({
   open,
   handleCloseModal,

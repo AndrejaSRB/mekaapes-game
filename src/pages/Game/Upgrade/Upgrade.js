@@ -82,9 +82,6 @@ const LevelBox = ({ level }) => (
   </LevelBoxContainer>
 );
 
-// TODO add level names (mobile and desktop) and colors
-// TODO check with them about text on the page and modals
-
 const Upgrade = () => {
   const client = useApolloClient();
   const { userMetaMaskToken } = useContext(UserContext);

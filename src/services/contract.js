@@ -216,6 +216,13 @@ export class Contract {
     return credits.toNumber();
   }
 
+  // Burn Robo Oogas for unstaking credits
+  async burnOogaForUnstakeCredits(tokenIds, gasLimit) {
+    return await this.mekaApesContract.burnOogaForUnstakeCredits(tokenIds, {
+      gasLimit: gasLimit,
+    });
+  }
+
   // DMT_ERC20 Contract functions:
 
   async getDMTBalance(address) {
