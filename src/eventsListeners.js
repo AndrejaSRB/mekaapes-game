@@ -11,6 +11,7 @@ export const TAX_REWARD = "TaxReward";
 export const REMOVE_CREW = "RemoveCrew";
 export const MAKE_CREW = "MakeCrew";
 export const ADD_TO_CREW = "AddToCrew";
+export const REMOVE_FROM_CREW = "RemoveFromCrew";
 export const CLAIM_CREW_REWARD = "ClaimCrewReward";
 
 export const getEvent = (receipt, contract, eventName) => {

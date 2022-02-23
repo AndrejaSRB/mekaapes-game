@@ -109,7 +109,7 @@ const Factory = () => {
     useContext(BalanceContext);
   const { width } = useWindowDimenstions();
   // Tabs
-  const [activeTab, setActiveTab] = useState("crew");
+  const [activeTab, setActiveTab] = useState("factory");
   const [selectAllStaked, setSelectAllStaked] = useState(false);
   const [selectAllUnstakedMeka, setSelectAllUnstakedMeka] = useState(false);
   const [selectAllUnstakedRobo, setSelectAllUnstakedRobo] = useState(false);
@@ -118,7 +118,7 @@ const Factory = () => {
   const [selectedUnstakedMeka, setSelectedUnstakedMeka] = useState([]);
   const [selectedStaked, setSelectedStaked] = useState([]);
 
-  const [stakedData, setStakedData] = useState(null);
+  const [stakedData, setStakedData] = useState([]);
   const [minStakedElementNo, setMinStakedElementNo] = useState(6);
 
   const [totalClaim, setTotalClaim] = useState(0);
@@ -232,7 +232,7 @@ const Factory = () => {
   // Sum Total Claim Reward
   useEffect(() => {
     if (claimAvaliableRewardList?.length > 0) {
-      setStakedData(claimAvaliableRewardList);
+      setStakedData(claimAvaliableRewardList ? claimAvaliableRewardList : []);
       let total = 0;
       claimAvaliableRewardList.forEach((ape) => {
         if (+ape.reward > 0) {
@@ -241,7 +241,7 @@ const Factory = () => {
       });
       setTotalClaim(total);
     } else {
-      setStakedData(null);
+      setStakedData([]);
       setTotalClaim(0);
     }
   }, [claimAvaliableRewardList]);
@@ -299,7 +299,7 @@ const Factory = () => {
   }, [width]);
 
   const hadnleChangeStakedCheckbox = (e) => {
-    if (stakedData && stakedData.length > 0) {
+    if (stakedData && stakedData?.length > 0) {
       if (!e.target.checked) {
         setSelectedStaked([]);
       } else {
@@ -374,7 +374,7 @@ const Factory = () => {
   };
 
   const renderDesktopStakedApes = () => {
-    if (stakedData && stakedData.length > 0) {
+    if (stakedData && stakedData?.length > 0) {
       return stakedData.map((ape) => (
         <StakedApe
           key={ape.id}
@@ -393,7 +393,7 @@ const Factory = () => {
   };
 
   const renderMobileStakedApes = () => {
-    if (stakedData && stakedData.length > 0) {
+    if (stakedData && stakedData?.length > 0) {
       let reducedList = arrangeStakedMobileList(stakedData);
       if (reducedList && reducedList.length > 0) {
         return reducedList.map((apeList) => (
@@ -907,15 +907,15 @@ const Factory = () => {
                   </CustomCheckbox>
                 </div>
                 <ApeList>{renderMobileStakedApes()}</ApeList>
-                <ApeListDesktop length={stakedData?.length}>
+                <ApeListDesktop length={stakedData ? stakedData.length : 0}>
                   {renderDesktopStakedApes()}
                 </ApeListDesktop>
-                {stakedApesListWithoutCrew.length > 0 && (
+                {stakedApesListWithoutCrew?.length > 0 && (
                   <SelectedCounter staked>
                     <span>Selected NFTs:</span>
                     <span className="numbers">
                       {selectedStaked ? getSelectedStakedNumber() : 0}/
-                      {stakedApesListWithoutCrew.length}
+                      {stakedApesListWithoutCrew?.length}
                     </span>
                   </SelectedCounter>
                 )}

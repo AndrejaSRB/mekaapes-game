@@ -200,12 +200,6 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
     setIsCreateModalOpen(true);
   };
 
-  const handleCloseCreateModal = () => {
-    setActionType("");
-    setClickedEditCrew(null);
-    setIsCreateModalOpen(false);
-  };
-
   const handleChangeSelectAll = (e) => {
     if (crewList && crewList.length > 0) {
       if (!e.target.checked) {
@@ -323,23 +317,17 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
     getCrewAvaliableRewards();
   };
 
+  const handleCloseCreateModal = () => {
+    setActionType("");
+    getFreshData();
+    setClickedEditCrew(null);
+    setIsCreateModalOpen(false);
+  };
+
   const handleCloseResultsModal = async () => {
+    handleCloseCreateModal()
     setIsResultsModalOpen(false);
-    getMekas({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getRobos({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
-    getCrews({
-      variables: {
-        owner: userMetaMaskToken,
-      },
-    });
+    getFreshData();
   };
 
   const getClaimEvent = (receipt) => {

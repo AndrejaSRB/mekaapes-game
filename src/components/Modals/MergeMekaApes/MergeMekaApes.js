@@ -120,9 +120,7 @@ const MergeMekaApes = ({
       maskClosable={false}>
       <div className="content">
         <Title>MekaApes</Title>
-        <Subtitle>
-          Select the MekaApe you want to merge.
-        </Subtitle>
+        <Subtitle>Select the MekaApe you want to merge.</Subtitle>
         <MekaApesBox length={listLength}>{handleRenderElements()}</MekaApesBox>
         <ButtonWrapper>
           <Button disabled={getIfBtnIsDisabled()} onClick={handleClickButton}>

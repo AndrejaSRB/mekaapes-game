@@ -17,7 +17,12 @@ import {
   ACTION_LOADING_UPGRADE_CREATION,
 } from "../../../messages";
 // ******** Events ********
-import { MAKE_CREW, getEvent, ADD_TO_CREW } from "../../../eventsListeners";
+import {
+  MAKE_CREW,
+  getEvent,
+  ADD_TO_CREW,
+  REMOVE_FROM_CREW,
+} from "../../../eventsListeners";
 // ******** Service ********
 import contract from "../../../services/contract";
 // ******** Images ********
@@ -302,13 +307,25 @@ const CrewModal = ({
     }
   };
 
-  const getChangeEvent = (receipt) => {
+  const getChangeEvent = (receipt, removedTokenIds, addedTokenIds) => {
     let { mekaApesContract } = contract;
-    let changeEvent = getEvent(receipt, mekaApesContract, ADD_TO_CREW);
+    let addToEvent = null;
+    if (addedTokenIds?.length > 0) {
+      addToEvent = getEvent(receipt, mekaApesContract, ADD_TO_CREW);
+    }
+    let removeToEvent = null;
+    if (removedTokenIds?.length > 0) {
+      removeToEvent = getEvent(receipt, mekaApesContract, REMOVE_FROM_CREW);
+    }
     let allTokens = [];
-    console.log('changeEvent', changeEvent);
-    if (changeEvent) {
-      let id = changeEvent.args.crewId.toNumber();
+    if (addToEvent) {
+      let id = addToEvent.args.crewId.toNumber();
+      allTokens.push({
+        type: "crew-change",
+        id: id,
+      });
+    } else if (removeToEvent) {
+      let id = removeToEvent.args.crewId.toNumber();
       allTokens.push({
         type: "crew-change",
         id: id,
@@ -430,14 +447,6 @@ const CrewModal = ({
 
     let crewId = clickedEditCrew.id;
 
-    console.log("original", clickedEditCrew);
-    console.log("crewId", crewId);
-    console.log("added", added);
-    console.log("removed", removed);
-    console.log("*****************************");
-    console.log("removedTokenIds", removedTokenIds);
-    console.log("addedTokenIds", addedTokenIds);
-
     setActionLoadingText(ACTION_LOADING_UPGRADE_CREATION);
     try {
       let totalGasEstimation = getUpgradeEstimatedGas(
@@ -456,7 +465,7 @@ const CrewModal = ({
       tsx
         .wait()
         .then(async (receipt) => {
-          getChangeEvent(receipt);
+          getChangeEvent(receipt, removedTokenIds, addedTokenIds);
         })
         .catch((error) => {
           console.log(error);
