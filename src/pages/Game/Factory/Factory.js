@@ -30,6 +30,7 @@ import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
 import useWindowDimenstions from "../../../hooks/useWindowDimensions";
 import useListClaimAvaliableReward from "../../../hooks/useListClaimAvaliableReward";
+import useBurnCredits from "../../../hooks/useBurnCredits";
 // ******** Functions ********
 import {
   getListLength,
@@ -41,6 +42,7 @@ import {
   getStakedRoboAmount,
   beautifyNumber,
   getReducedEstimatedGas,
+  getBurnCreditsClassName,
 } from "./helper";
 // ******** Queires ********
 import {
@@ -158,10 +160,16 @@ const Factory = () => {
   // Get Total CLaim Reward
   const { data: claimAvaliableRewardList, refetch: getAvaliableRewards } =
     useListClaimAvaliableReward(stakedList, stakedApesListWithoutCrew);
+
+  //Get Burn Credits
+  const { data: burnCreditsData, refetch: getBurnCredits } =
+    useBurnCredits(userMetaMaskToken);
+  const [burnCredits, setBurnCredits] = useState(0);
+  const [selectedBurnCreditsRobo, setSelectedBurnCreditsRobo] = useState(0);
   // Transaction Events
   const unstakeTokensAmount = useRef(null);
 
-  // Get all data
+  // Get all dat
   useEffect(() => {
     let isMounted = true;
     if (userMetaMaskToken && isMounted) {
@@ -261,6 +269,18 @@ const Factory = () => {
       setUnstakedMekaList(null);
     }
   }, [unstakedMekaApeData]);
+
+  useEffect(() => {
+    if (
+      burnCreditsData &&
+      burnCreditsData !== null &&
+      burnCreditsData !== undefined
+    ) {
+      setBurnCredits(burnCreditsData);
+    } else {
+      setBurnCredits(0);
+    }
+  }, [burnCreditsData]);
 
   // Sum selected token claim amount
   useEffect(() => {
@@ -502,6 +522,31 @@ const Factory = () => {
       return 0;
     }
   };
+
+  useEffect(() => {
+    if (selectedStaked?.length > 0) {
+      let realTokens = selectedStaked.filter((selected) => selected.owner);
+      let robo = realTokens.filter(
+        (token) => token.oogaType === "0" || token.oogaType === 0
+      );
+      setSelectedBurnCreditsRobo(robo.length);
+    } else {
+      setSelectedBurnCreditsRobo(0);
+    }
+  }, [selectedStaked]);
+
+  const getSelectedStakedRoboNumber = () => {
+    if (selectedStaked?.length > 0) {
+      let realTokens = selectedStaked.filter((selected) => selected.owner);
+      let robo = realTokens.filter(
+        (token) => token.oogaType === "0" || token.oogaType === 0
+      );
+      return robo.length;
+    } else {
+      return 0;
+    }
+  };
+
   const getEstimatedGas = async (list, type, gasFee) => {
     let gasEstimation;
     if (type === "stake") {
@@ -744,59 +789,63 @@ const Factory = () => {
   };
 
   const handleClickUnstake = async () => {
-    let tokenIds = [];
-    if (selectedStaked?.length > 0) {
-      selectedStaked.forEach((token) => {
-        if (token.owner) {
-          tokenIds.push(token.id);
-        }
-      });
+    if (selectedBurnCreditsRobo < burnCredits) {
+      let tokenIds = [];
+      if (selectedStaked?.length > 0) {
+        selectedStaked.forEach((token) => {
+          if (token.owner) {
+            tokenIds.push(token.id);
+          }
+        });
 
-      if (tokenIds?.length > 0) {
-        let gasFee = await getGasFee(selectedStaked);
-        try {
-          let totalGasEstimation = await getEstimatedGas(
-            tokenIds,
-            "unstake",
-            gasFee
-          );
-          let tsx = await contract.unstake(
-            tokenIds,
-            gasFee,
-            totalGasEstimation
-          );
-          openActionLoading(2, getActionLoadingUnstakeMessage(tokenIds));
-          tsx
-            .wait()
-            .then((receipt) => {
-              setTsxNumber(2);
-              getClaimEventAndWaitSecondTx(receipt);
-              getOogearBalance();
-            })
-            .catch((error) => {
-              console.log(error);
-              Sentry.captureException(new Error(error), {
-                tags: {
-                  section: "Factory Unstake tsx.wait",
-                },
+        if (tokenIds?.length > 0) {
+          let gasFee = await getGasFee(selectedStaked);
+          try {
+            let totalGasEstimation = await getEstimatedGas(
+              tokenIds,
+              "unstake",
+              gasFee
+            );
+            let tsx = await contract.unstake(
+              tokenIds,
+              gasFee,
+              totalGasEstimation
+            );
+            openActionLoading(2, getActionLoadingUnstakeMessage(tokenIds));
+            tsx
+              .wait()
+              .then((receipt) => {
+                setTsxNumber(2);
+                getClaimEventAndWaitSecondTx(receipt);
+                getOogearBalance();
+              })
+              .catch((error) => {
+                console.log(error);
+                Sentry.captureException(new Error(error), {
+                  tags: {
+                    section: "Factory Unstake tsx.wait",
+                  },
+                });
+                message.error(SOMETHING_WENT_WRONG);
+                clearActionLoading(false);
               });
-              message.error(SOMETHING_WENT_WRONG);
-              clearActionLoading(false);
+          } catch (error) {
+            console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "Factory Unstake 1st tsx",
+              },
             });
-        } catch (error) {
-          console.log(error);
-          Sentry.captureException(new Error(error), {
-            tags: {
-              section: "Factory Unstake 1st tsx",
-            },
-          });
-          message.error(SOMETHING_WENT_WRONG_UNSTAKE, 6);
+            message.error(SOMETHING_WENT_WRONG_UNSTAKE, 6);
+          }
+          setTotalClaim(0);
+          setSelectedStaked([]);
         }
-        setTotalClaim(0);
-        setSelectedStaked([]);
+      } else {
+        message.error(SELECT_SOME_STAKED_APE);
       }
     } else {
-      message.error(SELECT_SOME_STAKED_APE);
+      message.error("You don't have enough credits.");
     }
   };
 
@@ -923,7 +972,11 @@ const Factory = () => {
                   <BurnButton>Get Credits</BurnButton>
                   <div className="text">
                     <span>Unstaking Credits:</span>
-                    <span className="numbers">0/0</span>
+                    <span
+                      className={getBurnCreditsClassName(burnCredits, selectedBurnCreditsRobo)}>
+                      {selectedStaked ? getSelectedStakedRoboNumber() : 0}/
+                      {burnCredits}
+                    </span>
                   </div>
                 </BurnSection>
                 <ButtonClaim

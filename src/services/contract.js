@@ -152,17 +152,16 @@ export class Contract {
 
   // claim Crews reward
   async claimCrewReward(crewIds, gasLimit) {
-    return await this.mekaApesContract.claimCrewReward(
-      crewIds,
-      {
-        gasLimit: gasLimit,
-      }
-    );
+    return await this.mekaApesContract.claimCrewReward(crewIds, {
+      gasLimit: gasLimit,
+    });
   }
 
   // Crew claim avaliable reward
   async claimAvailableAmountMultipleCrews(crewIds) {
-    return await this.mekaApesContract.claimAvailableAmountMultipleCrews(crewIds);
+    return await this.mekaApesContract.claimAvailableAmountMultipleCrews(
+      crewIds
+    );
   }
 
   // merge two Meka Apes, one will be burned, and another will be kept
@@ -203,9 +202,18 @@ export class Contract {
     return total.toNumber();
   }
 
+  // Max Robo Oogas per crew for some Meka Level
   async getMaxCrewForMekaLevel(level) {
     let spots = await this.mekaApesContract.maxCrewForMekaLevel(level);
     return spots.toNumber();
+  }
+
+  // Get Burn Credits
+  async getUnstakeCreditsForAddress(address) {
+    let credits = await this.mekaApesContract.getUnstakeCreditsForAddress(
+      address
+    );
+    return credits.toNumber();
   }
 
   // DMT_ERC20 Contract functions:

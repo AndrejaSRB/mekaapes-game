@@ -753,8 +753,11 @@ export const BurnSection = styled.div`
     margin-top: 8px;
     .numbers {
       margin-left: 8px;
-      color: ${theme.color.red};
+      color: ${theme.color.green};
       display: block;
+    }
+    .numbers.empty {
+      color: ${theme.color.red};
     }
   }
   @media only screen and (min-width: 410px) {
