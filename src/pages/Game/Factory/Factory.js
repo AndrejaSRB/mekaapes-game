@@ -39,8 +39,6 @@ import {
   handleClickApe,
   handleClickStakedApe,
   arrangeStakedMobileList,
-  getApeName,
-  getStakedRoboAmount,
   beautifyNumber,
   getReducedEstimatedGas,
   getBurnCreditsClassName,
@@ -54,7 +52,6 @@ import {
 } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
-import gas from "../../../services/gas";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 import { BalanceContext } from "../../../store/balance-context";
@@ -65,8 +62,6 @@ import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import {
   CLAIM_REWARD,
   getAllEvents,
-  ATTACK_REWARD,
-  makeRandomSubscription,
 } from "../../../eventsListeners";
 // ******** Styles ********
 import {
