@@ -320,8 +320,14 @@ const BurnRoboModal = ({
         tsx
           .wait()
           .then(async (receipt) => {
-            // TODO: Add Event for results of Burning
-            // TODO: Handle results modal for burning
+            setTokens([
+              {
+                type: "burn",
+              },
+            ]);
+            getFreshUpgradeData();
+            setActionLoading(false);
+            setIsResultsModalOpen(true);
             // getUpgradeEvent(receipt);
           })
           .catch((error) => {

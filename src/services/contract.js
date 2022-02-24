@@ -84,9 +84,8 @@ export class Contract {
   }
 
   // unstake multiple items
-  async unstake(itemList, price, gasLimit) {
+  async unstake(itemList, gasLimit) {
     return await this.mekaApesContract.unstake(itemList, {
-      value: price,
       gasLimit: gasLimit,
     });
   }

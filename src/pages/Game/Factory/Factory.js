@@ -397,8 +397,10 @@ const Factory = () => {
     setIsRoboBurnModalOpen(true);
   };
 
-  const handleCloseBurnModal = () => {
+  const handleCloseBurnModal = async () => {
+    getStakedApe();
     getBurnCredits();
+    await getFreshData();
     setIsRoboBurnModalOpen(false);
   };
 
@@ -543,10 +545,13 @@ const Factory = () => {
   };
 
   const handleCloseResultsModal = async () => {
+    getBurnCredits();
     setIsResultsModalOpen(false);
     setText("");
     setTokens(null);
+    await handleCloseBurnModal();
     unstakeTokensAmount.current = null;
+
     getOogearBalance();
     await getFreshData();
   };
@@ -608,102 +613,13 @@ const Factory = () => {
       );
     } else if (type === "unstake") {
       gasEstimation = await contract.mekaApesContract.estimateGas.unstake(
-        list,
-        {
-          value: gasFee,
-        }
+        list
       );
     }
     let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
     return totalGasEstimation;
   };
 
-  const getGasFee = async (list) => {
-    let amount = getStakedRoboAmount(list);
-    let gasFee = await gas.getUnstakeRandomGas(amount);
-
-    // increasing gasFee for 14%
-    let increasedGas = null;
-    if (BigNumber.isBigNumber(gasFee)) {
-      increasedGas = gasFee.mul(114).div(100);
-    }
-    return increasedGas ? increasedGas : gasFee;
-  };
-
-  const onRandomsReceived = async (requestId, entropy, event) => {
-    let txReceipt = await event.getTransactionReceipt();
-    let { mekaApesContract } = contract;
-    let unstakeTokens = [];
-    if (unstakeTokensAmount.current?.length > 0) {
-      unstakeTokens = [...unstakeTokensAmount.current];
-    }
-    let claimEvent = getAllEvents(txReceipt, mekaApesContract, CLAIM_REWARD);
-    let attackedEvent = getAllEvents(
-      txReceipt,
-      mekaApesContract,
-      ATTACK_REWARD
-    );
-    if (claimEvent?.length > 0) {
-      claimEvent.forEach((event) => {
-        let ape = stakedData.find(
-          (item) => +item.id === +event.args.tokenId.toNumber()
-        );
-        if (ape) {
-          let name = getApeName(ape);
-          unstakeTokens.push({
-            type: "unstake",
-            name: `${name} #${event.args.tokenId.toNumber()}`,
-            id: event.args.tokenId.toNumber(),
-            amount: ethers.utils.formatUnits(event.args.amount),
-            stolen: false,
-            stolenAmount: 0,
-          });
-        }
-      });
-    }
-    if (attackedEvent?.length > 0) {
-      let allTokens = [...unstakeTokens];
-      attackedEvent.forEach((event) => {
-        allTokens.forEach((token) => {
-          if (+token.id === +event.args.tokenId) {
-            token.stolen = true;
-            token.stolenAmount = ethers.utils.formatUnits(event.args.amount);
-          }
-        });
-      });
-      unstakeTokens = [...allTokens];
-    }
-    setTokens(unstakeTokens);
-    clearActionLoading();
-    setIsResultsModalOpen(true);
-  };
-
-  const getClaimEventAndWaitSecondTx = (receipt) => {
-    let { mekaApesContract } = contract;
-    let firstClaimEvent = getAllEvents(receipt, mekaApesContract, CLAIM_REWARD);
-    let mekaTokens = [];
-    // Only meka tokens can be here
-    // Robo Oogas are in the seconds tsx
-    if (firstClaimEvent?.length > 0) {
-      firstClaimEvent.forEach((event) => {
-        let ape = stakedData.find(
-          (item) => +item.id === +event.args.tokenId.toNumber()
-        );
-        if (ape) {
-          let name = getApeName(ape);
-
-          mekaTokens.push({
-            type: "unstake",
-            name: `${name} #${event.args.tokenId.toNumber()}`,
-            id: event.args.tokenId.toNumber(),
-            amount: ethers.utils.formatUnits(event.args.amount),
-          });
-        }
-      });
-    }
-    unstakeTokensAmount.current = mekaTokens;
-    makeRandomSubscription(receipt, contract, onRandomsReceived);
-  };
 
   const getClaimEvent = (receipt) => {
     let { mekaApesContract } = contract;
@@ -729,6 +645,40 @@ const Factory = () => {
       }
     }
     setTokens(allTokens);
+    getStakedApe({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    clearActionLoading();
+    setIsResultsModalOpen(true);
+  };
+
+  const getUnstakeEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let claimRewardEvent = getAllEvents(
+      receipt,
+      mekaApesContract,
+      CLAIM_REWARD
+    );
+    let allTokens = [];
+
+    if (claimRewardEvent?.length > 0) {
+      let totalClaimAmount = BigNumber.from(0);
+      claimRewardEvent.forEach((event) => {
+        totalClaimAmount = totalClaimAmount.add(event.args.amount);
+      });
+      if (BigNumber.isBigNumber(totalClaimAmount)) {
+        let totalAmount = ethers.utils.formatUnits(totalClaimAmount);
+        allTokens.push({
+          type: "simple-unstake",
+          amount: totalAmount,
+          id: "simple-unstake",
+        });
+      }
+    }
+    setTokens(allTokens);
+    getBurnCredits();
     getStakedApe({
       variables: {
         owner: userMetaMaskToken,
@@ -850,24 +800,21 @@ const Factory = () => {
         });
 
         if (tokenIds?.length > 0) {
-          let gasFee = await getGasFee(selectedStaked);
           try {
             let totalGasEstimation = await getEstimatedGas(
               tokenIds,
-              "unstake",
-              gasFee
+              "unstake"
             );
             let tsx = await contract.unstake(
               tokenIds,
-              gasFee,
               totalGasEstimation
             );
-            openActionLoading(2, getActionLoadingUnstakeMessage(tokenIds));
+            openActionLoading(1, getActionLoadingUnstakeMessage(tokenIds));
             tsx
               .wait()
               .then((receipt) => {
-                setTsxNumber(2);
-                getClaimEventAndWaitSecondTx(receipt);
+                setTsxNumber(1);
+                getUnstakeEvent(receipt);
                 getOogearBalance();
               })
               .catch((error) => {
@@ -1020,7 +967,9 @@ const Factory = () => {
                   </SelectedCounter>
                 )}
                 <BurnSection>
-                  <BurnButton onClick={handleOpenBurnModal}>Get Credits</BurnButton>
+                  <BurnButton onClick={handleOpenBurnModal}>
+                    Get Credits
+                  </BurnButton>
                   <div className="text">
                     <span>Unstaking Credits:</span>
                     <span

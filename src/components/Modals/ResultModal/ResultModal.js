@@ -162,7 +162,7 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
   };
 
   const getRemoveCrewMessage = () => {
-      console.log('getRemoveCrewMessage', tokens);
+    console.log("getRemoveCrewMessage", tokens);
     if (tokens?.length > 1) {
       return (
         <>
@@ -222,6 +222,35 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
             }>{`You successfully updated meka crew #${token.id}!`}</Text>
         ));
       }
+    }
+  };
+
+  const getBurnMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully get new unstake credits.`}</Text>
+          {/* <List>{renderTokens()}</List> */}
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token, index) => (
+          <Text
+            white
+            key={index}>{`You successfully get new unstake credits.`}</Text>
+        ));
+      }
+    }
+  };
+
+  const getSimpleUnstakeMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+        <Text white key={token.id}>{`You successfully claimed ${beautifyNumber(
+          token.amount
+        )} $OG!`}</Text>
+      ));
     }
   };
 
@@ -300,6 +329,20 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
           <>
             <Title>Congratulations!</Title>
             {getChangeCrewMessage()}
+          </>
+        );
+      case "burn":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getBurnMessage()}
+          </>
+        );
+      case "simple-unstake":
+        return (
+          <>
+            <Title>Unstaking successfull!</Title>
+            {getSimpleUnstakeMessage()}
           </>
         );
       default:
