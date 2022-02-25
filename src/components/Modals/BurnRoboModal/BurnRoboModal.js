@@ -367,8 +367,9 @@ const BurnRoboModal = ({
           </Subtitle>
         ) : (
           <Subtitle>
-            Select the Robo Ooga you want to burn for unstake credits. <br />
-            Each level brings a larger number of credits.
+            To receive unstaking credits, please select the Robo Ooga you want
+            to burn. <br />
+            The higher the Robo level, the more credits you receive.
           </Subtitle>
         )}
         <RoboApesBox length={listLength}>{handleRenderElements()}</RoboApesBox>
@@ -379,7 +380,7 @@ const BurnRoboModal = ({
           </HelperText>
         ) : (
           <HelperText>
-            You have selected {clickedRobos?.length ? clickedRobos?.length : 0}.
+            Selected: {clickedRobos?.length ? clickedRobos?.length : 0}
           </HelperText>
         )}
         <ButtonWrapper>
@@ -401,8 +402,8 @@ const BurnRoboModal = ({
           </Text>
         ) : (
           <Text>
-            By clicking "Burn" you will burn selected Robo Oogas, and you will
-            get new amount of unstake credits.
+            By clicking “Burn” your selected Robo Oogas get burnt and you
+            receive unstaking credits.
           </Text>
         )}
       </div>
