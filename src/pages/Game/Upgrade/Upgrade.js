@@ -538,12 +538,13 @@ const Upgrade = () => {
             <InfoOutlined />
           </InfoIcon>
           <TitleBox>
-            <h4>Infuse Robo Oogas with $DMT</h4>
+            <h4>Upgrade Robo Oogas with $DMT or $OG</h4>
             <h6>
-              Level-up Robo Oogas using $DMT to make them produce more $OG and
-              gain other features. You don't need to unstake Robo Oogas to
-              upgrade them! Every Robo Ooga starts as a Garbage Compactor (Lvl
-              1) and can get upgraded to become an Executive Bot (Lvl 4).
+              Upgrade Robo Oogas to make them produce more Crew $OG. Upgrading
+              with $OG requires to burn 1 Robo Ooga for each level-up. $DMT
+              upgrading does not require to burn Robo Oogas. You can upgrade
+              multiple levels in one transaction. Robo Ooga Levels only affect
+              the $OG production in Meka Crews.
             </h6>
           </TitleBox>
           <LeftSide>

@@ -469,7 +469,11 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
       <MainBox>
         <TitleBox>
           <h4>Meka Crews</h4>
-          <h6>Pick your Meka and make your Meka crew!</h6>
+          <h6>
+            Create Meka Crews by selecting a MekaApe that’s currently staked in
+            the Factory. You can then add Robo Oogas to the crew to earn Crew
+            $OG. The higher the Meka level, the more Robo Oogas fit into a crew.
+          </h6>
         </TitleBox>
         <Headline>
           <CustomCheckbox onChange={handleChangeSelectAll} checked={selectAll}>
@@ -495,7 +499,7 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
           <Button
             disabled={clickedCrews?.length === 0 || isDisabled}
             onClick={handleRemoveCrew}>
-            Remove
+            Delete Crew
           </Button>
           <Button
             disabled={clickedCrews?.length === 0}
@@ -505,10 +509,8 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
           </Button>
         </Actions>
         <HelperText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit
-          aliquet sagittis id consectetur. Aenean vel elit scelerisque mauris.
-          Commodo odio aenean sed adipiscing diam donec.
+          Deleting a Crew will send the NFTs back to the Factory and all Crew
+          $OG will be claimed. There’s no tax when claiming $OG from Meka Crews.
         </HelperText>
       </MainBox>
       {isCreateModalOpen && (

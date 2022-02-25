@@ -363,7 +363,7 @@ const BurnRoboModal = ({
         <Title>Robo Oogas</Title>
         {type === "upgrade" ? (
           <Subtitle>
-            Select the Robo Ooga you want to burn for each level.
+            Select the Robo Oogas to be burnt with each level up.
           </Subtitle>
         ) : (
           <Subtitle>
@@ -374,7 +374,7 @@ const BurnRoboModal = ({
         <RoboApesBox length={listLength}>{handleRenderElements()}</RoboApesBox>
         {type === "upgrade" ? (
           <HelperText>
-            You have to select {spots}. Selected{" "}
+            Please select {spots} Robo Oogas. Selected{" "}
             {clickedRobos?.length ? clickedRobos?.length : 0}/{spots}
           </HelperText>
         ) : (
@@ -396,8 +396,8 @@ const BurnRoboModal = ({
         </ButtonWrapper>
         {type === "upgrade" ? (
           <Text>
-            By clicking "Upgrade" you will burn selected Robo Oogas, and your
-            previously selected Robo Ooga will be upgraded.
+            By clicking “Upgrade” the new levels will be applied, and the
+            selected Robo Ooga will be burnt.
           </Text>
         ) : (
           <Text>

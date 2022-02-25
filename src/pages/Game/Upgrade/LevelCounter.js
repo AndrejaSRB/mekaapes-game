@@ -20,7 +20,7 @@ const LevelCounter = ({ levelCounter, setLevelCounter, level, keepApe }) => {
 
   return (
     <CounterWrapper>
-      <CounterLabel>How many levels:</CounterLabel>
+      <CounterLabel>Select Level-Ups:</CounterLabel>
       <Counter>
         <div
           className={levelCounter === 1 ? "minus disabled" : "minus"}

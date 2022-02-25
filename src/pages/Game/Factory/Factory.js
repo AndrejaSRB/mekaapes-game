@@ -993,10 +993,7 @@ const Factory = () => {
                     Unclaimed:{" "}
                     <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
                   </p>
-                  <p>
-                    A Robo Ooga can only be unstaked when it has claimable min.
-                    2,000 $OG
-                  </p>
+                  <p />
                 </StakedText>
               </Staked>
             </Boxes>

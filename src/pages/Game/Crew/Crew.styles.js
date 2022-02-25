@@ -19,7 +19,7 @@ export const MainBox = styled.div`
     line-height: 1;
   }
   h6 {
-    line-height: 1;
+    line-height: 1.5;
     text-align: center;
     color: ${theme.color.whiteGrey};
     font-size: 16px;
@@ -48,6 +48,10 @@ export const MainBox = styled.div`
   @media only screen and (min-width: 1200px) {
     width: 100%;
     margin: 0 auto;
+    h6 {
+      width: 900px;
+      margin: 0 auto 32px auto;
+    }
   }
   @media only screen and (min-width: 1320px) {
     width: 1300px;
@@ -268,6 +272,8 @@ export const HelperText = styled.div`
   text-align: center;
   margin-top: 32px;
   font-size: 18px;
+  max-width: 800px;
+  margin: 32px auto 0 auto;
 `;
 
 export const RewardAmount = styled.div`

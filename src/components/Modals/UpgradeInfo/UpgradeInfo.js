@@ -24,7 +24,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span>Produce 200 $OG per day</span>
+              <span>Produce 100 $OG per day</span>
             </div>
             {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>/</span>
@@ -40,7 +40,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span>Produce 400 $OG per day</span>
+              <span>Produce 200 $OG per day</span>
             </div>
             {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>Decrease the risk of $OG getting stolen to 25% when unstaking</span>
@@ -57,7 +57,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             <div className="cell">
               <span>Productivity</span>
               {/* <span><small>+ 50%</small> more $OG (300 $OG per day)</span> */}
-              <span>Produce 700 $OG per day</span>
+              <span>Produce 400 $OG per day</span>
             </div>
             {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>Decrease the unstaking time by 25%</span>
@@ -73,7 +73,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span>Produce 1,200 $OG per day</span>
+              <span>Produce 700 $OG per day</span>
             </div>
             {/* <div className="cell">
               <span className="self-align">+ Feature</span><span>/</span>
@@ -88,7 +88,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span>Produce 2,500 $OG per day</span>
+              <span>Produce 1,200 $OG per day</span>
             </div>
           </Box>
           <Box>
@@ -100,7 +100,7 @@ const UpgradeInfo = ({ open, handleClose }) => {
             </div>
             <div className="cell">
               <span>Productivity</span>
-              <span>Produce 4,000 $OG per day</span>
+              <span>Produce 2,000 $OG per day</span>
             </div>
           </Box>
         </MobileTable>
