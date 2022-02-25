@@ -15,7 +15,7 @@ import { getAddedRobos, getDeletedRobos, getListIds } from "./helper";
 import {
   SOMETHING_WENT_WRONG,
   ACTION_LOADING_CREW_CREATION,
-  ACTION_LOADING_UPGRADE_CREATION,
+  ACTION_LOADING_CREW_UPGRADE,
 } from "../../../messages";
 // ******** Events ********
 import {
@@ -308,11 +308,10 @@ const CrewModal = ({
   const getFreshTokens = async () => {
     await client.cache.reset().then(async () => {
       await client.refetchQueries({
-        include: ["GetCrews","GetStakedApe","GetStakedRoboOogasUpgrade"],
+        include: ["GetCrews", "GetStakedApe", "GetStakedRoboOogasUpgrade"],
       });
     });
   };
-
 
   const getChangeEvent = async (receipt, removedTokenIds, addedTokenIds) => {
     let { mekaApesContract } = contract;
@@ -454,7 +453,6 @@ const CrewModal = ({
 
     let crewId = clickedEditCrew.id;
 
-    setActionLoadingText(ACTION_LOADING_UPGRADE_CREATION);
     try {
       let totalGasEstimation = getUpgradeEstimatedGas(
         crewId,
@@ -468,7 +466,7 @@ const CrewModal = ({
         totalGasEstimation
       );
       setActionLoading(true);
-      setActionLoadingText("Change Crew");
+      setActionLoadingText(ACTION_LOADING_CREW_UPGRADE);
       tsx
         .wait()
         .then(async (receipt) => {

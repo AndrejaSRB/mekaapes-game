@@ -19,9 +19,11 @@ export const ACTION_LOADING_CLAIM =
 export const ACTION_LOADING_MERGE =
   "Merging your MekaApes is in the progress. Your new Mega Meka will come soon. It could take a couple of minutes.";
 
-export const ACTION_LOADING_CREW_CREATION = "Crew creations in progress. This process might take a couple of minutes.";
-export const ACTION_LOADING_UPGRADE_CREATION = "Crew updating in progress. This process might take a couple of minutes.";
-export const ACTION_BRUNING_ROBO = "Making credits in progress. This process might take a couple of minutes.";
+export const ACTION_LOADING_CREW_CREATION = "Your Meka Crew gets created. It might take a couple of minutes.";
+export const ACTION_LOADING_CREW_UPGRADE = "Your Meka Crew gets updated. This process might take a couple of minutes.";
+export const ACTION_LOADING_CREW_REMOVE = "Removing NFTs from the Meka Crew in progess. This process might take a couple of minutes.";
+export const ACTION_LOADING_CREW_CLAIM = "Claiming $OG is in progress. This process might take a couple of minutes.";
+export const ACTION_BRUNING_ROBO = "Robo Ooga burn in progress. This process might take a couple of minutes.";
 
 export const getActionLoadingUpgrade = (id) =>
   `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;

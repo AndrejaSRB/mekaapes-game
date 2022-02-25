@@ -20,7 +20,7 @@ import contract from "../../../services/contract";
 // ******** Stores ********
 import { UserContext } from "../../../store/user-context";
 // ******** Text ********
-import { SELECT_CREW, SOMETHING_WENT_WRONG } from "../../../messages";
+import { SELECT_CREW, SOMETHING_WENT_WRONG, ACTION_LOADING_CREW_REMOVE, ACTION_LOADING_CREW_CLAIM } from "../../../messages";
 // ******** Queires ********
 import {
   GET_STAKED_MEKA,
@@ -389,7 +389,7 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
         let totalGasEstimation = getRemoveCrewEstimatedGas(crewIds);
         let tsx = await contract.removeCrew(crewIds, totalGasEstimation);
         setActionLoading(true);
-        setActionLoadingText("Removing Crew");
+        setActionLoadingText(ACTION_LOADING_CREW_REMOVE);
 
         tsx
           .wait()
@@ -431,7 +431,7 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
         let totalGasEstimation = getClaimCrewEstimatedGas(crewIds);
         let tsx = await contract.claimCrewReward(crewIds, totalGasEstimation);
         setActionLoading(true);
-        setActionLoadingText("Claim Crew");
+        setActionLoadingText(ACTION_LOADING_CREW_CLAIM);
 
         tsx
           .wait()
