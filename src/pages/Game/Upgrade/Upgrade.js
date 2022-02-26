@@ -402,6 +402,8 @@ const Upgrade = () => {
   };
 
   const handleCloseResultsModal = async () => {
+    setKeepApe(null);
+    handleCloseOGBurnModal();
     setIsResultsModalOpen(false);
     await getFreshData();
     setText("");

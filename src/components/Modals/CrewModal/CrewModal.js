@@ -396,13 +396,12 @@ const CrewModal = ({
       if (clickedRobos?.length > 0) {
         clickedRobos.forEach((robo) => crewTokenIds.push(robo.id));
       }
-      setActionLoadingText(ACTION_LOADING_CREW_CREATION);
       try {
         // get Gas Estimation from the contract
         let totalGasEstimation = getCreateEstimatedGas(crewTokenIds);
         let tsx = await contract.createCrew(crewTokenIds, totalGasEstimation);
         setActionLoading(true);
-        setActionLoadingText("Create Crew");
+        setActionLoadingText(ACTION_LOADING_CREW_CREATION);
         tsx
           .wait()
           .then(async (receipt) => {
