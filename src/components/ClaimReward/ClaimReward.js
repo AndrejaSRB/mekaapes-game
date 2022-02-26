@@ -34,10 +34,24 @@ const ClaimReward = ({
   const [reward, setReward] = useState(BigNumber.from(0));
   const [place, setPlace] = useState(0);
   const [signature, setSignature] = useState(null);
+  const [isOnTheList, setIsOnTheList] = useState(false);
 
   // Results
   const [actionLoading, setActionLoading] = useState(false);
   const [actionLoadingText, setActionLoadingText] = useState("");
+
+  useEffect(() => {
+    if (address) {
+      let userFromTheList = stageOneRewardJSON.find(
+        (user) => user.address.toLowerCase() === address.toLowerCase()
+      );
+      if (userFromTheList) {
+        setIsOnTheList(true);
+      } else {
+        setIsOnTheList(false);
+      }
+    }
+  }, [address]);
 
   useEffect(() => {
     if (address && hasClaimStageOneReward) {
@@ -127,10 +141,15 @@ const ClaimReward = ({
             <span> {reward && beautifyPrice(reward)} $OG</span> claim reward.
           </p>
         )}
-        {!hasReward && (
+        {!hasReward && !isOnTheList  && (
           <p>
             We are sorry, but you didn't manage to place yourself in one of the
             first 420 positions.
+          </p>
+        )}
+        {!hasReward && isOnTheList  && (
+          <p>
+            You have already claimed your reward.
           </p>
         )}
         {hasReward && (

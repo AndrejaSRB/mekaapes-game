@@ -193,8 +193,7 @@ const Statistics = () => {
         <Title>
           Game <span>Statistics</span>
         </Title>
-        {hasClaimStageOneReward && (
-          <ClaimReward
+        <ClaimReward
             address={userMetaMaskToken}
             hasClaimStageOneReward={hasClaimStageOneReward}
             setHasClaimStageOneReward={setHasClaimStageOneReward}
@@ -202,7 +201,6 @@ const Statistics = () => {
             setIsResultsModalOpen={setIsResultsModalOpen}
             setTokens={setTokens}
           />
-        )}
         <Holder>
           <Box>
             <h4>Game Status</h4>
