@@ -7,15 +7,17 @@ import Footer from "../../../components/Footer/Footer";
 import Loading from "../../../components/Modals/Loading/Loading";
 import OogaAttacked from "../OogaAttacked/OogaAttacked";
 import ClaimReward from "../../../components/ClaimReward/ClaimReward";
+import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
-import useDailyUsers from "../../../hooks/useDailyUsers";
+// import useDailyUsers from "../../../hooks/useDailyUsers";
 import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
+import useStageOneReward from "../../../hooks/useStageOneReward";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Funcstions ********
-import { beautifyNumber, beautifyPrice } from "../Factory/helper";
+import { beautifyNumber } from "../Factory/helper";
 // ******** Queires ********
 import { GET_LEADERBOARD } from "../../../queries";
 // ******** Styles ********
@@ -26,7 +28,6 @@ import {
   Box,
   Holder,
   Stats,
-  TotalText,
   LeaderboardsBox,
   Place,
   BoardWrapper,
@@ -37,18 +38,39 @@ const Statistics = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [loader, setLoader] = useState(false);
   const { loading, data } = useQuery(GET_LEADERBOARD);
-  const { data: dailyUsers, isLoading: dailyUsersIsLoading } = useDailyUsers();
+  //   const { data: dailyUsers, isLoading: dailyUsersIsLoading } = useDailyUsers();
+  //   const dailyUsers = 0;
 
   const { data: totalMintedTokens, isLoading: totalAmountLoading } =
     useTotalAmountMintedTokens(userMetaMaskToken);
 
+  const [hasClaimStageOneReward, setHasClaimStageOneReward] = useState(false);
+
+  const {
+    data: hasStageOneReward,
+    isLoading: hasStageOneRewardLoading,
+    refetch: getHasStageOneReward,
+  } = useStageOneReward(userMetaMaskToken);
+
+  // Results
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
+  const [tokens, setTokens] = useState(null);
+
   useEffect(() => {
-    if (loading || dailyUsersIsLoading || totalAmountLoading) {
+    if (hasStageOneReward) {
+      setHasClaimStageOneReward(true);
+    } else {
+      setHasClaimStageOneReward(false);
+    }
+  }, [hasStageOneReward]);
+
+  useEffect(() => {
+    if (loading || totalAmountLoading || hasStageOneRewardLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [loading, dailyUsersIsLoading, totalAmountLoading]);
+  }, [loading, totalAmountLoading, hasStageOneRewardLoading]);
 
   const reduceAddress = (address) => {
     if (address && typeof address === "string") {
@@ -88,6 +110,12 @@ const Statistics = () => {
   const getPercent = (a, b) => {
     const percent = (a / b) * 100;
     return percent.toFixed(2);
+  };
+
+  const handleCloseResultsModal = () => {
+    getHasStageOneReward();
+    setIsResultsModalOpen(false);
+    setHasClaimStageOneReward(false);
   };
 
   const renderGameStatus = () => {
@@ -165,15 +193,24 @@ const Statistics = () => {
         <Title>
           Game <span>Statistics</span>
         </Title>
-        <ClaimReward />
+        {hasClaimStageOneReward && (
+          <ClaimReward
+            address={userMetaMaskToken}
+            hasClaimStageOneReward={hasClaimStageOneReward}
+            setHasClaimStageOneReward={setHasClaimStageOneReward}
+            getHasStageOneReward={getHasStageOneReward}
+            setIsResultsModalOpen={setIsResultsModalOpen}
+            setTokens={setTokens}
+          />
+        )}
         <Holder>
           <Box>
             <h4>Game Status</h4>
             {renderGameStatus()}
-            <TotalText>
+            {/* <TotalText>
               Daily Views:{" "}
               <span>{dailyUsers ? beautifyPrice(dailyUsers) : 0}</span>
-            </TotalText>
+            </TotalText> */}
           </Box>
           <LeaderboardsBox>
             <h4>Leaderboard</h4>
@@ -184,6 +221,13 @@ const Statistics = () => {
       </Content>
       <Footer page="game" />
       {loader && <Loading open={loader} />}
+      {isResultsModalOpen && (
+        <ResultsModal
+          open={isResultsModalOpen}
+          handleClose={handleCloseResultsModal}
+          tokens={tokens}
+        />
+      )}
     </Wrapper>
   );
 };

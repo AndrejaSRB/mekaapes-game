@@ -254,6 +254,16 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
     }
   };
 
+  const getStageOneRewardMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+        <Text
+          white
+          key={token.id}>{`You successfully claimed your reward!`}</Text>
+      ));
+    }
+  };
+
   const renderTokens = () => {
     if (tokens?.length > 0) {
       return tokens.map((token) => <li key={token.id}>{getMessage(token)}</li>);
@@ -343,6 +353,13 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
           <>
             <Title>Unstaking successfull!</Title>
             {getSimpleUnstakeMessage()}
+          </>
+        );
+      case "stage-one-claim":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getStageOneRewardMessage()}
           </>
         );
       default:

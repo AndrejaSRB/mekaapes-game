@@ -222,6 +222,19 @@ export class Contract {
     });
   }
 
+  // Claim Stage One Reward
+  async claimLeaderbordReward(rewardSign, gasLimit) {
+    return await this.mekaApesContract.claimLeaderbordReward(rewardSign, {
+      gasLimit: gasLimit,
+    });
+  }
+
+  // Check if user has reward from Stage 1
+  async leaderboardRewardClaimed(address) {
+    let reward = await this.mekaApesContract.leaderboardRewardClaimed(address);
+    return ethers.utils.formatUnits(reward);
+  }
+
   // DMT_ERC20 Contract functions:
 
   async getDMTBalance(address) {

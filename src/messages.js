@@ -24,6 +24,7 @@ export const ACTION_LOADING_CREW_UPGRADE = "Your Meka Crew gets updated. This pr
 export const ACTION_LOADING_CREW_REMOVE = "Removing NFTs from the Meka Crew in progess. This process might take a couple of minutes.";
 export const ACTION_LOADING_CREW_CLAIM = "Claiming $OG is in progress. This process might take a couple of minutes.";
 export const ACTION_BRUNING_ROBO = "Robo Ooga burn in progress. This process might take a couple of minutes.";
+export const ACTION_LOADING_CLAIM_STAGE_ONE_REWARD = "Claiming $OG is in progress. This process might take a couple of minutes.";
 
 export const getActionLoadingUpgrade = (id) =>
   `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;

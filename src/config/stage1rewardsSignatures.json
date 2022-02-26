@@ -1,0 +1,145 @@
+[
+    {
+        "address": "0x1733c7dEFE47c96dfda8D7e6b935a72D99Bac6b1",
+        "place": 1,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": "0x7caa24918817137970c162afe6a9ec13452be30c26529dac9c3583a8d83a36a8",
+            "_r": "0x446c4f813f4f37da5353910c6ec419046017244a66617a203376327f51b4ef62"
+        }
+    },
+    {
+        "address": "0x8Cf3307AaF2Dc94b6D10ea859eA8151c70Be5EcB",
+        "place": 2,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x4658bc34549db0ef48a7a7d654db645722c3b19b8f118b38ac79466f5cb5d695",
+            "_r": "0x95b7505b48a37c4852d58c14267dec6094b3aee685f098bd2983ac836ef90469"
+        }
+    },
+    {
+        "address": "0x58B3a28C3dF26407Fd45f833b101072FC492f23c",
+        "place": 3,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": "0x7792ebff5a4d6967e99c5a67e0afb57e00c38673ea554d44f662a30a0503c471",
+            "_r": "0x1d0805c90421aacd0aff2a14dbaf0b7a294063b9730196bac78357759e2e171d"
+        }
+    },
+    {
+        "address": "0x8194E4181b96aDD434e1c37E161e4fb2F92C5990",
+        "place": 4,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": "0x47abd2ae3d890bf4599082aa001fbcf4ff78c7ec8d3cdeb60fe658d7d0c129f7",
+            "_r": "0xf25abebf4782aa02e657afe367c37c12aa13859a34984aff836d59c997438053"
+        }
+    },
+    {
+        "address": "0xE4f15C618689ff0de68E110EE97d017B91C26871",
+        "place": 5,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x14459f86c763d89112f071def5cb49fc45ed054a1a9a40607dde58be5a3e9d56",
+            "_r": "0xefeb21d48f397b9840edbfcc69e75a0f14af62cbac765d3a011a662dc83364ff"
+        }
+    },
+    {
+        "address": "0xBAe1919ECed427Aa9182B9Eb0e7B2a3778f3DC72",
+        "place": 6,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x3609ffb592a7462ccba0df26281e631d8cbb13d7c3463e855aa5491fa3fe46ab",
+            "_r": "0x9dfd2e1350212771aa00c030b6caae5050ec460fb64494cf04971073adbbe625"
+        }
+    },
+    {
+        "address": "0xae23FdEec40600ca8d95a040985D8DC61A58601d",
+        "place": 7,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": "0x0f7ea2a71382d6f93c1247a59a1fc319f2185a1b91fd5c5e7e925f69be0b9c13",
+            "_r": "0x2ca7ea983863126065c0d59159f21417d0b05f2c98ef7f037c634941d8efc558"
+        }
+    },
+    {
+        "address": "0x1605a306502bd0c3E9aDE8e1afff2809b4C237Ed",
+        "place": 8,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x01710f4d63237a3617b8c004a69d316c0027fa429822dda7efeb52c662367b44",
+            "_r": "0xd5d5db97c191046aa17cf99ff1032f6d9f0e586e1a74389802260aca465a2156"
+        }
+    },
+    {
+        "address": "0x4842f1aEe89f256a4a93963803F0Df81481997e2",
+        "place": 9,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x1fa3c719dbf7c2d6f1c7e777cfabcdb00475232cb8dee9cf986d4d2038756d25",
+            "_r": "0x8be56a1da76ed0099dfde1b7fca79af5761b9bdc2a6a67b38fdf58566d0cf603"
+        }
+    },
+    {
+        "address": "0xA1F4791727217a1d6160e5a8995Ca138ccDA3D75",
+        "place": 10,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1c"
+            },
+            "_s": "0x03076027ad372af1a249bf449302476f0596834bd961bcede28fbd70ce973d66",
+            "_r": "0xf1eb94a0a161888123475d9287dd9517f4f8ea0ad101f1ead369791a801bc27b"
+        }
+    },
+    {
+        "address": "0x4E028D4253A0b285Ca12ADCD098FDa48bBa1a470",
+        "place": 11,
+        "rewardSign": {
+            "reward": "10500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x3e8a32da9e7e28369f37f96ccf4837068b4e4b064dcb0917eaf0b5890b16cbd5",
+            "_r": "0x76bd3f93dfb6a507dafe4b4cc64da461311c2ca536d08523b81018cdcbeac2a1"
+        }
+    }
+]
