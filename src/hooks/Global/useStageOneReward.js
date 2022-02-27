@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import contract from "../../services/contract";
+import contract from "../../services/contract_2";
 // ******** Function ********
 import { beautifyPrice } from "../../pages/Game/Factory/helper";
 
