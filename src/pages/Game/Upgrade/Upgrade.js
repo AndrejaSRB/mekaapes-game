@@ -543,10 +543,10 @@ const Upgrade = () => {
             <h4>Upgrade Robo Oogas with $DMT or $OG</h4>
             <h6>
               Upgrade Robo Oogas to make them produce more Crew $OG. Upgrading
-              with $OG requires to burn 1 Robo Ooga for each level-up. $DMT
-              upgrading does not require to burn Robo Oogas. You can upgrade
-              multiple levels in one transaction. Robo Ooga Levels only affect
-              the $OG production in Meka Crews.
+              with $OG requires you to burn 1 Robo Ooga for each level-up. $DMT
+              upgrading does not require you to burn Robo Oogas. You can upgrade
+              multiple levels in one transaction. Once in a Meka Crew, Robos
+              will earn $OG according to their level.
             </h6>
           </TitleBox>
           <LeftSide>

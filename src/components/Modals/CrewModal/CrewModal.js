@@ -284,7 +284,7 @@ const CrewModal = ({
 
   const renderSubTitle = () => {
     if (step === 1) {
-      return "Select the Meka Ape you want to be a lead of the crew.";
+      return "Select your MekaApe Crew Leader";
     } else if (step === 2) {
       return "Select the Robo Oogas which would like to be the crew.";
     } else if (step === 3) {
@@ -294,7 +294,7 @@ const CrewModal = ({
 
   const renderText = () => {
     if (step === 1) {
-      return `Click "Next" to see the Robo Oogas list.`;
+      return `Click next to see the list of available Robo Oogas that can be added to your crew.`;
     } else if (step === 2) {
       return `Click "Next" to see the crew overview.`;
     } else if (step === 3) {
@@ -547,7 +547,7 @@ const CrewModal = ({
           <Steps current={step - 1} progressDot>
             <CustomStep title="Pick MekaApe" description="" />
             <CustomStep title="Pick Robo Oogas" description="" />
-            <CustomStep title="Overview" description="" />
+            <CustomStep title="Crew Overview" description="" />
           </Steps>
         </StepsWrapper>
         <HelperText>Step: {step}/3</HelperText>

@@ -20,7 +20,12 @@ import contract from "../../../services/contract_2";
 // ******** Stores ********
 import { UserContext } from "../../../store/user-context";
 // ******** Text ********
-import { SELECT_CREW, SOMETHING_WENT_WRONG, ACTION_LOADING_CREW_REMOVE, ACTION_LOADING_CREW_CLAIM } from "../../../messages";
+import {
+  SELECT_CREW,
+  SOMETHING_WENT_WRONG,
+  ACTION_LOADING_CREW_REMOVE,
+  ACTION_LOADING_CREW_CLAIM,
+} from "../../../messages";
 // ******** Queires ********
 import {
   GET_STAKED_MEKA,
@@ -470,9 +475,9 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
         <TitleBox>
           <h4>Meka Crews</h4>
           <h6>
-            Create Meka Crews by selecting a MekaApe that’s currently staked in
-            the Factory. You can then add Robo Oogas to the crew to earn Crew
-            $OG. The higher the Meka level, the more Robo Oogas fit into a crew.
+            Create Meka Crews by selecting a staked MekaApe, and adding Robo
+            Oogas to earn Crew $OG. The higher the Meka level, the more Robo
+            Oogas fit into a crew and the higher the $OG crew multiplier.
           </h6>
         </TitleBox>
         <Headline>
