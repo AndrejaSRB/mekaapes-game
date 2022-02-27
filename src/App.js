@@ -7,7 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { notification } from "antd";
 // ******** Pages ********
 import Landing from "./pages/Landing/Landing";
-import Minting from "./pages/Minting/Minting";
+// import Minting from "./pages/Minting/Minting";
 // import TermsOfUse from "./pages/Terms/Terms";
 import Whitepaper from "./pages/Whitepaper/Whitepaper";
 import Factory from "./pages/Game/Factory/Factory";
@@ -20,7 +20,6 @@ import OogaAttacked from "./pages/Game/OogaAttacked/OogaAttacked";
 import WhitepaperOnePointFive from './pages/Whitepaper_1.5/Whitepaper_1.5';
 // ******** Stores ********
 import { UserContext } from "./store/user-context";
-import { MintedContext } from "./store/minted-context";
 // ******** Services ********
 import metamask from "./services/metamask";
 
@@ -30,7 +29,6 @@ const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME;
 
 const App = () => {
   const { saveUserMetaMaskToken, userMetaMaskToken } = useContext(UserContext);
-  const { isMintSale } = useContext(MintedContext);
 
   useEffect(() => {
     document.addEventListener("touchstart", function () {}, false);
@@ -83,7 +81,7 @@ const App = () => {
         {/* <Route path="/terms" element={<TermsOfUse />} /> */}
         <Route path="/whitepaper" element={<Whitepaper />} />
         <Route path="/whitepaper-1-5" element={<WhitepaperOnePointFive />} />
-        {isMintSale && <Route path="/minting" element={<Minting />} />}
+        {/* {isMintSale && <Route path="/minting" element={<Minting />} />} */}
         <Route path="/game/gifted" element={<OogaAttacked />} />
         <Route path="/game/factory" element={<Factory />} />
         <Route path="/game/statistics" element={<Statistics />} />

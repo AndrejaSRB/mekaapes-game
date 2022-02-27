@@ -25,7 +25,7 @@ import {
   REMOVE_FROM_CREW,
 } from "../../../eventsListeners";
 // ******** Service ********
-import contract from "../../../services/contract";
+import contract from "../../../services/contract_2";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Styles ********

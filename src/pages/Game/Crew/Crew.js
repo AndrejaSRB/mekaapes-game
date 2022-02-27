@@ -16,7 +16,7 @@ import useCrewClaimAvaliableReward from "../../../hooks/useCrewClaimAvaliableRew
 import { getReducedEstimatedGas, beautifyNumber } from "../Factory/helper";
 import { generateCrewInformation } from "./helper";
 // ******** Services ********
-import contract from "../../../services/contract";
+import contract from "../../../services/contract_2";
 // ******** Stores ********
 import { UserContext } from "../../../store/user-context";
 // ******** Text ********

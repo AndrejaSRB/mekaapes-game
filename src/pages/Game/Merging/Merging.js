@@ -293,11 +293,13 @@ const Merging = () => {
         if (BigNumber.isBigNumber(event.args.megaLevel)) {
           level = event.args.megaLevel.toNumber();
         }
-        tokens.push({
-          type: "merge",
-          id: tokenId,
-          level: level,
-        });
+        if (+keepMeka.id === +tokenId) {
+          tokens.push({
+            type: "merge",
+            id: tokenId,
+            level: level,
+          });
+        }
       });
     }
     setTokens(tokens);

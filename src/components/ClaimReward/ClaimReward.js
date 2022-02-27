@@ -17,7 +17,7 @@ import {
   ACTION_LOADING_CLAIM_STAGE_ONE_REWARD,
 } from "../../messages";
 // ******** contract ********
-import contract from "../../services/contract";
+import contract from "../../services/contract_2";
 // ******** Styles ********
 import { Wrapper, Box, ButtonWrapper } from "./ClaimReward.styles";
 

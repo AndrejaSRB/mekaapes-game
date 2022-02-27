@@ -123,46 +123,6 @@ export class Contract {
     );
   }
 
-  // create Crew
-  async createCrew(tokenIds, gasLimit) {
-    return await this.mekaApesContract.createCrew(tokenIds, {
-      gasLimit: gasLimit,
-    });
-  }
-
-  // remove Crew
-  async removeCrew(crewId, gasLimit) {
-    return await this.mekaApesContract.removeCrew(crewId, {
-      gasLimit: gasLimit,
-    });
-  }
-
-  // change Crew
-  async changeCrew(crewId, addTokenIds, removeTokenIds, gasLimit) {
-    return await this.mekaApesContract.changeCrew(
-      crewId,
-      addTokenIds,
-      removeTokenIds,
-      {
-        gasLimit: gasLimit,
-      }
-    );
-  }
-
-  // claim Crews reward
-  async claimCrewReward(crewIds, gasLimit) {
-    return await this.mekaApesContract.claimCrewReward(crewIds, {
-      gasLimit: gasLimit,
-    });
-  }
-
-  // Crew claim avaliable reward
-  async claimAvailableAmountMultipleCrews(crewIds) {
-    return await this.mekaApesContract.claimAvailableAmountMultipleCrews(
-      crewIds
-    );
-  }
-
   // merge two Meka Apes, one will be burned, and another will be kept
   // the burned one will give Mega Meka Ape
   // the first argument is saved token
@@ -201,12 +161,6 @@ export class Contract {
     return total.toNumber();
   }
 
-  // Max Robo Oogas per crew for some Meka Level
-  async getMaxCrewForMekaLevel(level) {
-    let spots = await this.mekaApesContract.maxCrewForMekaLevel(level);
-    return spots.toNumber();
-  }
-
   // Get Burn Credits
   async getUnstakeCreditsForAddress(address) {
     let credits = await this.mekaApesContract.getUnstakeCreditsForAddress(
@@ -220,19 +174,6 @@ export class Contract {
     return await this.mekaApesContract.burnOogaForUnstakeCredits(tokenIds, {
       gasLimit: gasLimit,
     });
-  }
-
-  // Claim Stage One Reward
-  async claimLeaderbordReward(rewardSign, gasLimit) {
-    return await this.mekaApesContract.claimLeaderbordReward(rewardSign, {
-      gasLimit: gasLimit,
-    });
-  }
-
-  // Check if user has reward from Stage 1
-  async leaderboardRewardClaimed(address) {
-    let reward = await this.mekaApesContract.leaderboardRewardClaimed(address);
-    return ethers.utils.formatUnits(reward);
   }
 
   // DMT_ERC20 Contract functions:
