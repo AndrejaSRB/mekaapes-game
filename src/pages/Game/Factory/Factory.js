@@ -786,7 +786,7 @@ const Factory = () => {
   };
 
   const handleClickUnstake = async () => {
-    if (selectedBurnCreditsRobo < burnCredits) {
+    if (selectedBurnCreditsRobo <= burnCredits) {
       let tokenIds = [];
       if (selectedStaked?.length > 0) {
         selectedStaked.forEach((token) => {
