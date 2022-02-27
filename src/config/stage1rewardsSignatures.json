@@ -141,5 +141,18 @@
             "_s": "0x3e8a32da9e7e28369f37f96ccf4837068b4e4b064dcb0917eaf0b5890b16cbd5",
             "_r": "0x76bd3f93dfb6a507dafe4b4cc64da461311c2ca536d08523b81018cdcbeac2a1"
         }
+    },
+    {
+        "address": "0xa48876dad6F0eD5308ED2074BaBdb75Ac1734a40",
+        "place": 12,
+        "rewardSign": {
+            "reward": "9500000000000000000000",
+            "_v": {
+                "type": "BigNumber",
+                "hex": "0x1b"
+            },
+            "_s": "0x069855a1682eba97c0a83735725f335e14d8841ba661bef3c7614c31d49407f7",
+            "_r": "0x2a8ab51aa582294021a0f559c6b93e47c6b51682d6012bb87cfa8b65013ae1a0"
+        }
     }
 ]
