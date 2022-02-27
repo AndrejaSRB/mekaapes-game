@@ -27,8 +27,8 @@ import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
 import { MintedContext } from "../../../store/minted-context";
 // ******** Hooks ********
-import usePrices from "../../../hooks/usePrices";
-import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
+import usePrices from "../../../hooks/Information/usePrices";
+import useIsDMTTransactionApproved from "../../../hooks/Global/useIsDMTTransactionApproved";
 // ******** Queires ********
 import {
   GET_ROBO_OOGAS_UNSTAKED_UPGRADE_TOKENS,

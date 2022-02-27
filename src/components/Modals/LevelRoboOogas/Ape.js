@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // ******** Images ********
 import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
-import useApeMetadata from "../../../hooks/useApeMetadata";
+import useApeMetadata from "../../../hooks/Global/useApeMetadata";
 // ******** Styles ********
 import { Ape, ApeImage } from "./LevelRoboOogas.styles";
 

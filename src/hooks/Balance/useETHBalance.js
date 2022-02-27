@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import metamask from "../services/metamask";
+import metamask from "../../../services/metamask";
 
 const getETHBalance = async (address) => {
   let balance = await metamask.getBalance(address);

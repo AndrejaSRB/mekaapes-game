@@ -29,9 +29,9 @@ import {
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
-import useWindowDimenstions from "../../../hooks/useWindowDimensions";
-import useListClaimAvaliableReward from "../../../hooks/useListClaimAvaliableReward";
-import useBurnCredits from "../../../hooks/useBurnCredits";
+import useWindowDimenstions from "../../../hooks/Global/useWindowDimensions";
+import useListClaimAvaliableReward from "../../../hooks/Factory/useListClaimAvaliableReward";
+import useBurnCredits from "../../../hooks/Factory/useBurnCredits";
 // ******** Functions ********
 import {
   getListLength,

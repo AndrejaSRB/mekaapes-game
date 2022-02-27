@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import contract from "../services/contract";
+import contract from "../../services/contract";
 // ******** Function ********
-import { beautifyPrice } from "../pages/Game/Factory/helper";
+import { beautifyPrice } from "../../pages/Game/Factory/helper";
 
 const getStageOneReward = async (address) => {
   let reward = await contract.leaderboardRewardClaimed(address);

@@ -28,7 +28,7 @@ import { MintedContext } from "../../../store/minted-context";
 import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
-import usePrices from "../../../hooks/usePrices";
+import usePrices from "../../../hooks/Information/usePrices";
 // ******** Text ********
 import {
   PRE_SALE_IS_ONGOING,

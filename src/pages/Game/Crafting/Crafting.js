@@ -23,11 +23,11 @@ import { MintedContext } from "../../../store/minted-context";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Hooks ********
-import usePrices from "../../../hooks/usePrices";
-import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
-import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
-import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
-import useMaxMintWithDMT from "../../../hooks/useMaxMintWithDMT";
+import usePrices from "../../../hooks/Information/usePrices";
+import useTotalMintedDMTTokens from "../../../hooks/Balance/useTotalMintedDMTTokens";
+import useTotalAmountMintedTokens from "../../../hooks/Balance/useTotalAmountMintedTokens";
+import useIsDMTTransactionApproved from "../../../hooks/Global/useIsDMTTransactionApproved";
+import useMaxMintWithDMT from "../../../hooks/Information/useMaxMintWithDMT";
 // ******** Services ********
 import gas from "../../../services/gas";
 // ******** Text ********

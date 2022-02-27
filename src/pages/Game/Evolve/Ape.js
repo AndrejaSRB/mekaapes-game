@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // ******** Images ********
 import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
-import useEvolveMetadata from "../../../hooks/useEvolveMetadata";
+import useEvolveMetadata from "../../../hooks/Global/useEvolveMetadata";
 // ******** Styles ********
 import { Ape, ApeImage } from "./Evolve.styles";
 

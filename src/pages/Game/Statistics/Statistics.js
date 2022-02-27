@@ -11,9 +11,8 @@ import ResultsModal from "../../../components/Modals/ResultModal/ResultModal";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
-// import useDailyUsers from "../../../hooks/useDailyUsers";
-import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
-import useStageOneReward from "../../../hooks/useStageOneReward";
+import useTotalAmountMintedTokens from "../../../hooks/Balance/useTotalAmountMintedTokens";
+import useStageOneReward from "../../../hooks/Global/useStageOneReward";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Funcstions ********
@@ -38,8 +37,6 @@ const Statistics = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [loader, setLoader] = useState(false);
   const { loading, data } = useQuery(GET_LEADERBOARD);
-  //   const { data: dailyUsers, isLoading: dailyUsersIsLoading } = useDailyUsers();
-  //   const dailyUsers = 0;
 
   const { data: totalMintedTokens, isLoading: totalAmountLoading } =
     useTotalAmountMintedTokens(userMetaMaskToken);

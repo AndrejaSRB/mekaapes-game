@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // ******** Images ********
 import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
-import useApeMetadata from "../../../hooks/useApeMetadata";
+import useApeMetadata from "../../../hooks/Global/useApeMetadata";
 
 const CrewStepApe = ({ ape, handleClickApe, getIfActive, type }) => {
   const { data, isLoading } = useApeMetadata(ape);

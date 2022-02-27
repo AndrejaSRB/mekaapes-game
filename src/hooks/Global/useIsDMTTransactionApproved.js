@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import contract from "../services/contract";
+import contract from "../../services/contract";
 
 const getStatus = async (token, price) => {
   let status = await contract.isDMTtransactionApproved(token, price);

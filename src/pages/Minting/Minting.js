@@ -18,10 +18,10 @@ import withConnect from "../../hoc/withConnect";
 import { UserContext } from "../../store/user-context";
 import { MintedContext } from "../../store/minted-context";
 // ******** Hooks ********
-import usePrices from "../../hooks/usePrices";
-import useETHBalance from "../../hooks/useETHBalance";
-import useMaxTokenAmount from "../../hooks/useMaxTokenAmount";
-import useTotalAmountMintedTokens from "../../hooks/useTotalAmountMintedTokens";
+import usePrices from "../../hooks/Information/usePrices";
+import useETHBalance from "../../hooks/Balance/useETHBalance";
+import useMaxTokenAmount from "../../hooks/Information/useMaxTokenAmount";
+import useTotalAmountMintedTokens from "../../hooks/Balance/useTotalAmountMintedTokens";
 // ******** Icons ********
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 // ******** Services ********

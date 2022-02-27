@@ -11,7 +11,7 @@ import Loading from "../../../components/Modals/Loading/Loading";
 import ActionsLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 import ResultModal from "../../../components/Modals/ResultModal/ResultModal";
 // ******** Queires ********
-import useCrewClaimAvaliableReward from "../../../hooks/useCrewClaimAvaliableReward";
+import useCrewClaimAvaliableReward from "../../../hooks/Factory/useCrewClaimAvaliableReward";
 // ******** Functions ********
 import { getReducedEstimatedGas, beautifyNumber } from "../Factory/helper";
 import { generateCrewInformation } from "./helper";
