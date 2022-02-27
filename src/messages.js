@@ -12,6 +12,7 @@ export const SOMETHING_WENT_WRONG = "Transaction failed. :(";
 export const SOMETHING_WENT_WRONG_UNSTAKE =
   "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 2000 $OG.";
 export const SELECT_CREW = "Please select some crew.";
+export const DONT_ENOUGH_CREDITS = "You don't have enough unstaking credits.";
 
 // ******** Actions loading messages ********
 export const ACTION_LOADING_CLAIM =

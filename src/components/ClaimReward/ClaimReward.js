@@ -133,24 +133,22 @@ const ClaimReward = ({
   return (
     <Wrapper>
       <Box>
-        <h4>Claim Reward</h4>
+        <h4>Claim Stage 1 $OG Reward</h4>
         {hasReward && (
           <p>
-            Congratulations you were <span>#{place}</span> in stage 1 and you
-            get
-            <span> {reward && beautifyPrice(reward)} $OG</span> claim reward.
+            Congratulations you ranked <span>#{place}</span> in Stage 1! You’re
+            rewarded
+            <span> {reward && beautifyPrice(reward)} $OG</span>.
           </p>
         )}
-        {!hasReward && !isOnTheList  && (
+        {!hasReward && !isOnTheList && (
           <p>
             We are sorry, but you didn't manage to place yourself in one of the
             first 420 positions.
           </p>
         )}
-        {!hasReward && isOnTheList  && (
-          <p>
-            You have already claimed your reward.
-          </p>
+        {!hasReward && isOnTheList && (
+          <p>You’ve already claimed your $OG reward.</p>
         )}
         {hasReward && (
           <ButtonWrapper onClick={handleClickClaim}>

@@ -23,6 +23,7 @@ import {
   SOMETHING_WENT_WRONG,
   SOMETHING_WENT_WRONG_UNSTAKE,
   ACTION_LOADING_CLAIM,
+  DONT_ENOUGH_CREDITS,
   getActionLoadingStakeMessage,
   getActionLoadingUnstakeMessage,
 } from "../../../messages";
@@ -838,7 +839,7 @@ const Factory = () => {
         message.error(SELECT_SOME_STAKED_APE);
       }
     } else {
-      message.error("You don't have enough credits.");
+      message.error(DONT_ENOUGH_CREDITS);
     }
   };
 

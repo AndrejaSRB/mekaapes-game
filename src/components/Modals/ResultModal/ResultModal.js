@@ -229,7 +229,7 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
     if (tokens?.length > 1) {
       return (
         <>
-          <Text>{`You successfully get new unstake credits.`}</Text>
+          <Text>{`You successfully received new unstaking credits.`}</Text>
           {/* <List>{renderTokens()}</List> */}
         </>
       );
@@ -238,7 +238,7 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
         return tokens.map((token, index) => (
           <Text
             white
-            key={index}>{`You successfully get new unstake credits.`}</Text>
+            key={index}>{`You successfully received new unstaking credits.`}</Text>
         ));
       }
     }
