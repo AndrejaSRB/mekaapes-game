@@ -38,7 +38,6 @@ const OogaAttacked = ({ setLoader, reduceAddress }) => {
   }, [loading, setLoader]);
 
   useEffect(() => {
-    console.log("data", data);
     if (data?.gameStatus !== null && data?.gameStatus !== undefined) {
       if (data?.gameStatus?.roboOogasGifted) {
         setTotalGifted(data?.gameStatus?.roboOogasGifted);

@@ -102,7 +102,10 @@ export const TitleBox = styled.div`
   }
 `;
 
-export const OogearBox = styled.div``;
+export const OogearBox = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
 
 export const Counter = styled.div`
   display: flex;
@@ -226,9 +229,10 @@ export const HelperOGText = styled.p`
   @media only screen and (min-width: 1200px) {
     font-size: 17px;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    justify-content: center;
     align-items: center;
-    padding-left: 30px;
+    /* padding-left: 30px; */
     span {
       display: inline;
       padding-left: 15px;
@@ -377,5 +381,33 @@ export const DmtBoxWrapper = styled.div`
     display: flex;
     width: 460px;
     justify-content: flex-end;
+  }
+`;
+
+export const ButtonOGMint = styled.button`
+  background: ${theme.color.red};
+  transition: ${theme.transition};
+  cursor: pointer;
+  border: none;
+  color: ${theme.color.white};
+  border-radius: 400px;
+  height: 80px;
+  width: 240px;
+  font-size: 21px;
+  margin: 0 auto;
+  &:hover {
+    background: ${theme.color.redHover};
+  }
+  &:disabled {
+    color: ${theme.color.white};
+    border: 1px solid #ffffff;
+    background: ${theme.color.secondButton};
+    cursor: not-allowed;
+  }
+  @media only screen and (min-width: 600px) {
+    width: 380px;
+  }
+  @media only screen and (min-width: 1200px) {
+    width: 460px;
   }
 `;

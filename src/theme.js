@@ -18,9 +18,9 @@ export const color = {
     '2': `#CD7F32`,
     '3': `#D3D3D9`,
     '4': `#FAD824`,
+    '5': `#7BDAF2`,
+    '6': `#9D2CE5`,
   },
 };
 export const transition = `all 0.4s`;
 export const boxBackground = `linear-gradient(180deg,rgba(58, 70, 98, 0.7) 0%,#100419 84.37%);`;
-
-// @media only screen and (min-width: 769px)

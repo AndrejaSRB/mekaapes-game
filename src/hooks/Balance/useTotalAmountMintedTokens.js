@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import contract from "../services/contract";
+import contract from "../../services/contract";
 
 const INTERVAL_PERIOD = 300000; // 5min
 

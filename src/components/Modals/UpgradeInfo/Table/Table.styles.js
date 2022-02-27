@@ -41,10 +41,12 @@ export const Headline = styled.div`
     width: 14%;
   }
   .middle {
-    width: 24%;
+    /* width: 24%; */
+    width: 40%
   }
   .full {
-    width: 31%;
+    /* width: 31%; */
+    width: 46%;
   }
   @media only screen and (min-width: 1024px) {
     font-size: 21px;
@@ -65,11 +67,12 @@ export const Cell = styled.div`
     font-weight: 600;
   }
   .medium {
-    width: 24%;
+    /* width: 24%; */
+    width: 40%;
   }
 
   .bigger {
-    width: 31%;
+    width: 46%;
     font-size: 14px;
     padding-right: 8px;
     span {
@@ -79,6 +82,9 @@ export const Cell = styled.div`
     &:last-child {
         padding-right: 0;
     }
+  }
+  .third {
+    width: 27%;
   }
   &:last-child {
       border-bottom: 0;

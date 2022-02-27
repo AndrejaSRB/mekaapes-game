@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { BigNumber } from 'ethers';
+import { BigNumber } from "ethers";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 // ******** Services ********
@@ -189,4 +189,17 @@ export const getReducedEstimatedGas = (gasEstimation) => {
     totalGasEstimation = gasEstimation.add(30000);
   }
   return totalGasEstimation;
+};
+
+export const getBurnCreditsClassName = (burnCredits, currentNumber) => {
+  let className = "numbers empty";
+  if (burnCredits > 0) {
+    if (currentNumber > burnCredits) {
+      className = "numbers empty";
+    } else {
+      className = "numbers";
+    }
+  }
+
+  return className;
 };

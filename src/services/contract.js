@@ -79,14 +79,13 @@ export class Contract {
   // stake multiple items
   async stake(itemList, gasLimit) {
     return await this.mekaApesContract.stake(itemList, {
-        gasLimit: gasLimit
+      gasLimit: gasLimit,
     });
   }
 
   // unstake multiple items
-  async unstake(itemList, price, gasLimit) {
+  async unstake(itemList, gasLimit) {
     return await this.mekaApesContract.unstake(itemList, {
-      value: price,
       gasLimit: gasLimit,
     });
   }
@@ -94,7 +93,7 @@ export class Contract {
   // claim reward for multiple items
   async claimReward(itemList, gasLimit) {
     return await this.mekaApesContract.claimReward(itemList, {
-        gasLimit: gasLimit
+      gasLimit: gasLimit,
     });
   }
 
@@ -105,11 +104,23 @@ export class Contract {
     );
   }
 
-  // level up Robo Ooga
-  async levelUpRoboOooga(item, gasLimit) {
-    return await this.mekaApesContract.levelUpRoboOooga(item, {
+  // level up Robo Ooga with $DMT
+  async levelUpRoboOoga(item, levels, gasLimit) {
+    return await this.mekaApesContract.levelUpRoboOoga(item, levels, {
       gasLimit: gasLimit,
     });
+  }
+
+  // level up Robo Ooga with $OG
+  async levelUpRoboOogaWithOG(item, levels, burnTokenIds, gasLimit) {
+    return await this.mekaApesContract.levelUpRoboOogaWithOG(
+      item,
+      levels,
+      burnTokenIds,
+      {
+        gasLimit: gasLimit,
+      }
+    );
   }
 
   // merge two Meka Apes, one will be burned, and another will be kept
@@ -148,6 +159,21 @@ export class Contract {
   async getMaxMintWithDMTTokens() {
     let total = await this.mekaApesContract.maxMintWithDMT();
     return total.toNumber();
+  }
+
+  // Get Burn Credits
+  async getUnstakeCreditsForAddress(address) {
+    let credits = await this.mekaApesContract.getUnstakeCreditsForAddress(
+      address
+    );
+    return credits.toNumber();
+  }
+
+  // Burn Robo Oogas for unstaking credits
+  async burnOogaForUnstakeCredits(tokenIds, gasLimit) {
+    return await this.mekaApesContract.burnOogaForUnstakeCredits(tokenIds, {
+      gasLimit: gasLimit,
+    });
   }
 
   // DMT_ERC20 Contract functions:

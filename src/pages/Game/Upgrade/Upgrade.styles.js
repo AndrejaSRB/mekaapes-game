@@ -125,6 +125,7 @@ export const ButtonBox = styled.div`
       background: ${theme.color.redHover};
     }
     &:disabled {
+      cursor: not-allowed;
       color: ${theme.color.white};
       border: 1px solid #ffffff;
       background: ${theme.color.secondButton};
@@ -137,6 +138,52 @@ export const ButtonBox = styled.div`
     @media only screen and (min-width: 1200px) {
       width: 388px;
     }
+  }
+`;
+
+export const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  @media only screen and (min-width: 600px) {
+    div {
+      button {
+        width: 215px;
+        font-size: 21px;
+      }
+    }
+  }
+  @media only screen and (min-width: 789px) {
+    flex-direction: row;
+    div {
+      &:first-child {
+        margin-right: 64px;
+      }
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    div {
+      button {
+        width: 240px;
+      }
+    }
+  }
+`;
+
+export const Price = styled.span`
+  color: ${theme.color.white};
+  margin-bottom: 32px;
+  margin-top: 12px;
+  height: 26px;
+  @media only screen and (min-width: 1024px) {
+    font-size: 18px;
   }
 `;
 
@@ -208,8 +255,9 @@ export const LeftSide = styled.div`
   color: ${theme.color.white};
   display: none;
   @media only screen and (min-width: 1024px) {
+    padding-top: 48px;
     padding-right: 20px;
-    width: calc((100% - 380px) / 2);
+    width: calc((100% - 545px) / 2);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -221,16 +269,23 @@ export const LeftSide = styled.div`
   }
 `;
 export const Middle = styled.div`
+  @media only screen and (min-width: 789px) {
+    width: 450px;
+    margin: 0 auto;
+  }
   @media only screen and (min-width: 1024px) {
-    width: 380px;
+    width: 545px;
+    padding: 0 30px;
   }
 `;
+
 export const RightSide = styled.div`
   color: ${theme.color.white};
   display: none;
   @media only screen and (min-width: 1024px) {
+    padding-top: 48px;
     padding-left: 20px;
-    width: calc((100% - 380px) / 2);
+    width: calc((100% - 545px) / 2);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -242,13 +297,23 @@ export const RightSide = styled.div`
   }
 `;
 
+export const ApesWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const ApeBox = styled.div`
   text-align: center;
+  @media only screen and (min-width: 789px) {
+    &:first-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 export const Ape = styled.div`
-  width: 160px;
-  height: 160px;
+  width: 80px;
+  height: 80px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -276,13 +341,21 @@ export const Ape = styled.div`
     width: 100%;
     text-align: center;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 15px;
     margin: 0;
     span {
       display: block;
       width: 100%;
       text-align: center;
     }
+  }
+  @media only screen and (min-width: 600px) {
+    width: 120px;
+    height: 120px;
+  }
+  @media only screen and (min-width: 780px) {
+    width: 160px;
+    height: 160px;
   }
   @media only screen and (min-width: 1024px) {
     width: 180px;
@@ -298,7 +371,7 @@ export const Ape = styled.div`
 `;
 
 export const PlaceholderImage = styled.div`
-  opacity: ${({ active }) => (active ? 1 : 0.3)};;
+  opacity: ${({ active }) => (active ? 1 : 0.3)}; ;
 `;
 
 export const Name = styled.div`
@@ -362,5 +435,86 @@ export const InfoIcon = styled.div`
     font-size: 38px;
     top: 54px;
     right: 90px;
+  }
+`;
+
+export const CounterWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+export const CounterLabel = styled.div`
+  color: ${theme.color.white};
+  margin-bottom: 16px;
+  margin-top: 16px;
+  text-align: center;
+  @media only screen and (min-width: 1024px) {
+    font-size: 20px;
+  }
+`;
+export const Counter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${theme.color.white};
+  margin-bottom: 24px;
+  .number {
+    margin: 0 20px;
+    font-size: 30px;
+    color: ${theme.color.white};
+  }
+  .minus {
+    border-radius: 100%;
+    border: 5px solid ${theme.color.green};
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: ${theme.transition};
+    cursor: pointer;
+    &:hover {
+      background: ${theme.color.green};
+    }
+  }
+  .minus.disabled {
+    cursor: not-allowed;
+    &:hover {
+      background: transparent;
+    }
+  }
+  .plus {
+    border-radius: 100%;
+    border: 5px solid ${theme.color.green};
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: ${theme.transition};
+    cursor: pointer;
+    &:hover {
+      background: ${theme.color.green};
+    }
+  }
+  .plus.disabled {
+    cursor: not-allowed;
+    &:hover {
+      background: transparent;
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    .number {
+      font-size: 35px;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .plus,
+    .minus {
+      width: 55px;
+      height: 55px;
+      span > svg {
+        font-size: 30px;
+      }
+    }
   }
 `;

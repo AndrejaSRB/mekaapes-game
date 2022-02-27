@@ -3,8 +3,8 @@ import { ethers, BigNumber } from "ethers";
 // ******** Stores ********
 import { UserContext } from "./user-context";
 // ******** Hooks ********
-import useDMTBalance from "../hooks/useDMTBalance";
-import useOGBalance from "../hooks/useOGBalance";
+import useDMTBalance from "../hooks/Balance/useDMTBalance";
+import useOGBalance from "../hooks/Balance/useOGBalance";
 
 export const BalanceContext = createContext({
   dmtBalance: null,

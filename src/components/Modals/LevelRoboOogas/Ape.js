@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // ******** Images ********
 import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
-import useApeMetadata from "../../../hooks/useApeMetadata";
+import useApeMetadata from "../../../hooks/Global/useApeMetadata";
 // ******** Styles ********
 import { Ape, ApeImage } from "./LevelRoboOogas.styles";
 
@@ -58,12 +58,6 @@ const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
         />
       ) : (
         renderApeImage()
-        // <ApeImage
-        //   active={getIfActive(ape.id)}
-        //   currentLvl={ape.level}
-        //   src={`https://mekaapes.s3.amazonaws.com/images/${ape.id}.png?1222259157.415`}
-        //   alt={ape.id}
-        // />
       )}
     </Ape>
   );

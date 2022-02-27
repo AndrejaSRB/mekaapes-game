@@ -10,13 +10,22 @@ export const SELECT_SOME_UNSTAKED_APE = "You have to select some unstaked ape.";
 export const SELECT_SOME_STAKED_APE = "You have to select some staked ape.";
 export const SOMETHING_WENT_WRONG = "Transaction failed. :(";
 export const SOMETHING_WENT_WRONG_UNSTAKE =
-  "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 6000 $OG.";
+  "Transaction failed. :( Check your selected Robo Oogas if they accumulated min 2000 $OG.";
+export const SELECT_CREW = "Please select some crew.";
+export const DONT_ENOUGH_CREDITS = "You don't have enough unstaking credits.";
 
 // ******** Actions loading messages ********
 export const ACTION_LOADING_CLAIM =
   "Claiming $OG is in progress. It might take a couple of minutes.";
 export const ACTION_LOADING_MERGE =
   "Merging your MekaApes is in the progress. Your new Mega Meka will come soon. It could take a couple of minutes.";
+
+export const ACTION_LOADING_CREW_CREATION = "Your Meka Crew gets created. It might take a couple of minutes.";
+export const ACTION_LOADING_CREW_UPGRADE = "Your Meka Crew gets updated. This process might take a couple of minutes.";
+export const ACTION_LOADING_CREW_REMOVE = "Removing NFTs from the Meka Crew in progess. This process might take a couple of minutes.";
+export const ACTION_LOADING_CREW_CLAIM = "Claiming $OG is in progress. This process might take a couple of minutes.";
+export const ACTION_BRUNING_ROBO = "Robo Ooga burn in progress. This process might take a couple of minutes.";
+export const ACTION_LOADING_CLAIM_STAGE_ONE_REWARD = "Claiming $OG is in progress. This process might take a couple of minutes.";
 
 export const getActionLoadingUpgrade = (id) =>
   `Robo Ooga #${id} gets an upgrade! It will receive a new level soon. It might take a couple of minutes.`;

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import contract from "../services/contract";
+import contract from "../../services/contract";
 
 const getBalance = async (address) => {
   let balance = await contract.getDMTBalance(address);

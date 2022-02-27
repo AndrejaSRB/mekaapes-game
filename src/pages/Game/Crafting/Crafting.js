@@ -23,11 +23,11 @@ import { MintedContext } from "../../../store/minted-context";
 // ******** Services ********
 import contract from "../../../services/contract";
 // ******** Hooks ********
-import usePrices from "../../../hooks/usePrices";
-import useTotalMintedDMTTokens from "../../../hooks/useTotalMintedDMTTokens";
-import useTotalAmountMintedTokens from "../../../hooks/useTotalAmountMintedTokens";
-import useIsDMTTransactionApproved from "../../../hooks/useIsDMTTransactionApproved";
-import useMaxMintWithDMT from "../../../hooks/useMaxMintWithDMT";
+import usePrices from "../../../hooks/Information/usePrices";
+import useTotalMintedDMTTokens from "../../../hooks/Balance/useTotalMintedDMTTokens";
+import useTotalAmountMintedTokens from "../../../hooks/Balance/useTotalAmountMintedTokens";
+import useIsDMTTransactionApproved from "../../../hooks/Global/useIsDMTTransactionApproved";
+import useMaxMintWithDMT from "../../../hooks/Information/useMaxMintWithDMT";
 // ******** Services ********
 import gas from "../../../services/gas";
 // ******** Text ********
@@ -68,7 +68,6 @@ import {
   Counter,
   Button,
   HelperText,
-  ButtonBox,
   DmtBox,
   Text,
   CounterBox,
@@ -78,6 +77,7 @@ import {
   BalanceMobile,
   BalanceDesktop,
   DmtBoxWrapper,
+  ButtonOGMint,
 } from "./Crafting.styles";
 
 const MAX_TOKEN_AMOUNT = 4;
@@ -453,6 +453,8 @@ const Crafting = () => {
     makeRandomSubscription(receipt, contract, onRandomsReceived);
   };
 
+  // We are not using anymore for Stage 1.5
+  // eslint-disable-next-line no-unused-vars
   const handleClickMintWithOG = async () => {
     if (oogearCounter > 0) {
       if (checkBalance(oogearCounter, mintOGPrice, OGBalanceBigNumber)) {
@@ -668,7 +670,7 @@ const Crafting = () => {
                   <PlusOutlined />
                 </div>
               </Counter>
-              <ButtonBox>
+              {/* <ButtonBox>
                 <button
                   disabled={getOGBtnIsDisabled()}
                   onClick={handleClickMintWithOG}>
@@ -679,8 +681,13 @@ const Crafting = () => {
                   onClick={handleClickMintWithOGAndStake}>
                   $OG Mint & Stake
                 </button>
-              </ButtonBox>
-              <HelperOGText>
+              </ButtonBox> */}
+              <ButtonOGMint
+                disabled={getOGBtnIsDisabled()}
+                onClick={handleClickMintWithOGAndStake}>
+                $OG Mint & Stake
+              </ButtonOGMint>
+              {/* <HelperOGText>
                 Mint Price:{" "}
                 {beautifyPrice(convertBigNumberToPrice(mintOGPrice))} $OG{" "}
                 <span>
@@ -688,6 +695,11 @@ const Crafting = () => {
                   {beautifyPrice(convertBigNumberToPrice(mintAndStakeOGPrice))}{" "}
                   $OG
                 </span>
+              </HelperOGText> */}
+              <HelperOGText>
+                Mint & Stake Price:{" "}
+                {beautifyPrice(convertBigNumberToPrice(mintAndStakeOGPrice))}{" "}
+                $OG
               </HelperOGText>
             </OogearBox>
             <BalanceDesktop>
@@ -763,7 +775,9 @@ const Crafting = () => {
             risk that the Mint gets gifted to a random Mega Meka holder. Minting
             with $DMT reduces that risk to only 5%. $DMT Mint is limited to
             ${
-              maxAmountMintWithDMT ? numberWithCommas(maxAmountMintWithDMT) : "20,000"
+              maxAmountMintWithDMT
+                ? numberWithCommas(maxAmountMintWithDMT)
+                : "20,000"
             } mints and your NFTs will be staked automatically.`}
           </Text>
         </MainBox>

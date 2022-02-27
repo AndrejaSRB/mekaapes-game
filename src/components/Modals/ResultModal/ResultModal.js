@@ -26,11 +26,13 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
     if (token?.type === "crafting") {
       if (token.stolen === null) {
         return (
-          <Text white>{`You successfully minted ${token.name} #${token.id}!`}</Text>
+          <Text
+            white>{`You successfully minted ${token.name} #${token.id}!`}</Text>
         );
       } else {
         return (
-          <Text white>{`${token.name} #${token.id} was gifted to MekaApe #${token.stolenApeId}!`}</Text>
+          <Text
+            white>{`${token.name} #${token.id} was gifted to MekaApe #${token.stolenApeId}!`}</Text>
         );
       }
     } else if (token?.type === "evolve") {
@@ -159,6 +161,109 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
     }
   };
 
+  const getRemoveCrewMessage = () => {
+    console.log("getRemoveCrewMessage", tokens);
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully removed meka crews.`}</Text>
+          {/* <List>{renderTokens()}</List> */}
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token) => (
+          <Text
+            white
+            key={
+              token.id
+            }>{`You successfully removed meka crew #${token.id}!`}</Text>
+        ));
+      }
+    }
+  };
+
+  const getCreateCrewMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully created meka crews.`}</Text>
+          {/* <List>{renderTokens()}</List> */}
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token) => (
+          <Text
+            white
+            key={
+              token.id
+            }>{`You successfully created meka crew #${token.id}!`}</Text>
+        ));
+      }
+    }
+  };
+
+  const getChangeCrewMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully updated meka crew.`}</Text>
+          {/* <List>{renderTokens()}</List> */}
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token) => (
+          <Text
+            white
+            key={
+              token.id
+            }>{`You successfully updated meka crew #${token.id}!`}</Text>
+        ));
+      }
+    }
+  };
+
+  const getBurnMessage = () => {
+    if (tokens?.length > 1) {
+      return (
+        <>
+          <Text>{`You successfully received new unstaking credits.`}</Text>
+          {/* <List>{renderTokens()}</List> */}
+        </>
+      );
+    } else {
+      if (tokens?.length > 0) {
+        return tokens.map((token, index) => (
+          <Text
+            white
+            key={index}>{`You successfully received new unstaking credits.`}</Text>
+        ));
+      }
+    }
+  };
+
+  const getSimpleUnstakeMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+        <Text white key={token.id}>{`You successfully claimed ${beautifyNumber(
+          token.amount
+        )} $OG!`}</Text>
+      ));
+    }
+  };
+
+  const getStageOneRewardMessage = () => {
+    if (tokens?.length > 0) {
+      return tokens.map((token) => (
+        <Text
+          white
+          key={token.id}>{`You successfully claimed your reward!`}</Text>
+      ));
+    }
+  };
+
   const renderTokens = () => {
     if (tokens?.length > 0) {
       return tokens.map((token) => <li key={token.id}>{getMessage(token)}</li>);
@@ -201,16 +306,60 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
           </>
         );
       case "unstake":
-        return <>
-        <Title>Unstaking successfull!</Title>
-        <Text>Here’s what happened:</Text>
-        {getUnstakeMessage()}
-        </>;
+        return (
+          <>
+            <Title>Unstaking successfull!</Title>
+            <Text>Here’s what happened:</Text>
+            {getUnstakeMessage()}
+          </>
+        );
       case "upgrade":
         return (
           <>
             <Title>Congratulations!</Title>
             {getUpgradeMessage()}
+          </>
+        );
+      case "crew-remove":
+        return (
+          <>
+            <Title>Removing successfull!</Title>
+            {getRemoveCrewMessage()}
+          </>
+        );
+      case "crew-create":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getCreateCrewMessage()}
+          </>
+        );
+      case "crew-change":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getChangeCrewMessage()}
+          </>
+        );
+      case "burn":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getBurnMessage()}
+          </>
+        );
+      case "simple-unstake":
+        return (
+          <>
+            <Title>Unstaking successfull!</Title>
+            {getSimpleUnstakeMessage()}
+          </>
+        );
+      case "stage-one-claim":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getStageOneRewardMessage()}
           </>
         );
       default:

@@ -28,7 +28,7 @@ import { MintedContext } from "../../../store/minted-context";
 import { BalanceContext } from "../../../store/balance-context";
 import { UserContext } from "../../../store/user-context";
 // ******** Hooks ********
-import usePrices from "../../../hooks/usePrices";
+import usePrices from "../../../hooks/Information/usePrices";
 // ******** Text ********
 import {
   PRE_SALE_IS_ONGOING,
@@ -118,7 +118,15 @@ const Merging = () => {
       stakedMekaData &&
       stakedMekaData.spaceOogas
     ) {
-      setList([...unstakedMekaData.spaceOogas, ...stakedMekaData.spaceOogas]);
+      let stakedWithoutCrew = [];
+      if (stakedMekaData?.spaceOogas?.length > 0) {
+        stakedMekaData.spaceOogas.forEach((meka) => {
+          if (meka.crewId === null || meka.crewId === undefined) {
+            stakedWithoutCrew.push(meka);
+          }
+        });
+      }
+      setList([...unstakedMekaData.spaceOogas, ...stakedWithoutCrew]);
     } else {
       setList(null);
     }
@@ -285,11 +293,13 @@ const Merging = () => {
         if (BigNumber.isBigNumber(event.args.megaLevel)) {
           level = event.args.megaLevel.toNumber();
         }
-        tokens.push({
-          type: "merge",
-          id: tokenId,
-          level: level,
-        });
+        if (+keepMeka.id === +tokenId) {
+          tokens.push({
+            type: "merge",
+            id: tokenId,
+            level: level,
+          });
+        }
       });
     }
     setTokens(tokens);

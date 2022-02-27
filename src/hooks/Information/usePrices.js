@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 // ******** Services ********
-import prices from "../services/prices";
+import prices from "../../services/prices";
 
 const getAllPrices = async () => {
   let allPrices = await prices.getPrices();

@@ -14,6 +14,8 @@ import StakedApe from "./StakedApe";
 import UnstakeRoboApe from "./UnstakeRoboApe";
 import UnstakeMekaApe from "./UnstakeMekaApe";
 import ActionLoading from "../../../components/Modals/ActionLoading/ActionLoading";
+import Crew from "../Crew/Crew";
+import BurnRoboModal from "../../../components/Modals/BurnRoboModal/BurnRoboModal";
 // ******** Messages ********
 import {
   SELECT_SOME_UNSTAKED_APE,
@@ -21,14 +23,16 @@ import {
   SOMETHING_WENT_WRONG,
   SOMETHING_WENT_WRONG_UNSTAKE,
   ACTION_LOADING_CLAIM,
+  DONT_ENOUGH_CREDITS,
   getActionLoadingStakeMessage,
   getActionLoadingUnstakeMessage,
 } from "../../../messages";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
-import useWindowDimenstions from "../../../hooks/useWindowDimensions";
-import useListClaimAvaliableReward from "../../../hooks/useListClaimAvaliableReward";
+import useWindowDimenstions from "../../../hooks/Global/useWindowDimensions";
+import useListClaimAvaliableReward from "../../../hooks/Factory/useListClaimAvaliableReward";
+import useBurnCredits from "../../../hooks/Factory/useBurnCredits";
 // ******** Functions ********
 import {
   getListLength,
@@ -36,20 +40,19 @@ import {
   handleClickApe,
   handleClickStakedApe,
   arrangeStakedMobileList,
-  getApeName,
-  getStakedRoboAmount,
   beautifyNumber,
   getReducedEstimatedGas,
+  getBurnCreditsClassName,
 } from "./helper";
 // ******** Queires ********
 import {
   GET_STAKED_APE,
   GET_UNSTAKE_MEKA_APES,
   GET_UNSTAKE_ROBO_OOGAS,
+  GET_ALL_MY_ROBO_OOGAS,
 } from "../../../queries";
 // ******** Services ********
 import contract from "../../../services/contract";
-import gas from "../../../services/gas";
 // ******** Store ********
 import { UserContext } from "../../../store/user-context";
 import { BalanceContext } from "../../../store/balance-context";
@@ -60,8 +63,6 @@ import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import {
   CLAIM_REWARD,
   getAllEvents,
-  ATTACK_REWARD,
-  makeRandomSubscription,
 } from "../../../eventsListeners";
 // ******** Styles ********
 import {
@@ -89,6 +90,10 @@ import {
   Subtitle,
   ButtonClaim,
   SelectedCounter,
+  Tabs,
+  Tab,
+  BurnSection,
+  BurnButton,
 } from "./Factory.styles";
 
 const NoItemFound = () => (
@@ -103,6 +108,8 @@ const Factory = () => {
   const { dmtBalance, oogearBalance, getOogearBalance } =
     useContext(BalanceContext);
   const { width } = useWindowDimenstions();
+  // Tabs
+  const [activeTab, setActiveTab] = useState("factory");
   const [selectAllStaked, setSelectAllStaked] = useState(false);
   const [selectAllUnstakedMeka, setSelectAllUnstakedMeka] = useState(false);
   const [selectAllUnstakedRobo, setSelectAllUnstakedRobo] = useState(false);
@@ -111,7 +118,7 @@ const Factory = () => {
   const [selectedUnstakedMeka, setSelectedUnstakedMeka] = useState([]);
   const [selectedStaked, setSelectedStaked] = useState([]);
 
-  const [stakedData, setStakedData] = useState(null);
+  const [stakedData, setStakedData] = useState([]);
   const [minStakedElementNo, setMinStakedElementNo] = useState(6);
 
   const [totalClaim, setTotalClaim] = useState(0);
@@ -133,6 +140,8 @@ const Factory = () => {
   const [unstakedRoboList, setUnstakedRoboList] = useState(null);
   const [unstakedMekaList, setUnstakedMekaList] = useState(null);
   const [stakedList, setStakedList] = useState(null);
+  const [stakedApesListWithoutCrew, setStakedApesListWithoutCrew] =
+    useState(null);
 
   const [getStakedApe, { loading: stakeLoading, data: stakedApesData }] =
     useLazyQuery(GET_STAKED_APE);
@@ -148,7 +157,19 @@ const Factory = () => {
 
   // Get Total CLaim Reward
   const { data: claimAvaliableRewardList, refetch: getAvaliableRewards } =
-    useListClaimAvaliableReward(stakedList, stakedApesData?.spaceOogas);
+    useListClaimAvaliableReward(stakedList, stakedApesListWithoutCrew);
+
+  //Get Burn Credits
+  const [
+    getAllMyRoboOogas,
+    { loading: allMyRoboOogasLoading, data: allMyRoboOogasData },
+  ] = useLazyQuery(GET_ALL_MY_ROBO_OOGAS);
+  const [isRoboBurnModalOpen, setIsRoboBurnModalOpen] = useState(false);
+  const { data: burnCreditsData, refetch: getBurnCredits } =
+    useBurnCredits(userMetaMaskToken);
+  const [burnCredits, setBurnCredits] = useState(0);
+  const [burnRoboList, setBurnRoboList] = useState(null);
+  const [selectedBurnCreditsRobo, setSelectedBurnCreditsRobo] = useState(0);
   // Transaction Events
   const unstakeTokensAmount = useRef(null);
 
@@ -171,6 +192,11 @@ const Factory = () => {
           owner: userMetaMaskToken,
         },
       });
+      getAllMyRoboOogas({
+        variables: {
+          owner: userMetaMaskToken,
+        },
+      });
     }
     return () => {
       isMounted = false;
@@ -179,23 +205,48 @@ const Factory = () => {
     userMetaMaskToken,
     getStakedApe,
     getUnstakedRoboOogas,
+    getAllMyRoboOogas,
     getUnstakeMekaApes,
   ]);
 
   useEffect(() => {
     if (stakedApesData && stakedApesData.spaceOogas) {
-      setStakedList(stakedApesData.spaceOogas);
+      let list = [];
+      stakedApesData.spaceOogas.forEach((ape) => {
+        if (ape?.crewId === null || ape?.crewId === undefined) {
+          list.push(ape);
+        }
+        setStakedApesListWithoutCrew(list);
+        setStakedList(list);
+      });
     } else {
       setStakedList(null);
     }
   }, [stakedApesData]);
 
+  // Set Robo Ooga list avaliable for burning
+  useEffect(() => {
+    let allRobos = [];
+    if (allMyRoboOogasData?.unstaked?.length > 0) {
+      allRobos = [...allRobos, ...allMyRoboOogasData?.unstaked];
+    }
+    if (allMyRoboOogasData?.staked?.length > 0) {
+      let roboWithoutCrew = [];
+      allMyRoboOogasData?.staked.forEach((robo) => {
+        if (robo.crewId === null || robo.crewId === undefined) {
+          roboWithoutCrew.push(robo);
+        }
+      });
+      allRobos = [...allRobos, ...roboWithoutCrew];
+    }
+    setBurnRoboList(allRobos);
+  }, [allMyRoboOogasData]);
+
   // Set placeholder in the staked list
   useEffect(() => {
-    if (stakedApesData && stakedApesData.spaceOogas) {
-      let stakedOogas = stakedApesData.spaceOogas;
-      let length = stakedOogas.length;
-      let array = [...stakedOogas];
+    if (stakedApesListWithoutCrew) {
+      let length = stakedApesListWithoutCrew.length;
+      let array = [...stakedApesListWithoutCrew];
       if (length < minStakedElementNo) {
         let placeholderArray = Array.from(
           { length: minStakedElementNo - length },
@@ -206,18 +257,18 @@ const Factory = () => {
             id: uuidv4(),
           })
         );
-        array = [...stakedOogas, ...placeholderArray];
+        array = [...stakedApesListWithoutCrew, ...placeholderArray];
       }
       setStakedList(array);
     } else {
       setStakedList(null);
     }
-  }, [minStakedElementNo, stakedApesData]);
+  }, [minStakedElementNo, stakedApesListWithoutCrew]);
 
   // Sum Total Claim Reward
   useEffect(() => {
     if (claimAvaliableRewardList?.length > 0) {
-      setStakedData(claimAvaliableRewardList);
+      setStakedData(claimAvaliableRewardList ? claimAvaliableRewardList : []);
       let total = 0;
       claimAvaliableRewardList.forEach((ape) => {
         if (+ape.reward > 0) {
@@ -226,7 +277,7 @@ const Factory = () => {
       });
       setTotalClaim(total);
     } else {
-      setStakedData(null);
+      setStakedData([]);
       setTotalClaim(0);
     }
   }, [claimAvaliableRewardList]);
@@ -247,6 +298,18 @@ const Factory = () => {
     }
   }, [unstakedMekaApeData]);
 
+  useEffect(() => {
+    if (
+      burnCreditsData &&
+      burnCreditsData !== null &&
+      burnCreditsData !== undefined
+    ) {
+      setBurnCredits(burnCreditsData);
+    } else {
+      setBurnCredits(0);
+    }
+  }, [burnCreditsData]);
+
   // Sum selected token claim amount
   useEffect(() => {
     if (selectedStaked?.length > 0 && claimAvaliableRewardList?.length > 0) {
@@ -266,12 +329,22 @@ const Factory = () => {
   }, [selectedStaked, claimAvaliableRewardList]);
 
   useEffect(() => {
-    if (stakeLoading || unstakedRoboLoading || unstakedMekaApeLoading) {
+    if (
+      stakeLoading ||
+      unstakedRoboLoading ||
+      unstakedMekaApeLoading ||
+      allMyRoboOogasLoading
+    ) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [stakeLoading, unstakedRoboLoading, unstakedMekaApeLoading]);
+  }, [
+    stakeLoading,
+    unstakedRoboLoading,
+    unstakedMekaApeLoading,
+    allMyRoboOogasLoading,
+  ]);
 
   useEffect(() => {
     if (width < 388) {
@@ -284,7 +357,7 @@ const Factory = () => {
   }, [width]);
 
   const hadnleChangeStakedCheckbox = (e) => {
-    if (stakedData && stakedData.length > 0) {
+    if (stakedData && stakedData?.length > 0) {
       if (!e.target.checked) {
         setSelectedStaked([]);
       } else {
@@ -314,6 +387,21 @@ const Factory = () => {
       }
       setSelectAllUnstakedRobo(e.target.checked);
     }
+  };
+
+  const handleOpenBurnModal = () => {
+    setIsRoboBurnModalOpen(true);
+  };
+
+  const handleCloseBurnModal = async () => {
+    getStakedApe();
+    getBurnCredits();
+    await getFreshData();
+    setIsRoboBurnModalOpen(false);
+  };
+
+  const handleClickTab = (tab) => () => {
+    setActiveTab(tab);
   };
 
   const renderUnstakedRobo = () => {
@@ -355,7 +443,7 @@ const Factory = () => {
   };
 
   const renderDesktopStakedApes = () => {
-    if (stakedData && stakedData.length > 0) {
+    if (stakedData && stakedData?.length > 0) {
       return stakedData.map((ape) => (
         <StakedApe
           key={ape.id}
@@ -374,7 +462,7 @@ const Factory = () => {
   };
 
   const renderMobileStakedApes = () => {
-    if (stakedData && stakedData.length > 0) {
+    if (stakedData && stakedData?.length > 0) {
       let reducedList = arrangeStakedMobileList(stakedData);
       if (reducedList && reducedList.length > 0) {
         return reducedList.map((apeList) => (
@@ -453,10 +541,13 @@ const Factory = () => {
   };
 
   const handleCloseResultsModal = async () => {
+    getBurnCredits();
     setIsResultsModalOpen(false);
     setText("");
     setTokens(null);
+    await handleCloseBurnModal();
     unstakeTokensAmount.current = null;
+
     getOogearBalance();
     await getFreshData();
   };
@@ -483,6 +574,31 @@ const Factory = () => {
       return 0;
     }
   };
+
+  useEffect(() => {
+    if (selectedStaked?.length > 0) {
+      let realTokens = selectedStaked.filter((selected) => selected.owner);
+      let robo = realTokens.filter(
+        (token) => token.oogaType === "0" || token.oogaType === 0
+      );
+      setSelectedBurnCreditsRobo(robo.length);
+    } else {
+      setSelectedBurnCreditsRobo(0);
+    }
+  }, [selectedStaked]);
+
+  const getSelectedStakedRoboNumber = () => {
+    if (selectedStaked?.length > 0) {
+      let realTokens = selectedStaked.filter((selected) => selected.owner);
+      let robo = realTokens.filter(
+        (token) => token.oogaType === "0" || token.oogaType === 0
+      );
+      return robo.length;
+    } else {
+      return 0;
+    }
+  };
+
   const getEstimatedGas = async (list, type, gasFee) => {
     let gasEstimation;
     if (type === "stake") {
@@ -493,102 +609,13 @@ const Factory = () => {
       );
     } else if (type === "unstake") {
       gasEstimation = await contract.mekaApesContract.estimateGas.unstake(
-        list,
-        {
-          value: gasFee,
-        }
+        list
       );
     }
     let totalGasEstimation = getReducedEstimatedGas(gasEstimation);
     return totalGasEstimation;
   };
 
-  const getGasFee = async (list) => {
-    let amount = getStakedRoboAmount(list);
-    let gasFee = await gas.getUnstakeRandomGas(amount);
-
-    // increasing gasFee for 14%
-    let increasedGas = null;
-    if (BigNumber.isBigNumber(gasFee)) {
-      increasedGas = gasFee.mul(114).div(100);
-    }
-    return increasedGas ? increasedGas : gasFee;
-  };
-
-  const onRandomsReceived = async (requestId, entropy, event) => {
-    let txReceipt = await event.getTransactionReceipt();
-    let { mekaApesContract } = contract;
-    let unstakeTokens = [];
-    if (unstakeTokensAmount.current?.length > 0) {
-      unstakeTokens = [...unstakeTokensAmount.current];
-    }
-    let claimEvent = getAllEvents(txReceipt, mekaApesContract, CLAIM_REWARD);
-    let attackedEvent = getAllEvents(
-      txReceipt,
-      mekaApesContract,
-      ATTACK_REWARD
-    );
-    if (claimEvent?.length > 0) {
-      claimEvent.forEach((event) => {
-        let ape = stakedData.find(
-          (item) => +item.id === +event.args.tokenId.toNumber()
-        );
-        if (ape) {
-          let name = getApeName(ape);
-          unstakeTokens.push({
-            type: "unstake",
-            name: `${name} #${event.args.tokenId.toNumber()}`,
-            id: event.args.tokenId.toNumber(),
-            amount: ethers.utils.formatUnits(event.args.amount),
-            stolen: false,
-            stolenAmount: 0,
-          });
-        }
-      });
-    }
-    if (attackedEvent?.length > 0) {
-      let allTokens = [...unstakeTokens];
-      attackedEvent.forEach((event) => {
-        allTokens.forEach((token) => {
-          if (+token.id === +event.args.tokenId) {
-            token.stolen = true;
-            token.stolenAmount = ethers.utils.formatUnits(event.args.amount);
-          }
-        });
-      });
-      unstakeTokens = [...allTokens];
-    }
-    setTokens(unstakeTokens);
-    clearActionLoading();
-    setIsResultsModalOpen(true);
-  };
-
-  const getClaimEventAndWaitSecondTx = (receipt) => {
-    let { mekaApesContract } = contract;
-    let firstClaimEvent = getAllEvents(receipt, mekaApesContract, CLAIM_REWARD);
-    let mekaTokens = [];
-    // Only meka tokens can be here
-    // Robo Oogas are in the seconds tsx
-    if (firstClaimEvent?.length > 0) {
-      firstClaimEvent.forEach((event) => {
-        let ape = stakedData.find(
-          (item) => +item.id === +event.args.tokenId.toNumber()
-        );
-        if (ape) {
-          let name = getApeName(ape);
-
-          mekaTokens.push({
-            type: "unstake",
-            name: `${name} #${event.args.tokenId.toNumber()}`,
-            id: event.args.tokenId.toNumber(),
-            amount: ethers.utils.formatUnits(event.args.amount),
-          });
-        }
-      });
-    }
-    unstakeTokensAmount.current = mekaTokens;
-    makeRandomSubscription(receipt, contract, onRandomsReceived);
-  };
 
   const getClaimEvent = (receipt) => {
     let { mekaApesContract } = contract;
@@ -614,6 +641,40 @@ const Factory = () => {
       }
     }
     setTokens(allTokens);
+    getStakedApe({
+      variables: {
+        owner: userMetaMaskToken,
+      },
+    });
+    clearActionLoading();
+    setIsResultsModalOpen(true);
+  };
+
+  const getUnstakeEvent = (receipt) => {
+    let { mekaApesContract } = contract;
+    let claimRewardEvent = getAllEvents(
+      receipt,
+      mekaApesContract,
+      CLAIM_REWARD
+    );
+    let allTokens = [];
+
+    if (claimRewardEvent?.length > 0) {
+      let totalClaimAmount = BigNumber.from(0);
+      claimRewardEvent.forEach((event) => {
+        totalClaimAmount = totalClaimAmount.add(event.args.amount);
+      });
+      if (BigNumber.isBigNumber(totalClaimAmount)) {
+        let totalAmount = ethers.utils.formatUnits(totalClaimAmount);
+        allTokens.push({
+          type: "simple-unstake",
+          amount: totalAmount,
+          id: "simple-unstake",
+        });
+      }
+    }
+    setTokens(allTokens);
+    getBurnCredits();
     getStakedApe({
       variables: {
         owner: userMetaMaskToken,
@@ -725,59 +786,60 @@ const Factory = () => {
   };
 
   const handleClickUnstake = async () => {
-    let tokenIds = [];
-    if (selectedStaked?.length > 0) {
-      selectedStaked.forEach((token) => {
-        if (token.owner) {
-          tokenIds.push(token.id);
-        }
-      });
+    if (selectedBurnCreditsRobo < burnCredits) {
+      let tokenIds = [];
+      if (selectedStaked?.length > 0) {
+        selectedStaked.forEach((token) => {
+          if (token.owner) {
+            tokenIds.push(token.id);
+          }
+        });
 
-      if (tokenIds?.length > 0) {
-        let gasFee = await getGasFee(selectedStaked);
-        try {
-          let totalGasEstimation = await getEstimatedGas(
-            tokenIds,
-            "unstake",
-            gasFee
-          );
-          let tsx = await contract.unstake(
-            tokenIds,
-            gasFee,
-            totalGasEstimation
-          );
-          openActionLoading(2, getActionLoadingUnstakeMessage(tokenIds));
-          tsx
-            .wait()
-            .then((receipt) => {
-              setTsxNumber(2);
-              getClaimEventAndWaitSecondTx(receipt);
-              getOogearBalance();
-            })
-            .catch((error) => {
-              console.log(error);
-              Sentry.captureException(new Error(error), {
-                tags: {
-                  section: "Factory Unstake tsx.wait",
-                },
+        if (tokenIds?.length > 0) {
+          try {
+            let totalGasEstimation = await getEstimatedGas(
+              tokenIds,
+              "unstake"
+            );
+            let tsx = await contract.unstake(
+              tokenIds,
+              totalGasEstimation
+            );
+            openActionLoading(1, getActionLoadingUnstakeMessage(tokenIds));
+            tsx
+              .wait()
+              .then((receipt) => {
+                setTsxNumber(1);
+                getUnstakeEvent(receipt);
+                getOogearBalance();
+              })
+              .catch((error) => {
+                console.log(error);
+                Sentry.captureException(new Error(error), {
+                  tags: {
+                    section: "Factory Unstake tsx.wait",
+                  },
+                });
+                message.error(SOMETHING_WENT_WRONG);
+                clearActionLoading(false);
               });
-              message.error(SOMETHING_WENT_WRONG);
-              clearActionLoading(false);
+          } catch (error) {
+            console.log(error);
+            Sentry.captureException(new Error(error), {
+              tags: {
+                section: "Factory Unstake 1st tsx",
+              },
             });
-        } catch (error) {
-          console.log(error);
-          Sentry.captureException(new Error(error), {
-            tags: {
-              section: "Factory Unstake 1st tsx",
-            },
-          });
-          message.error(SOMETHING_WENT_WRONG_UNSTAKE, 6);
+            message.error(SOMETHING_WENT_WRONG_UNSTAKE, 6);
+          }
+          setTotalClaim(0);
+          setSelectedStaked([]);
         }
-        setTotalClaim(0);
-        setSelectedStaked([]);
+      } else {
+        message.error(SELECT_SOME_STAKED_APE);
       }
     } else {
-      message.error(SELECT_SOME_STAKED_APE);
+      message.error(DONT_ENOUGH_CREDITS);
     }
   };
 
@@ -786,77 +848,26 @@ const Factory = () => {
       <Header page="game" />
       <Content>
         <Title>Enter the Factory</Title>
-        <MainBox>
-          <TitleBox>
-            <h4>The Factory</h4>
-            <h6>Stake Robo Oogas and MekaApes to earn $OG</h6>
-          </TitleBox>
-          <MobileBoxHeader>
-            <div>
-              <img src={HeroImage} alt="Factory Robo" />
-            </div>
-            <p>
-              <span>$OG Balance:</span>{" "}
-              {oogearBalance && beautifyNumber(oogearBalance)}
-            </p>
-            <p>
-              <span>$DMT Balance:</span>{" "}
-              {dmtBalance && beautifyNumber(dmtBalance)}
-            </p>
-          </MobileBoxHeader>
-          <Boxes>
-            <Unstaked>
-              <h5>Unstaked</h5>
-              <Subtitle>
-                <h6 className="robo">Robo Oogas:</h6>
-                <CustomUnstakeCheckbox
-                  onChange={hadnleChangeUnstakedRoboCheckbox}
-                  checked={selectAllUnstakedRobo}>
-                  Select All:
-                </CustomUnstakeCheckbox>
-              </Subtitle>
-              <NftList length={getListLength(unstakedRoboList)}>
-                {renderUnstakedRobo()}
-              </NftList>
-              {unstakedRoboList?.length > 0 && (
-                <SelectedCounter>
-                  <span>Selected Robo Oogas:</span>
-                  <span className="numbers">
-                    {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/
-                    {unstakedRoboList?.length}
-                  </span>
-                </SelectedCounter>
-              )}
-              <Subtitle>
-                <h6 className="meka">MekaApes:</h6>
-                <CustomUnstakeCheckbox
-                  onChange={hadnleChangeUnstakedMekaCheckbox}
-                  checked={selectAllUnstakedMeka}>
-                  Select All:
-                </CustomUnstakeCheckbox>
-              </Subtitle>
-              <NftList meka length={getListLength(unstakedMekaList)}>
-                {renderUnstakedMeka()}
-              </NftList>
-              {unstakedMekaList?.length > 0 && (
-                <SelectedCounter>
-                  <span>Selected MekaApes:</span>
-                  <span className="numbers">
-                    {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/
-                    {unstakedMekaList?.length}
-                  </span>
-                </SelectedCounter>
-              )}
-              <Button
-                type="stake"
-                disabled={getIfItsStakeDisabled()}
-                onClick={handleClickStake}>
-                Stake in Factory!
-              </Button>
-              <HelperText>Select the NFTs you want to stake</HelperText>
-            </Unstaked>
-            <MiddleBox>
-              <img src={HeroImage} alt="hero ape" />
+        <Tabs>
+          <Tab
+            active={activeTab === "factory"}
+            onClick={handleClickTab("factory")}>
+            The Factory
+          </Tab>
+          <Tab active={activeTab === "crew"} onClick={handleClickTab("crew")}>
+            Meka Crews
+          </Tab>
+        </Tabs>
+        {activeTab === "factory" && (
+          <MainBox>
+            <TitleBox>
+              <h4>The Factory</h4>
+              <h6>Stake Robo Oogas and MekaApes to earn $OG</h6>
+            </TitleBox>
+            <MobileBoxHeader>
+              <div>
+                <img src={HeroImage} alt="Factory Robo" />
+              </div>
               <p>
                 <span>$OG Balance:</span>{" "}
                 {oogearBalance && beautifyNumber(oogearBalance)}
@@ -865,54 +876,137 @@ const Factory = () => {
                 <span>$DMT Balance:</span>{" "}
                 {dmtBalance && beautifyNumber(dmtBalance)}
               </p>
-            </MiddleBox>
-            <Staked>
-              <h5>Staked</h5>
-              <div className="subtitle">
-                <h6>In the Factory:</h6>
-                <CustomCheckbox
-                  onChange={hadnleChangeStakedCheckbox}
-                  checked={selectAllStaked}>
-                  Select All:
-                </CustomCheckbox>
-              </div>
-              <ApeList>{renderMobileStakedApes()}</ApeList>
-              <ApeListDesktop length={stakedData?.length}>
-                {renderDesktopStakedApes()}
-              </ApeListDesktop>
-              {stakedApesData?.spaceOogas?.length > 0 && (
-                <SelectedCounter staked>
-                  <span>Selected NFTs:</span>
-                  <span className="numbers">
-                    {selectedStaked ? getSelectedStakedNumber() : 0}/
-                    {stakedApesData?.spaceOogas?.length}
-                  </span>
-                </SelectedCounter>
-              )}
-              <ButtonClaim
-                disabled={getIfItsClaimDisabled()}
-                onClick={handleClickClaim}>
-                Claim {totalSelectedClaim && beautifyNumber(totalSelectedClaim)}{" "}
-                $OG
-              </ButtonClaim>
-              <ClaimAndUnstakeButton
-                disabled={getIfItsClaimDisabled()}
-                onClick={handleClickUnstake}>
-                Claim $OG and Unstake
-              </ClaimAndUnstakeButton>
-              <StakedText>
+            </MobileBoxHeader>
+            <Boxes>
+              <Unstaked>
+                <h5>Unstaked</h5>
+                <Subtitle>
+                  <h6 className="robo">Robo Oogas:</h6>
+                  <CustomUnstakeCheckbox
+                    onChange={hadnleChangeUnstakedRoboCheckbox}
+                    checked={selectAllUnstakedRobo}>
+                    Select All:
+                  </CustomUnstakeCheckbox>
+                </Subtitle>
+                <NftList length={getListLength(unstakedRoboList)}>
+                  {renderUnstakedRobo()}
+                </NftList>
+                {unstakedRoboList?.length > 0 && (
+                  <SelectedCounter>
+                    <span>Selected Robo Oogas:</span>
+                    <span className="numbers">
+                      {selectedUnstakedRobo ? selectedUnstakedRobo?.length : 0}/
+                      {unstakedRoboList?.length}
+                    </span>
+                  </SelectedCounter>
+                )}
+                <Subtitle>
+                  <h6 className="meka">MekaApes:</h6>
+                  <CustomUnstakeCheckbox
+                    onChange={hadnleChangeUnstakedMekaCheckbox}
+                    checked={selectAllUnstakedMeka}>
+                    Select All:
+                  </CustomUnstakeCheckbox>
+                </Subtitle>
+                <NftList meka length={getListLength(unstakedMekaList)}>
+                  {renderUnstakedMeka()}
+                </NftList>
+                {unstakedMekaList?.length > 0 && (
+                  <SelectedCounter>
+                    <span>Selected MekaApes:</span>
+                    <span className="numbers">
+                      {selectedUnstakedMeka ? selectedUnstakedMeka?.length : 0}/
+                      {unstakedMekaList?.length}
+                    </span>
+                  </SelectedCounter>
+                )}
+                <Button
+                  type="stake"
+                  disabled={getIfItsStakeDisabled()}
+                  onClick={handleClickStake}>
+                  Stake in Factory!
+                </Button>
+                <HelperText>Select the NFTs you want to stake</HelperText>
+              </Unstaked>
+              <MiddleBox>
+                <img src={HeroImage} alt="hero ape" />
                 <p>
-                  Unclaimed:{" "}
-                  <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
+                  <span>$OG Balance:</span>{" "}
+                  {oogearBalance && beautifyNumber(oogearBalance)}
                 </p>
                 <p>
-                  A Robo Ooga can only be unstaked when it has claimable min.
-                  2,000 $OG
+                  <span>$DMT Balance:</span>{" "}
+                  {dmtBalance && beautifyNumber(dmtBalance)}
                 </p>
-              </StakedText>
-            </Staked>
-          </Boxes>
-        </MainBox>
+              </MiddleBox>
+              <Staked>
+                <h5>Staked</h5>
+                <div className="subtitle">
+                  <h6>In the Factory:</h6>
+                  <CustomCheckbox
+                    onChange={hadnleChangeStakedCheckbox}
+                    checked={selectAllStaked}>
+                    Select All:
+                  </CustomCheckbox>
+                </div>
+                <ApeList>{renderMobileStakedApes()}</ApeList>
+                <ApeListDesktop length={stakedData ? stakedData.length : 0}>
+                  {renderDesktopStakedApes()}
+                </ApeListDesktop>
+                {stakedApesListWithoutCrew?.length > 0 && (
+                  <SelectedCounter staked>
+                    <span>Selected NFTs:</span>
+                    <span className="numbers">
+                      {selectedStaked ? getSelectedStakedNumber() : 0}/
+                      {stakedApesListWithoutCrew?.length}
+                    </span>
+                  </SelectedCounter>
+                )}
+                <BurnSection>
+                  <BurnButton onClick={handleOpenBurnModal}>
+                    Get Credits
+                  </BurnButton>
+                  <div className="text">
+                    <span>Unstaking Credits:</span>
+                    <span
+                      className={getBurnCreditsClassName(
+                        burnCredits,
+                        selectedBurnCreditsRobo
+                      )}>
+                      {selectedStaked ? getSelectedStakedRoboNumber() : 0}/
+                      {burnCredits}
+                    </span>
+                  </div>
+                </BurnSection>
+                <ButtonClaim
+                  disabled={getIfItsClaimDisabled()}
+                  onClick={handleClickClaim}>
+                  Claim{" "}
+                  {totalSelectedClaim && beautifyNumber(totalSelectedClaim)} $OG
+                </ButtonClaim>
+                <ClaimAndUnstakeButton
+                  disabled={getIfItsClaimDisabled()}
+                  onClick={handleClickUnstake}>
+                  Claim $OG and Unstake
+                </ClaimAndUnstakeButton>
+                <StakedText>
+                  <p>
+                    Unclaimed:{" "}
+                    <span>{totalClaim && beautifyNumber(totalClaim)} $OG</span>
+                  </p>
+                  <p />
+                </StakedText>
+              </Staked>
+            </Boxes>
+          </MainBox>
+        )}
+        {activeTab === "crew" && (
+          <Crew
+            getStakedApe={getStakedApe}
+            getUnstakedRoboOogas={getUnstakedRoboOogas}
+            getUnstakeMekaApes={getUnstakeMekaApes}
+          />
+        )}
       </Content>
       <Footer page="game" />
       {loading && <Loading open={loading} />}
@@ -937,6 +1031,16 @@ const Factory = () => {
           text={actionLoadingText}
           tsxNumber={tsxNumber}
           tsxTotalNumber={tsxTotalNumber}
+        />
+      )}
+      {isRoboBurnModalOpen && (
+        <BurnRoboModal
+          open={isRoboBurnModalOpen}
+          roboList={burnRoboList}
+          type="burn"
+          handleCloseModal={handleCloseBurnModal}
+          setIsResultsModalOpen={setIsResultsModalOpen}
+          setTokens={setTokens}
         />
       )}
     </Wrapper>

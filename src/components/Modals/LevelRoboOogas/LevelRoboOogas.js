@@ -43,7 +43,7 @@ const LevelRoboOogas = ({
 
   useEffect(() => {
     if (list && list.length > 0) {
-      let apes = list.filter((ape) => ape.level < 4);
+      let apes = list.filter((ape) => ape.level < 6);
       setData(apes);
       setListLength(apes.length);
     }
@@ -136,4 +136,5 @@ LevelRoboOogas.propTypes = {
   handleSaveApe: PropTypes.func.isRequired,
   selectedApe: PropTypes.object,
   list: PropTypes.array,
+  opposite: PropTypes.object,
 };

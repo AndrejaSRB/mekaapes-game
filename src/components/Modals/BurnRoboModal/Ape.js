@@ -5,9 +5,9 @@ import PlaceholderImage from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
 import useApeMetadata from "../../../hooks/Global/useApeMetadata";
 // ******** Styles ********
-import { Ape, ApeImage } from "./MergeMekaApes.styles";
+import { Ape, ApeImage } from "./BurnRoboModal.styles";
 
-const MergeMekaApe = ({ ape, handleClickApe, getIfActive }) => {
+const LevelRoboOogaApe = ({ ape, handleClickApe, getIfActive }) => {
   const { data, isLoading } = useApeMetadata(ape);
   const [image, setImage] = useState(null);
 
@@ -63,9 +63,9 @@ const MergeMekaApe = ({ ape, handleClickApe, getIfActive }) => {
   );
 };
 
-export default MergeMekaApe;
+export default LevelRoboOogaApe;
 
-MergeMekaApe.propTypes = {
+LevelRoboOogaApe.propTypes = {
   ape: PropTypes.object.isRequired,
   handleClickApe: PropTypes.func.isRequired,
   getIfActive: PropTypes.func.isRequired,

@@ -13,7 +13,7 @@ import Ape from "./Ape";
 // ******** HOC ********
 import withConnect from "../../../hoc/withConnect";
 // ******** Hooks ********
-import useWindowDimenstions from "../../../hooks/useWindowDimensions";
+import useWindowDimenstions from "../../../hooks/Global/useWindowDimensions";
 // ******** Images ********
 import PlaceholderApe from "../../../assets/placeholder_ape.png";
 import EvolveAnimation from "../../../assets/level_up.gif";

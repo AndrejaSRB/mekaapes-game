@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // ******** Images ********
 import ImagePlaceholder from "../../../assets/placeholder-image.jpeg";
 // ******** Hooks ********
-import useApeMetadata from "../../../hooks/useApeMetadata";
+import useApeMetadata from "../../../hooks/Global/useApeMetadata";
 // ******** Functions ********
 import { beautifyNumber } from "../Factory/helper";
 // ******** Styles ********
