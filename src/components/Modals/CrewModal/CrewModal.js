@@ -105,30 +105,39 @@ const CrewModal = ({
 
   useEffect(() => {
     if (step === 1) {
-      let avaliableMekaList = mekaList.filter(
-        (meka) => meka.crewId === null || meka.crewId === undefined
-      );
-      setData(avaliableMekaList);
-      setMekaListLength(avaliableMekaList.length);
-    } else if (step === 2) {
-      if (actionType === "edit") {
-        let avaliableRoboList = roboList.filter(
-          (robo) => robo.crewId === null || robo.crewId === undefined
+      if (mekaList?.length > 0) {
+        let avaliableMekaList = mekaList.filter(
+          (meka) => meka.crewId === null || meka.crewId === undefined
         );
-        if (clickedEditCrew?.roboOogas?.length > 0) {
-          let allRobos = [...clickedEditCrew?.roboOogas, ...avaliableRoboList];
-          setData(allRobos);
-          setRoboListLength(allRobos.length);
+        setData(avaliableMekaList);
+        setMekaListLength(avaliableMekaList.length);
+      }
+    } else if (step === 2) {
+      if (roboList?.length > 0) {
+        if (actionType === "edit") {
+          let avaliableRoboList = roboList.filter(
+            (robo) => robo.crewId === null || robo.crewId === undefined
+          );
+          if (clickedEditCrew?.roboOogas?.length > 0) {
+            let allRobos = [
+              ...clickedEditCrew?.roboOogas,
+              ...avaliableRoboList,
+            ];
+            setData(allRobos);
+            setRoboListLength(allRobos.length);
+          } else {
+            setData(roboList);
+            setRoboListLength(roboList.length);
+          }
         } else {
-          setData(roboList);
-          setRoboListLength(roboList.length);
+          let avaliableRoboList = roboList.filter(
+            (robo) => robo.crewId === null || robo.crewId === undefined
+          );
+          setData(avaliableRoboList);
+          setRoboListLength(avaliableRoboList.length);
         }
       } else {
-        let avaliableRoboList = roboList.filter(
-          (robo) => robo.crewId === null || robo.crewId === undefined
-        );
-        setData(avaliableRoboList);
-        setRoboListLength(avaliableRoboList.length);
+        setIsDisable(true);
       }
     }
   }, [step, mekaList, roboList, actionType, clickedEditCrew]);
