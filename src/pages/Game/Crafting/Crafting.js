@@ -770,7 +770,7 @@ const Crafting = () => {
             </DmtBoxWrapper>
           </CounterBox>
           <Text>
-            {`When minting Robo Oogas with $OG or $DMT there is a 10% chance that
+            {`When minting Robo Oogas with $OG or $DMT there is a 5% chance that
             you'll receive a MekaApe instead of a Robo Ooga! There is also a 10%
             risk that the Mint gets gifted to a random Mega Meka holder. Minting
             with $DMT reduces that risk to only 5%. $DMT Mint is limited to

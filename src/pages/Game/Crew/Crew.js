@@ -475,7 +475,7 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
         <TitleBox>
           <h4>Meka Crews</h4>
           <h6>
-            Create Meka Crews by selecting a staked MekaApe, and adding Robo
+            Create Meka Crews by selecting a staked MekaApe and adding Robo
             Oogas to earn Crew $OG. The higher the Meka level, the more Robo
             Oogas fit into a crew and the higher the $OG crew multiplier.
           </h6>
