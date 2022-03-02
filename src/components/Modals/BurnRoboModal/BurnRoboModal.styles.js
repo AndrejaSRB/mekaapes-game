@@ -141,13 +141,13 @@ export const ApeImage = styled.img`
   height: 100px;
   -webkit-filter: drop-shadow(0px 0px 40px #11051b);
   filter: drop-shadow(0px 0px 10px #11051b);
-  /* border: ${({ currentLvl }) => {
+  border: ${({ currentLvl }) => {
     if (currentLvl) {
       return `5px solid ${theme.color.level[currentLvl]}`;
     } else {
       return `none`;
     }
-  }}; */
+  }};
   border-radius: 15px;
   opacity: ${({ active }) => (active ? 1 : 0.3)};
 `;
