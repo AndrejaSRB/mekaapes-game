@@ -38,6 +38,11 @@ export class Contract {
     );
   }
 
+  // Get game status
+  async getGameStatus() {
+    return await this.mekaApesContract.gameActive();
+  }
+
   // gives mekaApes to the user
   async evolveBabyOogas(itemIds, gasLimit) {
     return await this.mekaApesContract.evolveBabyOogas(itemIds, {

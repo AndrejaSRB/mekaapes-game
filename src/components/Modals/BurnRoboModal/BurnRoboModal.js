@@ -83,14 +83,14 @@ const BurnRoboModal = ({
   useEffect(() => {
     if (type === "upgrade") {
       if (roboList && roboList.length > 0 && tokenUpgrade) {
-        let apes = roboList.filter((ape) => ape.level < 6);
+        let apes = roboList.filter((ape) => ape.level < 2); // 2 is temporary, it should be "6"
         let uniqueApes = apes.filter((ape) => ape.id !== tokenUpgrade.id);
         setData(uniqueApes);
         setListLength(uniqueApes.length);
       }
     } else {
       if (roboList && roboList.length > 0) {
-        let apes = roboList.filter((ape) => ape.level < 6);
+        let apes = [...roboList];
         setData(apes);
         setListLength(apes.length);
       }
