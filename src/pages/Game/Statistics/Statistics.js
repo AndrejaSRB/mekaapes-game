@@ -37,7 +37,6 @@ const Statistics = () => {
   const { userMetaMaskToken } = useContext(UserContext);
   const [loader, setLoader] = useState(false);
   const { loading, data } = useQuery(GET_LEADERBOARD);
-
   const { data: totalMintedTokens, isLoading: totalAmountLoading } =
     useTotalAmountMintedTokens(userMetaMaskToken);
 
@@ -118,6 +117,7 @@ const Statistics = () => {
   const renderGameStatus = () => {
     if (data?.gameStatus) {
       const { gameStatus } = data;
+
       return (
         <StatsBox>
           <Stats position="first">
@@ -126,7 +126,7 @@ const Statistics = () => {
               {getBeautifiedNumber(gameStatus?.mekaApesMinted)}
             </span>
           </Stats>
-          <Stats>
+          {/* <Stats>
             <span>MekaApes Staked:</span>
             <span className="number">
               {getPercent(
@@ -135,7 +135,7 @@ const Statistics = () => {
               )}
               %
             </span>
-          </Stats>
+          </Stats> */}
           <Stats>
             <span>Robo Oogas Minted:</span>
             <span className="number">
@@ -170,6 +170,27 @@ const Statistics = () => {
               {getBeautifiedNumber(gameStatus?.roboOogasGifted)}
             </span>
           </Stats>
+
+          <Stats>
+            <span>Unique Players:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.players)}
+            </span>
+          </Stats>
+          <Stats>
+            <span>Robo Oogas Burned:</span>
+            <span className="number">
+              {getBeautifiedNumber(gameStatus?.roboOogasBurned)}
+            </span>
+          </Stats>
+          <Stats>
+            <span>OG Burned:</span>
+            <span className="number">
+              {beautifyNumber(
+                ethers.utils.formatUnits(gameStatus?.oogearBurned)
+              )}
+            </span>
+          </Stats>
           <Stats position="last">
             <span>Total Minted NFTs:</span>
             <span className="number">
@@ -191,13 +212,13 @@ const Statistics = () => {
           Game <span>Statistics</span>
         </Title>
         <ClaimReward
-            address={userMetaMaskToken}
-            hasClaimStageOneReward={hasClaimStageOneReward}
-            setHasClaimStageOneReward={setHasClaimStageOneReward}
-            getHasStageOneReward={getHasStageOneReward}
-            setIsResultsModalOpen={setIsResultsModalOpen}
-            setTokens={setTokens}
-          />
+          address={userMetaMaskToken}
+          hasClaimStageOneReward={hasClaimStageOneReward}
+          setHasClaimStageOneReward={setHasClaimStageOneReward}
+          getHasStageOneReward={getHasStageOneReward}
+          setIsResultsModalOpen={setIsResultsModalOpen}
+          setTokens={setTokens}
+        />
         <Holder>
           <Box>
             <h4>Game Status</h4>

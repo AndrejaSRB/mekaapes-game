@@ -180,6 +180,9 @@ export const GET_LEADERBOARD = gql`
       roboOogasStaked
       roboOogasGifted
       mekaApesGifted
+      oogearBurned
+      players
+      roboOogasBurned
     }
   }
 `;
