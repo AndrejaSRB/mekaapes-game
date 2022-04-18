@@ -10,8 +10,10 @@ import CrewModal from "../../../components/Modals/CrewModal/CrewModal";
 import Loading from "../../../components/Modals/Loading/Loading";
 import ActionsLoading from "../../../components/Modals/ActionLoading/ActionLoading";
 import ResultModal from "../../../components/Modals/ResultModal/ResultModal";
+import MissingReward from "../../../components/MissingReward/MissingReward";
 // ******** Queires ********
 import useCrewClaimAvaliableReward from "../../../hooks/Factory/useCrewClaimAvaliableReward";
+import useMissingReward from "../../../hooks/Global/useMissingReward";
 // ******** Functions ********
 import { getReducedEstimatedGas, beautifyNumber } from "../Factory/helper";
 import { generateCrewInformation } from "./helper";
@@ -109,13 +111,20 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
   // Events
   const [tokens, setTokens] = useState(false);
 
+  // Missing Rewards
+  const {
+    data: hasClaimedMissingReward,
+    isLoading: hasMissingRewardLoading,
+    refetch: getMissingRewardStatus,
+  } = useMissingReward(userMetaMaskToken);
+
   useEffect(() => {
-    if (mekaLoading || roboLoading || crewLoading) {
+    if (mekaLoading || roboLoading || crewLoading || hasMissingRewardLoading) {
       setLoader(true);
     } else {
       setLoader(false);
     }
-  }, [mekaLoading, roboLoading, crewLoading]);
+  }, [mekaLoading, roboLoading, crewLoading, hasMissingRewardLoading]);
 
   useEffect(() => {
     if (userMetaMaskToken) {
@@ -517,6 +526,13 @@ const Crew = ({ getStakedApe, getUnstakedRoboOogas, getUnstakeMekaApes }) => {
           Deleting a Crew will send the NFTs back to the Factory and all Crew
           $OG will be claimed. There’s no tax when claiming $OG from Meka Crews.
         </HelperText>
+        <MissingReward
+          address={userMetaMaskToken}
+          hasClaimedMissingReward={hasClaimedMissingReward}
+          getMissingRewardStatus={getMissingRewardStatus}
+          setIsResultsModalOpen={setIsResultsModalOpen}
+          setTokens={setTokens}
+        />
       </MainBox>
       {isCreateModalOpen && (
         <CrewModal

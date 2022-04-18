@@ -238,7 +238,9 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
         return tokens.map((token, index) => (
           <Text
             white
-            key={index}>{`You successfully received new unstaking credits.`}</Text>
+            key={
+              index
+            }>{`You successfully received new unstaking credits.`}</Text>
         ));
       }
     }
@@ -356,6 +358,13 @@ const ResultModal = ({ open, handleClose, tokens, craftingType }) => {
           </>
         );
       case "stage-one-claim":
+        return (
+          <>
+            <Title>Congratulations!</Title>
+            {getStageOneRewardMessage()}
+          </>
+        );
+      case "crew-missing-reward":
         return (
           <>
             <Title>Congratulations!</Title>

@@ -19,6 +19,19 @@ export class Contract {
   }
 
   // MEKA CREWS
+  // Check missing rewards
+  async recoverOGClaimed(address, gasLimit) {
+    return await this.mekaApesContract.recoverOGClaimed(address, {
+      gasLimit: gasLimit,
+    });
+  }
+
+  // Claim Crew Missing Reward
+  async recoverLostOG(rewardSign, gasLimit) {
+    return await this.mekaApesContract.recoverLostOG(rewardSign, {
+      gasLimit: gasLimit,
+    });
+  }
 
   // create Crew
   async createCrew(tokenIds, gasLimit) {

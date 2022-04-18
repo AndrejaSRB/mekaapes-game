@@ -270,7 +270,6 @@ export const Button = styled.button`
 export const HelperText = styled.div`
   color: ${theme.color.whiteGrey};
   text-align: center;
-  margin-top: 32px;
   font-size: 18px;
   max-width: 800px;
   margin: 32px auto 0 auto;
